@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>石頭獲利分析戰法</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/....../6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a', // 深藍黑背景
+                        card: '#1e293b', // 卡片背景
+                        accent: '#dc2626', // 石頭紅
+                        input: '#334155', // 輸入框底色
+                        gold: '#eab308', // 重點黃框
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #0f172a; /* 深色背景 */
+            color: white;
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* 輸入框樣式優化 */
+        input[type="number"], input[type="text"] {
+            background-color: #1e293b;
+            border: 1px solid #475569;
+            color: white;
+            font-family: 'Roboto Mono', monospace;
+            text-align: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+        /* 大黃框特效 */
+        .input-highlight {
+            border: 2px solid #eab308 !important; /* 黃色邊框 */
+            background-color: #283044 !important;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        /* 按鈕特效 */
+        .btn-action {
+            background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 4px 6px rgba(220, 38, 38, 0.4);
+            transition: transform 0.1s;
+        }
+        .btn-action:active { transform: scale(0.98); }
+        /* 模擬按鈕群 */
+        .sim-btn {
+            font-size: 0.8rem;
+            padding: 8px 4px;
+            border-radius: 6px;
+            background: #334155;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .sim-btn:active { background: #475569; }
+        .sim-up { border-bottom: 2px solid #ef4444; color: #fca5a5; }
+        .sim-mid { border-bottom: 2px solid #fbbf24; color: #fde68a; }
+        .sim-down { border-bottom: 2px solid #22c55e; color: #86efac; }
+        /* Modal 動畫 */
+        #resultModal { transition: opacity 0.2s; }
+        #resultContent { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body class="min-h-screen flex justify-center bg-dark">
+    <div class="w-full max-w-md p-5 flex flex-col gap-5">
+        <div class="flex justify-between items-start mt-2">
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-10 bg-accent rounded-full"></div> <div>
+                    <h1 class="text-2xl font-black tracking-wide text-white">石頭獲利分析戰法</h1>
+                    <p class="text-xs text-gray-400">極速操作 CDP 進場神器</p>
+                </div>
+            </div>
+            <button onclick="app.toggleHelp()" class="bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition">
+                <i class="fas fa-book-open"></i> 說明書
+            </button>
+        </div>
+        <div>
+            <label class="text-accent font-bold text-sm mb-2 block">股票代號 / 名稱 (必填)</label>
+            <input type="text" id="inpName" placeholder="例如：台積電 2330" class="w-full p-3 text-lg font-bold">
+        </div>
+        <div class="bg-card p-4 rounded-xl border border-gray-700/50">
+            <h3 class="text-gray-400 text-sm mb-3 font-medium">1. 設定昨日基準 (K棒數據)</h3>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="text-xs text-gray-500 block text-center mb-1">昨日最高 (H)</label>
+                    <input type="number" id="inpH" placeholder="50.5" class="w-full p-2 h-12" step="0.01">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 block text-center mb-1">昨日最低 (L)</label>
+                    <input type="number" id="inpL" placeholder="48" class="w-full p-2 h-12" step="0.01">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 block text-center mb-1">昨日收盤 (C)</label>
+                    <input type="number" id="inpC" placeholder="49" class="w-full p-2 h-12" step="0.01">
+                </div>
+            </div>
+        </div>
+        <div>
+            <label class="text-blue-400 font-bold text-sm mb-2 block">2. 設定今日開盤 (OPEN) <span class="text-[10px] text-gray-500 font-normal">*判斷實體K棒用</span></label>
+            <input type="number" id="inpOpen" placeholder="49.2" class="w-full p-3 text-xl font-bold text-blue-300 border-blue-900/50 bg-blue-900/10" step="0.01">
+        </div>
+        <div>
+            <label class="text-gray-300 font-bold text-sm mb-2 block">3. 輸入目前成交價</label>
+            <div class="relative">
+                <input type="number" id="inpNow" placeholder="輸入現價..." class="w-full p-6 input-highlight text-white placeholder-gray-600" step="0.01">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-bold">TWD</span>
+            </div>
+        </div>
+        <button onclick="app.analyze()" class="btn-action w-full py-4 rounded-xl text-white text-lg font-bold tracking-wider shadow-lg mt-2">
+            立即分析情勢
+        </button>
+        <p class="text-center text-gray-600 text-xs">輸入數字後按 Enter 或點擊按鈕</p>
+        <div class="border-t border-gray-800 my-1"></div>
+        <div>
+            <label class="text-gray-500 text-xs mb-3 block">快速模擬 (點擊測試)</label>
+            <div class="grid grid-cols-3 gap-3">
+                <button onclick="app.simulate('high')" class="sim-btn sim-up bg-red-900/20 hover:bg-red-900/40">
+                    <i class="fas fa-arrow-up mr-1"></i> 突破大漲
+                </button>
+                <button onclick="app.simulate('mid')" class="sim-btn sim-mid bg-yellow-900/20 hover:bg-yellow-900/40">
+                    <i class="fas fa-minus mr-1"></i> 盤整測試
+                </button>
+                <button onclick="app.simulate('low')" class="sim-btn sim-down bg-green-900/20 hover:bg-green-900/40">
+                    <i class="fas fa-arrow-down mr-1"></i> 跌破大跌
+                </button>
+            </div>
+        </div>
+        <div class="mt-auto pt-6 pb-2 text-center text-[10px] text-gray-700">
+            Powered by Stone Strategy v3.0
+        </div>
+    </div>
+    <div id="resultModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="app.closeResult()"></div>
+        <div id="resultContent" class="absolute bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl p-6 transform translate-y-full transition-transform border-t border-gray-700 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto mb-6"></div>
+            <div class="flex justify-between items-end mb-4">
+                <h2 class="text-2xl font-bold text-white" id="resName">台積電 (2330)</h2>
+                <div id="resTrendBadge" class="px-3 py-1 rounded text-xs font-bold bg-gray-700">計算中</div>
+            </div>
+            <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-4 rounded-xl mb-6 shadow-lg">
+                <div class="text-xs text-gray-400 mb-1"><i class="fas fa-robot mr-1"></i>石頭戰法指令</div>
+                <div id="resAdvice" class="text-lg font-bold text-white leading-relaxed">
+                    ...
+                </div>
+            </div>
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center justify-between p-3 rounded-lg bg-red-900/20 border border-red-900/50 relative overflow-hidden">
+                    <div class="flex items-center gap-3 z-10">
+                        <span class="w-8 h-8 rounded bg-red-600 text-white flex items-center justify-center font-bold text-xs shadow">AH</span>
+                        <span class="text-sm text-gray-300">突破買進</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-red-400 z-10" id="valAH">--</span>
+                    <div class="absolute right-0 top-0 bottom-0 w-1 bg-red-600"></div>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-orange-900/20 border border-orange-900/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded bg-orange-600 text-white flex items-center justify-center font-bold text-xs shadow">NH</span>
+                        <span class="text-sm text-gray-300">短線獲利</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-orange-400" id="valNH">--</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 ring-1 ring-white/20">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded bg-gray-200 text-gray-800 flex items-center justify-center font-bold text-xs shadow">CDP</span>
+                        <span class="text-sm text-white font-bold">多空樞紐</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-white" id="valCDP">--</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-green-900/20 border border-green-900/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded bg-green-600 text-white flex items-center justify-center font-bold text-xs shadow">NL</span>
+                        <span class="text-sm text-gray-300">支撐買點</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-green-400" id="valNL">--</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-emerald-900/20 border border-emerald-900/50 relative overflow-hidden">
+                    <div class="flex items-center gap-3 z-10">
+                        <span class="w-8 h-8 rounded bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow">AL</span>
+                        <span class="text-sm text-gray-300">停損殺多</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-emerald-500 z-10" id="valAL">--</span>
+                    <div class="absolute right-0 top-0 bottom-0 w-1 bg-emerald-700"></div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="app.closeResult()" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl font-bold">返回修改</button>
+                <button onclick="app.copyResult()" class="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-900/50">複製報告</button>
+            </div>
+            <div class="h-6"></div>
+        </div>
+    </div>
+    <div id="helpModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+        <div class="bg-gray-800 border border-gray-700 rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center"><i class="fas fa-book mr-2 text-accent"></i>操作定義</h3>
+            <ul class="space-y-4 text-sm text-gray-300">
+                <li class="flex gap-3">
+                    <span class="text-red-500 font-bold w-8">AH</span>
+                    <div>最強勢突破點。開盤站穩此點，多頭強烈，可追價。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-orange-400 font-bold w-8">NH</span>
+                    <div>短線壓力點。若無力突破 AH，容易在此回檔。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-white font-bold w-8">CDP</span>
+                    <div>多空分水嶺。今日操作的中線，之上偏多，之下偏空。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-green-400 font-bold w-8">NL</span>
+                    <div>回檔支撐點。多頭趨勢回測不破此點，是買點。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-emerald-500 font-bold w-8">AL</span>
+                    <div><span class="text-red-400">絕對停損點</span>。跌破此處代表趨勢反轉，無條件離場。</div>
+                </li>
+            </ul>
+            <button onclick="app.toggleHelp()" class="mt-6 w-full py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-bold transition">知道了</button>
+        </div>
+    </div>
+    <script>
+        const app = (() => {
+            const els = {
+                inpH: document.getElementById('inpH'),
+                inpL: document.getElementById('inpL'),
+                inpC: document.getElementById('inpC'),
+                inpOpen: document.getElementById('inpOpen'),
+                inpNow: document.getElementById('inpNow'),
+                inpName: document.getElementById('inpName'),
+                // Result
+                resultModal: document.getElementById('resultModal'),
+                resultContent: document.getElementById('resultContent'),
+                resName: document.getElementById('resName'),
+                resAdvice: document.getElementById('resAdvice'),
+                resTrendBadge: document.getElementById('resTrendBadge'),
+                valAH: document.getElementById('valAH'),
+                valNH: document.getElementById('valNH'),
+                valCDP: document.getElementById('valCDP'),
+                valNL: document.getElementById('valNL'),
+                valAL: document.getElementById('valAL'),
+                helpModal: document.getElementById('helpModal')
+            };
+            const format = (num) => (Math.round(num * 100) / 100).toFixed(2);
+            const calculateCDP = (h, l, c) => {
+                const cdp = (h + l + 2 * c) / 4;
+                const ah = cdp + (h - l);
+                const nh = 2 * cdp - l;
+                const nl = 2 * cdp - h;
+                const al = cdp - (h - l);
+                return { ah, nh, cdp, nl, al };
+            };
+            const analyze = () => {
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                const open = parseFloat(els.inpOpen.value);
+                const now = parseFloat(els.inpNow.value);
+                const name = els.inpName.value || '未命名個股';
+                if (isNaN(h) || isNaN(l) || isNaN(c)) {
+                    alert('請輸入完整的昨日 H/L/C 數據');
+                    return;
+                }
+                const vals = calculateCDP(h, l, c);
+                // Update Values
+                els.resName.textContent = name;
+                els.valAH.textContent = format(vals.ah);
+                els.valNH.textContent = format(vals.nh);
+                els.valCDP.textContent = format(vals.cdp);
+                els.valNL.textContent = format(vals.nl);
+                els.valAL.textContent = format(vals.al);
+                // Strategy Logic
+                let advice = "";
+                let badgeClass = "bg-gray-600";
+                let badgeText = "中性";
+                if (!isNaN(now)) {
+                    if (now > vals.ah) {
+                        advice = `股價強勢突破 AH (${format(vals.ah)})！<br><span class="text-red-400">多頭攻擊型態，持股續抱，空手者可嘗試追價但需嚴設停損。</span>`;
+                        badgeClass = "bg-red-600 text-white";
+                        badgeText = "強勢多頭";
+                    } else if (now > vals.cdp) {
+                        advice = `股價位於 CDP (${format(vals.cdp)}) 之上。<br><span class="text-orange-300">偏多操作，若回測 CDP 不破可進場，目標看 NH。</span>`;
+                        badgeClass = "bg-orange-600 text-white";
+                        badgeText = "偏多震盪";
+                    } else if (now < vals.al) {
+                        advice = `警告！股價跌破 AL (${format(vals.al)})。<br><span class="text-emerald-400">空頭確立，主力棄守，多單應無條件離場。</span>`;
+                        badgeClass = "bg-emerald-600 text-white";
+                        badgeText = "空頭殺戮";
+                    } else if (now < vals.cdp) {
+                        advice = `股價位於 CDP (${format(vals.cdp)}) 之下。<br><span class="text-gray-300">弱勢整理，反彈不過 CDP 應站在賣方，下方支撐看 NL。</span>`;
+                        badgeClass = "bg-green-600 text-white";
+                        badgeText = "偏空整理";
+                    }
+                } else {
+                    advice = `請輸入目前成交價以取得即時戰術建議。<br>關鍵點位：守穩 ${format(vals.cdp)} 為多方，跌破 ${format(vals.al)} 為停損。`;
+                }
+                els.resAdvice.innerHTML = advice;
+                els.resTrendBadge.className = `px-3 py-1 rounded text-xs font-bold ${badgeClass}`;
+                els.resTrendBadge.textContent = badgeText;
+                openModal();
+            };
+            const simulate = (type) => {
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                if (isNaN(h) || isNaN(l) || isNaN(c)) {
+                    // Default Demo Values if empty
+                    els.inpH.value = 50.5;
+                    els.inpL.value = 48;
+                    els.inpC.value = 49;
+                    els.inpOpen.value = 49.2;
+                    // Recursive call with values filled
+                    setTimeout(() => simulate(type), 50);
+                    return;
+                }
+                const vals = calculateCDP(h || 50.5, l || 48, c || 49);
+                if (type === 'high') els.inpNow.value = format(vals.ah * 1.01); // Simulate Breakout
+                if (type === 'mid') els.inpNow.value = format(vals.cdp); // Simulate Pivot
+                if (type === 'low') els.inpNow.value = format(vals.al * 0.99); // Simulate Breakdown
+                // Highlight effect
+                els.inpNow.classList.add('bg-yellow-900');
+                setTimeout(() => els.inpNow.classList.remove('bg-yellow-900'), 200);
+            };
+            const openModal = () => {
+                els.resultModal.classList.remove('hidden');
+                setTimeout(() => {
+                    els.resultContent.classList.remove('translate-y-full');
+                }, 10);
+            };
+            const closeResult = () => {
+                els.resultContent.classList.add('translate-y-full');
+                setTimeout(() => {
+                    els.resultModal.classList.add('hidden');
+                }, 300);
+            };
+            const toggleHelp = () => {
+                const m = els.helpModal;
+                m.classList.toggle('hidden');
+            };
+            const copyResult = () => {
+                const name = els.resName.textContent;
+                const advice = els.resAdvice.innerText.replace(/\n/g, ' ');
+                const text = `【${name}】石頭戰法分析\nAH: ${els.valAH.textContent}\nCDP: ${els.valCDP.textContent}\nAL: ${els.valAL.textContent}\n----------------\n建議：${advice}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('分析報告已複製！');
+                });
+            };
+            return {
+                analyze,
+                simulate,
+                closeResult,
+                toggleHelp,
+                copyResult
+            };
+        })();
+    </script>
+</body>
+</html>
