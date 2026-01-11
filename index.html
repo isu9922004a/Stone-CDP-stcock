@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>石頭獲利分析戰法 V4.3 Commander</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0b101a',
+                        cardDark: '#111621',
+                        borderDark: '#232a3b',
+                        accentRed: '#ff4d4f',
+                        accentGreen: '#2ec7c9',
+                        accentPurple: '#a78bfa',
+                        textGray: '#8b949e',
+                        textLight: '#e6edf3'
+                    },
+                    fontFamily: {
+                        mono: ['"Roboto Mono"', 'monospace'],
+                        sans: ['"Noto Sans TC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b101a;
+            color: #e6edf3;
+            font-family: 'Noto Sans TC', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Input Styles */
+        .input-dark {
+            background-color: #1c2230;
+            border: 1px solid #2d3548;
+            color: #e6edf3;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .input-dark:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            background-color: #232a3b;
+        }
+
+        .input-price-large {
+            background-color: #1c2230;
+            border: 2px solid #3b82f6;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        /* Dashboard Card */
+        .dashboard-card {
+            background-color: #111621;
+            border: 1px solid #232a3b;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Target Cards */
+        .target-card {
+            background: rgba(17, 22, 33, 0.8);
+            border: 1px solid #232a3b;
+            padding: 12px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .target-card.reached {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        .target-card.next {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Badge */
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; }
+        
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            border: 1px solid #3b82f6;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        /* --- Monochrome Mode --- */
+        body.monochrome-mode {
+            background-color: #f0f2f5 !important;
+            color: #1a1a1a !important;
+        }
+        body.monochrome-mode header,
+        body.monochrome-mode aside,
+        body.monochrome-mode main {
+            background-color: #f0f2f5 !important;
+            border-color: #d1d5db !important;
+        }
+        body.monochrome-mode .dashboard-card {
+            background-color: #ffffff !important;
+            border: 1px solid #d1d5db !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+        }
+        body.monochrome-mode .input-dark {
+            background-color: #ffffff !important;
+            border: 1px solid #9ca3af !important;
+            color: #000000 !important;
+        }
+        body.monochrome-mode .input-price-large {
+            border: 2px solid #000000 !important;
+            color: #000000 !important;
+        }
+        body.monochrome-mode .text-gray-400, body.monochrome-mode .text-gray-500, body.monochrome-mode .text-gray-600, body.monochrome-mode .text-textGray {
+            color: #4b5563 !important;
+        }
+        body.monochrome-mode .text-white, body.monochrome-mode .text-textLight {
+            color: #000000 !important;
+        }
+        body.monochrome-mode .text-neon-red, body.monochrome-mode .text-accentRed, body.monochrome-mode .text-red-400, body.monochrome-mode .text-red-500 {
+            color: #000000 !important; text-shadow: none !important; font-weight: 900 !important; text-decoration: underline;
+        }
+        body.monochrome-mode .text-neon-green, body.monochrome-mode .text-accentGreen, body.monochrome-mode .text-teal-400, body.monochrome-mode .text-teal-500, body.monochrome-mode .text-green-400 {
+            color: #4b5563 !important; text-shadow: none !important; font-style: italic;
+        }
+        body.monochrome-mode .target-card {
+            background-color: #fff !important; border: 1px dashed #9ca3af !important;
+        }
+        body.monochrome-mode .target-card.reached {
+            background-color: #e5e7eb !important; border: 2px solid #000 !important;
+        }
+        body.monochrome-mode table tbody tr:hover { background-color: #f3f4f6 !important; }
+        body.monochrome-mode thead { background-color: #e5e7eb !important; color: #000 !important; }
+        body.monochrome-mode .modal-content { background: #ffffff !important; color: #000 !important; border: 2px solid #000; }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); z-index: 100;
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-backdrop.open { display: flex; opacity: 1; }
+        .modal-content {
+            background: #1e293b; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto;
+            border-radius: 12px; padding: 24px; color: #e6edf3;
+            transform: translateY(20px); transition: transform 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .modal-backdrop.open .modal-content { transform: translateY(0); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b101a; }
+        ::-webkit-scrollbar-thumb { background: #2d3548; border-radius: 3px; }
+        body.monochrome-mode ::-webkit-scrollbar-track { background: #e5e7eb; }
+        body.monochrome-mode ::-webkit-scrollbar-thumb { background: #9ca3af; }
+    </style>
+</head>
+<body class="flex flex-col">
+
+    <header class="h-14 border-b border-borderDark flex items-center justify-between px-6 shrink-0 bg-[#0b101a]">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-chess-king text-purple-500 text-xl"></i>
+            <div>
+                <h1 class="text-lg font-bold tracking-wide text-white">石頭戰法戰情室 <span class="text-xs font-normal text-textGray ml-2">V4.3 Commander</span></h1>
+            </div>
+        </div>
+        
+        <div class="text-right flex items-center gap-3">
+             <button onclick="app.toggleHelp()" class="text-xs bg-blue-900/30 hover:bg-blue-800 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded transition flex items-center gap-2">
+                <i class="fas fa-book-open"></i> 說明書
+             </button>
+
+             <button onclick="app.toggleTheme()" class="text-xs bg-gray-700/50 hover:bg-gray-600 text-gray-200 border border-gray-500/30 px-3 py-1.5 rounded transition flex items-center gap-2" title="切換黑白/彩色模式">
+                <i class="fas fa-adjust"></i> 黑白
+             </button>
+
+             <button onclick="app.copyReport()" class="text-xs bg-purple-900/30 hover:bg-purple-800 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded transition flex items-center gap-2">
+                <i class="fas fa-copy"></i> 複製戰報
+             </button>
+
+             <div class="w-px h-4 bg-gray-700 mx-1"></div>
+
+             <button onclick="app.clearAll()" class="text-xs text-gray-500 hover:text-red-400 transition flex items-center gap-1">
+                <i class="fas fa-trash-alt"></i> 重置
+             </button>
+             
+             <div class="pl-4 border-l border-gray-800 ml-2">
+                <div class="text-[10px] text-textGray">目前標的</div>
+                <div class="text-lg font-bold font-mono leading-none" id="headerTicker">--</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 grid grid-cols-12 gap-0 overflow-hidden">
+        
+        <aside class="col-span-12 lg:col-span-3 bg-[#0f131a] border-r border-borderDark flex flex-col overflow-y-auto p-4 gap-4 z-10">
+            
+            <div class="dashboard-card p-4">
+                <h3 class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider"><i class="fas fa-sliders-h mr-2"></i>市場參數</h3>
+                
+                <div class="mb-3">
+                    <label class="text-[10px] text-textGray block mb-1">股票代號</label>
+                    <input type="text" id="inpName" placeholder="例如：台積電 2330" class="input-dark w-full p-2 text-sm font-bold" oninput="app.updateHeader()">
+                </div>
+
+                <div class="mb-3 p-3 bg-black/20 rounded border border-white/5">
+                    <label class="text-[10px] text-textGray block mb-2 font-bold">昨日 K 棒 (CDP 基準)</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <span class="text-[10px] text-textGray block text-center">高 H</span>
+                            <input type="number" id="inpH" placeholder="-" class="input-dark w-full p-1 text-sm text-accentRed" step="0.1">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-textGray block text-center">低 L</span>
+                            <input type="number" id="inpL" placeholder="-" class="input-dark w-full p-1 text-sm text-accentGreen" step="0.1">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-textGray block text-center">收 C</span>
+                            <input type="number" id="inpC" placeholder="-" class="input-dark w-full p-1 text-sm" step="0.1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 p-3 bg-blue-900/10 rounded border border-blue-500/20">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[10px] text-blue-300 font-bold block"><i class="fas fa-dot-circle mr-1"></i>SAR 拋物線</label>
+                        <span class="text-[9px] text-blue-400/60">查閱券商</span>
+                    </div>
+                    <input type="number" id="inpSAR" placeholder="輸入 SAR 值" class="input-dark w-full p-2 font-mono text-blue-300 border-blue-500/30 focus:border-blue-400" step="0.1">
+                </div>
+
+                <div class="mb-3 p-3 bg-purple-900/10 rounded border border-purple-500/20">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[10px] text-purple-300 font-bold block"><i class="fas fa-coins mr-1"></i>主力成本</label>
+                        <span class="text-[9px] text-purple-400/60">均價/大量低點</span>
+                    </div>
+                    <input type="number" id="inpMainCost" placeholder="輸入主力成本價" class="input-dark w-full p-2 font-mono text-purple-300 border-purple-500/30 focus:border-purple-400" step="0.1">
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-[10px] text-textGray block mb-1">今日開盤 (Open)</label>
+                    <input type="number" id="inpOpen" placeholder="-" class="input-dark w-full p-2 font-bold text-white" step="0.1">
+                </div>
+
+                <div class="mb-4">
+                    <label class="text-[10px] text-textGray block mb-1">當前成交價 (Price)</label>
+                    <input type="number" id="inpNow" placeholder="輸入現價..." class="input-dark input-price-large w-full p-3" step="0.1" onkeyup="app.analyze()">
+                </div>
+
+                <button onclick="app.analyze()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-lg shadow-lg transition text-sm mb-3 tracking-wide">
+                    <i class="fas fa-calculator mr-2"></i>立即分析
+                </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="app.simulate('bull')" class="py-2 bg-gray-800 hover:bg-red-900/40 border border-gray-700 hover:border-red-800 text-gray-400 hover:text-red-400 text-xs rounded transition">模擬大漲</button>
+                <button onclick="app.simulate('bear')" class="py-2 bg-gray-800 hover:bg-teal-900/40 border border-gray-700 hover:border-teal-800 text-gray-400 hover:text-teal-400 text-xs rounded transition">模擬大跌</button>
+                <button onclick="app.simulate('range')" class="py-2 bg-gray-800 hover:bg-yellow-900/40 border border-gray-700 hover:border-yellow-800 text-gray-400 hover:text-yellow-400 text-xs rounded transition">模擬盤整</button>
+            </div>
+        </aside>
+
+        <main class="col-span-12 lg:col-span-9 bg-[#0b101a] flex flex-col h-full overflow-hidden p-6 gap-5 relative">
+            
+            <div class="h-[20%] shrink-0 flex gap-4">
+                <div class="dashboard-card p-4 relative overflow-hidden flex flex-row items-center justify-between w-full group">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition">
+                        <i class="fas fa-dot-circle text-8xl text-white"></i>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center w-1/3 border-r border-gray-800 pr-4">
+                        <div class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1">SAR 趨勢雷達</div>
+                        <div class="text-3xl font-black text-gray-600 leading-none" id="sarStatusText">--</div>
+                    </div>
+
+                    <div class="flex flex-col justify-center w-2/3 pl-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-textGray">基準 SAR 值: <span class="font-mono text-white font-bold" id="sarValDisp">--</span></span>
+                        </div>
+                        <div class="text-xs text-gray-400 leading-relaxed" id="sarAdvice">
+                             輸入數據以啟動分析。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shrink-0">
+                <div class="flex justify-between items-end mb-2 px-1">
+                    <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider"><i class="fas fa-crosshairs mr-1"></i>主力目標價矩陣</h4>
+                    <span class="text-[10px] text-gray-600">Smart Target System</span>
+                </div>
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="target-card" id="cardT1">
+                        <div class="text-[10px] text-gray-400 mb-1">短線獲利</div>
+                        <div class="font-mono text-lg font-bold text-blue-400" id="valT1">--</div>
+                        <div class="text-[9px] text-gray-500 mt-1">基本達陣區</div>
+                        <div class="status-badge absolute top-2 right-2"></div>
+                    </div>
+                    <div class="target-card" id="cardT2">
+                        <div class="text-[10px] text-gray-400 mb-1">出貨上緣</div>
+                        <div class="font-mono text-lg font-bold text-teal-400" id="valT2">--</div>
+                        <div class="text-[9px] text-gray-500 mt-1">短線壓力大</div>
+                        <div class="status-badge absolute top-2 right-2"></div>
+                    </div>
+                    <div class="target-card" id="cardT3">
+                        <div class="text-[10px] text-gray-400 mb-1">波段延伸</div>
+                        <div class="font-mono text-lg font-bold text-orange-400" id="valT3">--</div>
+                        <div class="text-[9px] text-gray-500 mt-1">中階獲利區</div>
+                        <div class="status-badge absolute top-2 right-2"></div>
+                    </div>
+                    <div class="target-card" id="cardT4">
+                        <div class="text-[10px] text-gray-400 mb-1">誘多末端</div>
+                        <div class="font-mono text-lg font-bold text-red-400" id="valT4">--</div>
+                        <div class="text-[9px] text-gray-500 mt-1">高風險收割</div>
+                        <div class="status-badge absolute top-2 right-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 h-[15%]">
+                <div class="dashboard-card p-4 border-l-4 border-blue-600 flex flex-col justify-center">
+                    <div class="text-[10px] text-blue-400 font-bold mb-1 uppercase">防守重點 (Support)</div>
+                    <div class="text-xl font-bold text-white tracking-wide" id="adviceDef">等待數據...</div>
+                </div>
+                <div class="dashboard-card p-4 border-l-4 border-purple-600 flex flex-col justify-center">
+                    <div class="text-[10px] text-purple-400 font-bold mb-1 uppercase">進攻/壓力 (Resistance)</div>
+                    <div class="text-xl font-bold text-white tracking-wide" id="adviceAtt">等待數據...</div>
+                </div>
+            </div>
+
+            <div class="dashboard-card flex-1 overflow-hidden flex flex-col">
+                <div class="p-3 bg-[#161b26] border-b border-borderDark flex justify-between items-center shrink-0">
+                    <h4 class="text-xs font-bold text-textLight"><i class="fas fa-list-ul mr-2 text-gray-500"></i>CDP 關鍵階梯</h4>
+                </div>
+                <div class="overflow-y-auto flex-1">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-[#0f131a] text-[10px] text-textGray font-mono uppercase tracking-wider sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="p-3">Level</th>
+                                <th class="p-3">Price</th>
+                                <th class="p-3">Desc</th>
+                                <th class="p-3 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm font-mono text-textLight divide-y divide-borderDark" id="cdpTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="helpModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h3 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-book"></i> 石頭戰法操作手冊</h3>
+                <button onclick="app.toggleHelp()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div class="space-y-6 text-sm">
+                <div>
+                    <h4 class="text-blue-400 font-bold mb-2 text-base">一、CDP 逆勢操作戰法</h4>
+                    <ul class="space-y-2 pl-2">
+                        <li><span class="text-red-400 font-bold">AH</span>：強力突破點。開盤站穩視為超強勢多頭。</li>
+                        <li><span class="text-orange-400 font-bold">NH</span>：短線壓力點。若無力突破 AH，容易在此回檔。</li>
+                        <li><span class="text-white font-bold">CDP</span>：多空分水嶺。之上偏多，之下偏空。</li>
+                        <li><span class="text-green-400 font-bold">NL</span>：支撐買進點。回檔不破可接多。</li>
+                        <li><span class="text-teal-400 font-bold">AL</span>：停損殺多點。跌破趨勢轉空，無條件離場。</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-purple-400 font-bold mb-2 text-base">二、SAR 拋物線趨勢</h4>
+                    <ul class="space-y-2 pl-2 border-l-2 border-purple-500/50">
+                        <li>🔴 <b class="text-white">多頭</b>：現價 > SAR。持股續抱，拉回買進。</li>
+                        <li>🟢 <b class="text-white">空頭</b>：現價 < SAR。反彈找空，嚴設停損。</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-blue-400 font-bold mb-2 text-base">三、主力目標價公式</h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-black/20 p-2 rounded border border-gray-700"><span class="block font-bold text-blue-300">短線獲利</span></div>
+                        <div class="bg-black/20 p-2 rounded border border-gray-700"><span class="block font-bold text-orange-300">波段延伸</span></div>
+                        <div class="bg-black/20 p-2 rounded border border-gray-700 col-span-2"><span class="block font-bold text-red-300">誘多末端 (高風險)</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="app.toggleHelp()" class="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">我瞭解了</button>
+        </div>
+    </div>
+
+    <div id="toast"><i class="fas fa-check-circle text-green-400 mr-2"></i>戰報已複製</div>
+
+    <script>
+        const app = (() => {
+            let currentSimMode = null; // Track current simulation mode
+
+            const els = {
+                inpName: document.getElementById('inpName'),
+                inpH: document.getElementById('inpH'),
+                inpL: document.getElementById('inpL'),
+                inpC: document.getElementById('inpC'),
+                inpOpen: document.getElementById('inpOpen'),
+                inpNow: document.getElementById('inpNow'),
+                inpSAR: document.getElementById('inpSAR'),
+                inpMainCost: document.getElementById('inpMainCost'),
+                headerTicker: document.getElementById('headerTicker'),
+                sarStatusText: document.getElementById('sarStatusText'),
+                sarValDisp: document.getElementById('sarValDisp'),
+                sarAdvice: document.getElementById('sarAdvice'),
+                cardT1: document.getElementById('cardT1'), valT1: document.getElementById('valT1'),
+                cardT2: document.getElementById('cardT2'), valT2: document.getElementById('valT2'),
+                cardT3: document.getElementById('cardT3'), valT3: document.getElementById('valT3'),
+                cardT4: document.getElementById('cardT4'), valT4: document.getElementById('valT4'),
+                adviceDef: document.getElementById('adviceDef'),
+                adviceAtt: document.getElementById('adviceAtt'),
+                cdpTableBody: document.getElementById('cdpTableBody'),
+                toast: document.getElementById('toast'),
+                helpModal: document.getElementById('helpModal')
+            };
+
+            const format = num => (Math.round(num * 100) / 100).toFixed(2);
+            
+            const updateHeader = () => {
+                els.headerTicker.textContent = els.inpName.value || '--';
+            };
+
+            const toggleHelp = () => {
+                els.helpModal.classList.toggle('open');
+            };
+
+            const toggleTheme = () => {
+                document.body.classList.toggle('monochrome-mode');
+            };
+
+            const calculateCDP = (h, l, c) => {
+                const cdp = (h + l + 2 * c) / 4;
+                const ah = cdp + (h - l);
+                const nh = 2 * cdp - l;
+                const nl = 2 * cdp - h;
+                const al = cdp - (h - l);
+                return { ah, nh, cdp, nl, al };
+            };
+
+            const calculateTargets = (cost) => {
+                return {
+                    t1: cost * 1.045,
+                    t2: cost * 1.09,
+                    t3: cost * 1.2,
+                    t4: cost * 1.3
+                };
+            };
+
+            const analyze = (isSim = false) => {
+                // If this wasn't triggered by simulation, reset the mode to null (Manual)
+                if (!isSim) {
+                    currentSimMode = null;
+                }
+
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                const now = parseFloat(els.inpNow.value);
+                const sar = parseFloat(els.inpSAR.value);
+                const cost = parseFloat(els.inpMainCost.value);
+
+                if (isNaN(h) || isNaN(l) || isNaN(c)) return;
+
+                const v = calculateCDP(h, l, c);
+
+                // SAR Analysis
+                if (!isNaN(now) && !isNaN(sar)) {
+                    els.sarValDisp.textContent = sar;
+                    if (now > sar) {
+                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-up mr-2 text-red-500"></i>多頭`;
+                        els.sarStatusText.className = "text-4xl font-black text-neon-red tracking-wide leading-none";
+                        els.sarAdvice.innerHTML = `訊號：<span class="text-red-400 font-bold">Long</span> | 策略：持股續抱 / 拉回找買點`;
+                    } else {
+                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-down mr-2 text-teal-500"></i>空頭`;
+                        els.sarStatusText.className = "text-4xl font-black text-neon-green tracking-wide leading-none";
+                        els.sarAdvice.innerHTML = `訊號：<span class="text-teal-400 font-bold">Short</span> | 策略：反彈找空點 / 嚴設停損`;
+                    }
+                } else {
+                    resetCards();
+                }
+
+                // Targets
+                if (!isNaN(cost)) {
+                    const t = calculateTargets(cost);
+                    const updateCard = (card, valEl, targetVal, nowPrice) => {
+                        valEl.textContent = format(targetVal);
+                        card.classList.remove('reached', 'next', 'opacity-50');
+                        card.querySelector('.status-badge').innerHTML = '';
+                        if (!isNaN(nowPrice) && nowPrice >= targetVal) {
+                            card.classList.add('reached');
+                            card.querySelector('.status-badge').innerHTML = '<i class="fas fa-check-circle text-green-400"></i>';
+                        }
+                    };
+                    updateCard(els.cardT1, els.valT1, t.t1, now);
+                    updateCard(els.cardT2, els.valT2, t.t2, now);
+                    updateCard(els.cardT3, els.valT3, t.t3, now);
+                    updateCard(els.cardT4, els.valT4, t.t4, now);
+                    
+                    if (!isNaN(now)) {
+                        if (now < t.t1) els.cardT1.classList.add('next');
+                        else if (now < t.t2) els.cardT2.classList.add('next');
+                        else if (now < t.t3) els.cardT3.classList.add('next');
+                        else if (now < t.t4) els.cardT4.classList.add('next');
+                    }
+                } else {
+                    [els.valT1, els.valT2, els.valT3, els.valT4].forEach(el => el.textContent = '--');
+                    [els.cardT1, els.cardT2, els.cardT3, els.cardT4].forEach(c => {
+                        c.classList.remove('reached', 'next'); c.classList.add('opacity-50');
+                        c.querySelector('.status-badge').innerHTML = '';
+                    });
+                }
+
+                // CDP Table & Advice
+                renderTable(v, now);
+                if (!isNaN(now)) {
+                    if (now > v.cdp) {
+                        els.adviceDef.textContent = `防守 CDP (${format(v.cdp)})`;
+                        els.adviceAtt.textContent = `挑戰 NH (${format(v.nh)})`;
+                    } else {
+                        els.adviceDef.textContent = `防守 NL (${format(v.nl)})`;
+                        els.adviceAtt.textContent = `壓力 CDP (${format(v.cdp)})`;
+                    }
+                }
+            };
+
+            const resetCards = () => {
+                els.sarStatusText.textContent = "等待輸入";
+                els.sarStatusText.className = "text-4xl font-black text-gray-600 leading-none";
+                els.sarValDisp.textContent = "--";
+                els.sarAdvice.textContent = "請在左側輸入數據以啟動分析。";
+            };
+
+            const renderTable = (v, now) => {
+                const rows = [
+                    { name: "AH", val: v.ah, desc: "追買點 / 頂部壓力", color: "text-red-400" },
+                    { name: "NH", val: v.nh, desc: "賣出點 / 短線壓力", color: "text-orange-400" },
+                    { name: "CDP", val: v.cdp, desc: "多空分界核心線", color: "text-white font-bold" },
+                    { name: "NL", val: v.nl, desc: "買進點 / 短線支撐", color: "text-green-400" },
+                    { name: "AL", val: v.al, desc: "停損點 / 底部支撐", color: "text-teal-400" }
+                ];
+                els.cdpTableBody.innerHTML = rows.map(r => {
+                    let status = "";
+                    if (!isNaN(now)) {
+                        const diff = Math.abs(now - r.val);
+                        const range = r.val * 0.003; 
+                        if (diff <= range) status = `<span class="badge bg-blue-500/20 text-blue-400 border border-blue-500/50">ACTIVE</span>`;
+                        else if ((r.name === 'AH' && now > r.val) || (r.name === 'AL' && now < r.val)) status = `<span class="text-[10px] text-gray-500">PASSED</span>`;
+                    }
+                    return `
+                        <tr class="hover:bg-[#1c2230] transition border-b border-borderDark/50">
+                            <td class="p-3 font-bold ${r.color}">${r.name}</td>
+                            <td class="p-3 font-mono text-white text-lg">${format(r.val)}</td>
+                            <td class="p-3 text-xs text-gray-400">${r.desc}</td>
+                            <td class="p-3 text-right">${status}</td>
+                        </tr>
+                    `;
+                }).join('');
+            };
+
+            const simulate = (type) => {
+                // Set current simulation mode
+                currentSimMode = type;
+
+                if(!els.inpH.value) {
+                    els.inpH.value = 100; els.inpL.value = 95; els.inpC.value = 98;
+                    els.inpSAR.value = 96; els.inpMainCost.value = 90;
+                }
+                const v = calculateCDP(parseFloat(els.inpH.value), parseFloat(els.inpL.value), parseFloat(els.inpC.value));
+                
+                if (type === 'bull') { els.inpNow.value = format(v.ah * 1.01); els.inpSAR.value = format(v.cdp); } 
+                else if (type === 'bear') { els.inpNow.value = format(v.al * 0.99); els.inpSAR.value = format(v.cdp); } 
+                else { els.inpNow.value = format(v.cdp); els.inpSAR.value = format(v.nh); }
+                
+                // Call analyze with true flag
+                analyze(true);
+            };
+
+            const copyReport = () => {
+                const name = els.inpName.value || "未命名標的";
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                const now = parseFloat(els.inpNow.value);
+                const sar = parseFloat(els.inpSAR.value);
+                const cost = parseFloat(els.inpMainCost.value);
+                
+                if (isNaN(h) || isNaN(l) || isNaN(c)) {
+                    showToast('請先輸入數據以生成報告');
+                    return;
+                }
+
+                const v = calculateCDP(h, l, c);
+                let sarTrend = "無數據";
+                if (!isNaN(now) && !isNaN(sar)) {
+                    sarTrend = (now > sar) ? "🔴 多頭 (現價 > SAR)" : "🟢 空頭 (現價 < SAR)";
+                }
+
+                let targetReport = "";
+                if (!isNaN(cost)) {
+                    const t = calculateTargets(cost);
+                    targetReport = `
+-------------------------
+【主力目標價 (Cost: ${cost})】
+🔹 短線獲利：${format(t.t1)}
+🔹 出貨上緣：${format(t.t2)}
+🔸 波段延伸：${format(t.t3)}
+🔥 誘多末端：${format(t.t4)}`;
+                }
+
+                const dateStr = new Date().toLocaleString('zh-TW', { hour12: false });
+
+                // Dynamic Title Logic
+                let reportTitle = "";
+                if (currentSimMode === 'bull') {
+                    reportTitle = `這是代號${name}的模擬大漲分析報告 🚀`;
+                } else if (currentSimMode === 'bear') {
+                    reportTitle = `這是代號${name}的模擬大跌分析報告 📉`;
+                } else if (currentSimMode === 'range') {
+                    reportTitle = `這是代號${name}的模擬盤整分析報告 ➖`;
+                } else {
+                    reportTitle = `${name} 盤中趨勢分析 📈`;
+                }
+
+                const report = `
+📊 【石頭戰法戰情室】
+${reportTitle}
+📅 時間：${dateStr}
+-------------------------
+【市場數據】
+🔹 昨 H/L/C：${h} / ${l} / ${c}
+🔹 當前現價：${isNaN(now) ? '--' : now}
+🔹 SAR 數值：${isNaN(sar) ? '--' : sar}
+🌊 SAR 趨勢：${sarTrend}
+-------------------------
+【CDP 關鍵點位】
+🚀 AH (突破)：${format(v.ah)}
+🛑 NH (壓力)：${format(v.nh)}
+⚖️ CDP(中樞)：${format(v.cdp)}
+🛡️ NL (支撐)：${format(v.nl)}
+☠️ AL (停損)：${format(v.al)}${targetReport}
+-------------------------
+【操作建議】
+${els.adviceDef.innerText}
+${els.adviceAtt.innerText}
+-------------------------
+(由 石頭戰法 V4.3 Commander 生成)
+`;
+                navigator.clipboard.writeText(report).then(() => {
+                    showToast();
+                });
+            };
+
+            const showToast = (msg) => {
+                const t = els.toast;
+                if(msg) { t.textContent = msg; t.innerHTML = msg; }
+                else t.innerHTML = '<i class="fas fa-check-circle text-green-400 mr-2"></i>戰報已複製';
+                t.className = "show";
+                setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+            };
+
+            const clearAll = () => {
+                document.querySelectorAll('input').forEach(i => i.value = '');
+                resetCards();
+                els.adviceDef.textContent = "等待數據...";
+                els.adviceAtt.textContent = "等待數據...";
+                els.cdpTableBody.innerHTML = '';
+                [els.cardT1, els.cardT2, els.cardT3, els.cardT4].forEach(c => {
+                    c.classList.remove('reached', 'next'); c.classList.add('opacity-50');
+                    c.querySelector('.status-badge').innerHTML = '';
+                });
+                [els.valT1, els.valT2, els.valT3, els.valT4].forEach(el => el.textContent = '--');
+                currentSimMode = null; // Reset mode
+                updateHeader();
+            };
+
+            return { analyze, simulate, updateHeader, clearAll, copyReport, toggleHelp, toggleTheme };
+        })();
+    </script>
+</body>
+</html>
