@@ -3,625 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>石頭CDP多空進場神器</title>
+    <title>石頭獲利分析戰法</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/....../6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script>
-        // 設定 Tailwind 台股配色習慣 (紅漲綠跌)
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        bull: '#dc2626', // 紅 (多)
-                        bear: '#16a34a', // 綠 (空)
-                        neutral: '#64748b'
+                        dark: '#0f172a', // 深藍黑背景
+                        card: '#1e293b', // 卡片背景
+                        accent: '#dc2626', // 石頭紅
+                        input: '#334155', // 輸入框底色
+                        gold: '#eab308', // 重點黃框
                     }
                 }
             }
         }
     </script>
     <style>
-        :root {
-            --header-height: 60px;
-            --bull-bg: #fef2f2;
-            --bull-text: #dc2626;
-            --bear-bg: #f0fdf4;
-            --bear-text: #16a34a;
-        }
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f1f5f9;
+            background-color: #0f172a; /* 深色背景 */
+            color: white;
             overscroll-behavior-y: none;
             -webkit-tap-highlight-color: transparent;
         }
-        .layout-grid {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            height: 100dvh;
-        }
-        /* HUD & Controls */
-        .status-bar {
-            background: white;
-            z-index: 40;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 1rem;
-            height: var(--header-height);
-            flex-shrink: 0;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        .app-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #1e293b;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        /* Table Area */
-        .table-wrapper {
-            flex: 1;
-            overflow: auto;
-            position: relative;
-            background: #fff;
-        }
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-        }
-        th, td {
-            padding: 10px 6px;
-            text-align: center;
-            white-space: nowrap;
-            border-bottom: 1px solid #e2e8f0;
-            vertical-align: middle;
-            font-size: 0.95rem;
-        }
-        /* 凍結首列 (股票名稱) */
-        .sticky-col {
-            position: sticky;
-            left: 0;
-            z-index: 20;
-            background-color: white;
-            border-right: 2px solid #e2e8f0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
-            min-width: 85px;
-            max-width: 100px;
-        }
-        thead th {
-            position: sticky;
-            top: 0;
-            background-color: #f8fafc;
-            z-index: 10;
-            font-size: 0.75rem;
-            color: #64748b;
-            font-weight: 700;
-            padding: 12px 4px;
-            border-bottom: 2px solid #cbd5e1;
-        }
-        thead th.sticky-col {
-            z-index: 30;
-            background-color: #f8fafc;
-        }
-        /* 數值顯示 */
-        .price-val {
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        /* CDP 標籤 */
-        .cdp-tag {
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-bottom: 2px;
-            display: inline-block;
-        }
-        /* 底部按鈕區 */
-        .footer-actions {
-            background: white;
-            border-top: 1px solid #e2e8f0;
-            padding: 0.75rem 1rem;
-            display: flex;
-            gap: 1rem;
-            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
-            z-index: 40;
-            flex-shrink: 0;
-            padding-bottom: env(safe-area-inset-bottom, 20px);
-        }
-        .btn-main {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        /* 輸入框樣式優化 */
+        input[type="number"], input[type="text"] {
+            background-color: #1e293b;
+            border: 1px solid #475569;
             color: white;
-            border-radius: 0.75rem;
-            padding: 0.75rem;
-            width: 100%;
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-main:active { transform: scale(0.98); }
-        .btn-ocr {
-            background: #f1f5f9;
-            color: #475569;
-            border: 1px solid #cbd5e1;
-        }
-        /* Modal 動畫 */
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
-        .modal-exit { opacity: 1; transform: scale(1); }
-        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 0.15s ease-in; }
-        /* 輸入框優化 */
-        .input-group label {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #64748b;
-            margin-bottom: 4px;
-            display: block;
-        }
-        .input-group input, .input-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
             font-family: 'Roboto Mono', monospace;
-            font-size: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        input:focus {
             outline: none;
-            transition: border-color 0.2s;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
-        .input-group input:focus, .input-group textarea:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        /* 大黃框特效 */
+        .input-highlight {
+            border: 2px solid #eab308 !important; /* 黃色邊框 */
+            background-color: #283044 !important;
+            font-size: 1.8rem;
+            font-weight: bold;
         }
+        /* 按鈕特效 */
+        .btn-action {
+            background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 4px 6px rgba(220, 38, 38, 0.4);
+            transition: transform 0.1s;
+        }
+        .btn-action:active { transform: scale(0.98); }
+        /* 模擬按鈕群 */
+        .sim-btn {
+            font-size: 0.8rem;
+            padding: 8px 4px;
+            border-radius: 6px;
+            background: #334155;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .sim-btn:active { background: #475569; }
+        .sim-up { border-bottom: 2px solid #ef4444; color: #fca5a5; }
+        .sim-mid { border-bottom: 2px solid #fbbf24; color: #fde68a; }
+        .sim-down { border-bottom: 2px solid #22c55e; color: #86efac; }
+        /* Modal 動畫 */
+        #resultModal { transition: opacity 0.2s; }
+        #resultContent { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
     </style>
 </head>
-<body class="text-gray-800">
-    <div class="layout-grid">
-        <div class="status-bar">
-            <div class="app-title">
-                <i class="fas fa-gem text-blue-600"></i>
-                石頭CDP進場神器
+<body class="min-h-screen flex justify-center bg-dark">
+    <div class="w-full max-w-md p-5 flex flex-col gap-5">
+        <div class="flex justify-between items-start mt-2">
+            <div class="flex items-center gap-3">
+                <div class="w-1.5 h-10 bg-accent rounded-full"></div> <div>
+                    <h1 class="text-2xl font-black tracking-wide text-white">石頭獲利分析戰法</h1>
+                    <p class="text-xs text-gray-400">極速操作 CDP 進場神器</p>
+                </div>
+            </div>
+            <button onclick="app.toggleHelp()" class="bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition">
+                <i class="fas fa-book-open"></i> 說明書
+            </button>
+        </div>
+        <div>
+            <label class="text-accent font-bold text-sm mb-2 block">股票代號 / 名稱 (必填)</label>
+            <input type="text" id="inpName" placeholder="例如：台積電 2330" class="w-full p-3 text-lg font-bold">
+        </div>
+        <div class="bg-card p-4 rounded-xl border border-gray-700/50">
+            <h3 class="text-gray-400 text-sm mb-3 font-medium">1. 設定昨日基準 (K棒數據)</h3>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="text-xs text-gray-500 block text-center mb-1">昨日最高 (H)</label>
+                    <input type="number" id="inpH" placeholder="50.5" class="w-full p-2 h-12" step="0.01">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 block text-center mb-1">昨日最低 (L)</label>
+                    <input type="number" id="inpL" placeholder="48" class="w-full p-2 h-12" step="0.01">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 block text-center mb-1">昨日收盤 (C)</label>
+                    <input type="number" id="inpC" placeholder="49" class="w-full p-2 h-12" step="0.01">
+                </div>
+            </div>
+        </div>
+        <div>
+            <label class="text-blue-400 font-bold text-sm mb-2 block">2. 設定今日開盤 (OPEN) <span class="text-[10px] text-gray-500 font-normal">*判斷實體K棒用</span></label>
+            <input type="number" id="inpOpen" placeholder="49.2" class="w-full p-3 text-xl font-bold text-blue-300 border-blue-900/50 bg-blue-900/10" step="0.01">
+        </div>
+        <div>
+            <label class="text-gray-300 font-bold text-sm mb-2 block">3. 輸入目前成交價</label>
+            <div class="relative">
+                <input type="number" id="inpNow" placeholder="輸入現價..." class="w-full p-6 input-highlight text-white placeholder-gray-600" step="0.01">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-bold">TWD</span>
+            </div>
+        </div>
+        <button onclick="app.analyze()" class="btn-action w-full py-4 rounded-xl text-white text-lg font-bold tracking-wider shadow-lg mt-2">
+            立即分析情勢
+        </button>
+        <p class="text-center text-gray-600 text-xs">輸入數字後按 Enter 或點擊按鈕</p>
+        <div class="border-t border-gray-800 my-1"></div>
+        <div>
+            <label class="text-gray-500 text-xs mb-3 block">快速模擬 (點擊測試)</label>
+            <div class="grid grid-cols-3 gap-3">
+                <button onclick="app.simulate('high')" class="sim-btn sim-up bg-red-900/20 hover:bg-red-900/40">
+                    <i class="fas fa-arrow-up mr-1"></i> 突破大漲
+                </button>
+                <button onclick="app.simulate('mid')" class="sim-btn sim-mid bg-yellow-900/20 hover:bg-yellow-900/40">
+                    <i class="fas fa-minus mr-1"></i> 盤整測試
+                </button>
+                <button onclick="app.simulate('low')" class="sim-btn sim-down bg-green-900/20 hover:bg-green-900/40">
+                    <i class="fas fa-arrow-down mr-1"></i> 跌破大跌
+                </button>
+            </div>
+        </div>
+        <div class="mt-auto pt-6 pb-2 text-center text-[10px] text-gray-700">
+            Powered by Stone Strategy v3.0
+        </div>
+    </div>
+    <div id="resultModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="app.closeResult()"></div>
+        <div id="resultContent" class="absolute bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl p-6 transform translate-y-full transition-transform border-t border-gray-700 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto mb-6"></div>
+            <div class="flex justify-between items-end mb-4">
+                <h2 class="text-2xl font-bold text-white" id="resName">台積電 (2330)</h2>
+                <div id="resTrendBadge" class="px-3 py-1 rounded text-xs font-bold bg-gray-700">計算中</div>
+            </div>
+            <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-4 rounded-xl mb-6 shadow-lg">
+                <div class="text-xs text-gray-400 mb-1"><i class="fas fa-robot mr-1"></i>石頭戰法指令</div>
+                <div id="resAdvice" class="text-lg font-bold text-white leading-relaxed">
+                    ...
+                </div>
+            </div>
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center justify-between p-3 rounded-lg bg-red-900/20 border border-red-900/50 relative overflow-hidden">
+                    <div class="flex items-center gap-3 z-10">
+                        <span class="w-8 h-8 rounded bg-red-600 text-white flex items-center justify-center font-bold text-xs shadow">AH</span>
+                        <span class="text-sm text-gray-300">突破買進</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-red-400 z-10" id="valAH">--</span>
+                    <div class="absolute right-0 top-0 bottom-0 w-1 bg-red-600"></div>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-orange-900/20 border border-orange-900/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded bg-orange-600 text-white flex items-center justify-center font-bold text-xs shadow">NH</span>
+                        <span class="text-sm text-gray-300">短線獲利</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-orange-400" id="valNH">--</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 ring-1 ring-white/20">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded bg-gray-200 text-gray-800 flex items-center justify-center font-bold text-xs shadow">CDP</span>
+                        <span class="text-sm text-white font-bold">多空樞紐</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-white" id="valCDP">--</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-green-900/20 border border-green-900/50">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded bg-green-600 text-white flex items-center justify-center font-bold text-xs shadow">NL</span>
+                        <span class="text-sm text-gray-300">支撐買點</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-green-400" id="valNL">--</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-emerald-900/20 border border-emerald-900/50 relative overflow-hidden">
+                    <div class="flex items-center gap-3 z-10">
+                        <span class="w-8 h-8 rounded bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow">AL</span>
+                        <span class="text-sm text-gray-300">停損殺多</span>
+                    </div>
+                    <span class="font-mono text-xl font-bold text-emerald-500 z-10" id="valAL">--</span>
+                    <div class="absolute right-0 top-0 bottom-0 w-1 bg-emerald-700"></div>
+                </div>
             </div>
             <div class="flex gap-3">
-                <button onclick="app.clearAll()" class="text-gray-400 hover:text-red-500 transition" title="清空">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-                <button onclick="app.toggleHelp()" class="text-gray-400 hover:text-blue-600 transition" title="說明">
-                    <i class="fas fa-question-circle"></i>
-                </button>
+                <button onclick="app.closeResult()" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl font-bold">返回修改</button>
+                <button onclick="app.copyResult()" class="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-900/50">複製報告</button>
             </div>
-        </div>
-        <div class="table-wrapper" id="tableWrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="sticky-col">股號/名稱</th>
-                        <th class="bg-red-50 text-bull">AH<br><span class="text-[10px]">突破買進</span></th>
-                        <th class="bg-orange-50 text-orange-600">NH<br><span class="text-[10px]">賣出點</span></th>
-                        <th class="bg-white text-gray-800">CDP<br><span class="text-[10px]">盤中樞</span></th>
-                        <th class="bg-green-50 text-bear">NL<br><span class="text-[10px]">買進點</span></th>
-                        <th class="bg-emerald-50 text-emerald-700">AL<br><span class="text-[10px]">跌破殺多</span></th>
-                        <th class="text-gray-400">操作</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    </tbody>
-            </table>
-            <div id="emptyState" class="hidden flex flex-col items-center justify-center py-20 text-gray-400">
-                <i class="fas fa-chart-line text-4xl mb-3 opacity-20"></i>
-                <p class="text-sm">尚無追蹤個股</p>
-                <p class="text-xs mt-1">點擊下方按鈕開始分析</p>
-            </div>
-        </div>
-        <div class="footer-actions">
-            <button onclick="app.openSmartModal()" class="btn-main btn-ocr flex-1 bg-white text-gray-700 shadow-sm hover:bg-gray-50">
-                <i class="fas fa-camera text-blue-500"></i> 
-                <span class="text-sm">智能解析/匯入</span>
-            </button>
-            <button onclick="app.openAddModal()" class="btn-main flex-[2]">
-                <i class="fas fa-plus"></i> 手動新增
-            </button>
+            <div class="h-6"></div>
         </div>
     </div>
-    <div id="addModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
-        <div class="bg-white w-full sm:w-[400px] sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl transform transition-transform translate-y-full sm:translate-y-0" id="addModalContent">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-gray-800">新增追蹤個股</h3>
-                <button onclick="app.closeModal('addModal')" class="p-2 bg-gray-100 rounded-full text-gray-500"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="space-y-4">
-                <div class="input-group">
-                    <label>股票名稱 / 代號</label>
-                    <input type="text" id="inpName" placeholder="例如：漢磊 (3707)">
-                </div>
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="input-group">
-                        <label>昨日最高 (H)</label>
-                        <input type="number" id="inpHigh" step="0.01" class="text-bull font-bold">
-                    </div>
-                    <div class="input-group">
-                        <label>昨日最低 (L)</label>
-                        <input type="number" id="inpLow" step="0.01" class="text-bear font-bold">
-                    </div>
-                    <div class="input-group">
-                        <label>昨日收盤 (C)</label>
-                        <input type="number" id="inpClose" step="0.01">
-                    </div>
-                </div>
-            </div>
-            <button onclick="app.calculateAndAdd()" class="mt-8 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg active:scale-95 transition">
-                計算 CDP 並加入
-            </button>
-        </div>
-    </div>
-    <div id="smartModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-full sm:w-[400px] sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl h-[85vh] flex flex-col" id="smartModalContent">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-magic text-purple-500 mr-2"></i>智能解析</h3>
-                <button onclick="app.closeModal('smartModal')" class="p-2 bg-gray-100 rounded-full text-gray-500"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="flex-1 overflow-y-auto">
-                <div class="mb-6 p-4 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 text-center relative group hover:border-blue-400 transition">
-                    <input type="file" id="imgUpload" accept="image/*" onchange="app.handleImage(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <div id="uploadPlaceholder">
-                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                        <p class="text-sm text-gray-500 font-medium">點擊上傳 K 線圖 / 截圖</p>
-                        <p class="text-xs text-gray-400 mt-1">將作為縮圖附件保存</p>
-                    </div>
-                    <div id="imgPreview" class="hidden">
-                        <img id="previewEl" src="" class="h-32 mx-auto rounded shadow-sm object-contain">
-                        <button onclick="app.clearImage(event)" class="absolute top-2 right-2 bg-white rounded-full p-1 shadow text-red-500 z-10"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="input-group mb-4">
-                    <label class="flex justify-between">
-                        <span>貼上分析文字 (自動抓取數值)</span>
-                        <span class="text-xs text-blue-500 cursor-pointer" onclick="app.loadExample()">帶入範例</span>
-                    </label>
-                    <textarea id="smartText" rows="6" placeholder="請貼上如：「漢磊... AH:48.65...」之文字，系統將自動解析。" class="text-sm"></textarea>
-                </div>
-                <div id="parseResult" class="hidden bg-blue-50 p-3 rounded-lg border border-blue-100 mb-4">
-                    <div class="text-xs font-bold text-blue-800 mb-2">解析成功：</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                        <div>名稱: <b id="resName">-</b></div>
-                        <div>AH: <b id="resAH">-</b></div>
-                        <div>CDP: <b id="resCDP">-</b></div>
-                        <div>NL: <b id="resNL">-</b></div>
-                    </div>
-                </div>
-            </div>
-            <button onclick="app.confirmSmartAdd()" class="mt-4 w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-lg active:scale-95 transition">
-                <i class="fas fa-check mr-2"></i> 確認匯入
-            </button>
-        </div>
-    </div>
-    <div id="helpModal" class="fixed inset-0 z-[60] hidden bg-black/60 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl relative">
-            <button onclick="app.toggleHelp()" class="absolute top-4 right-4 text-gray-400"><i class="fas fa-times text-xl"></i></button>
-            <h3 class="text-xl font-bold text-gray-800 mb-4">石頭戰法操作說明</h3>
-            <div class="space-y-4 text-sm text-gray-600">
-                <p><span class="inline-block w-6 h-6 bg-red-100 text-red-600 rounded text-center font-bold mr-2">1</span> <b>AH (Alien High)</b>：<br>強力突破點。若開盤越過此點，視為強勢多頭。</p>
-                <p><span class="inline-block w-6 h-6 bg-orange-100 text-orange-600 rounded text-center font-bold mr-2">2</span> <b>NH (Near High)</b>：<br>短線獲利點。如未過 AH，此處壓力大，可調節賣出。</p>
-                <p><span class="inline-block w-6 h-6 bg-gray-100 text-gray-600 rounded text-center font-bold mr-2">3</span> <b>CDP</b>：<br>多空分水嶺。之上偏多，之下偏空。</p>
-                <p><span class="inline-block w-6 h-6 bg-green-100 text-green-600 rounded text-center font-bold mr-2">4</span> <b>NL (Near Low)</b>：<br>買進支撐點。回檔不破此點可接多。</p>
-                <p><span class="inline-block w-6 h-6 bg-emerald-100 text-emerald-600 rounded text-center font-bold mr-2">5</span> <b>AL (Alien Low)</b>：<br>停損殺多點。跌破此點，趨勢轉空，無條件離場。</p>
-            </div>
-            <button onclick="app.toggleHelp()" class="mt-6 w-full py-2 bg-gray-800 text-white rounded-lg font-bold">了解</button>
+    <div id="helpModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+        <div class="bg-gray-800 border border-gray-700 rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center"><i class="fas fa-book mr-2 text-accent"></i>操作定義</h3>
+            <ul class="space-y-4 text-sm text-gray-300">
+                <li class="flex gap-3">
+                    <span class="text-red-500 font-bold w-8">AH</span>
+                    <div>最強勢突破點。開盤站穩此點，多頭強烈，可追價。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-orange-400 font-bold w-8">NH</span>
+                    <div>短線壓力點。若無力突破 AH，容易在此回檔。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-white font-bold w-8">CDP</span>
+                    <div>多空分水嶺。今日操作的中線，之上偏多，之下偏空。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-green-400 font-bold w-8">NL</span>
+                    <div>回檔支撐點。多頭趨勢回測不破此點，是買點。</div>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-emerald-500 font-bold w-8">AL</span>
+                    <div><span class="text-red-400">絕對停損點</span>。跌破此處代表趨勢反轉，無條件離場。</div>
+                </li>
+            </ul>
+            <button onclick="app.toggleHelp()" class="mt-6 w-full py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-bold transition">知道了</button>
         </div>
     </div>
     <script>
         const app = (() => {
-            let stocks = [];
-            const STORAGE_KEY = 'stone_cdp_v1';
-            let tempImage = null; // 暫存圖片 DataURL
-            // DOM Elements
             const els = {
-                tableBody: document.getElementById('table-body'),
-                emptyState: document.getElementById('emptyState'),
-                // Add Modal
-                addModal: document.getElementById('addModal'),
-                addContent: document.getElementById('addModalContent'),
+                inpH: document.getElementById('inpH'),
+                inpL: document.getElementById('inpL'),
+                inpC: document.getElementById('inpC'),
+                inpOpen: document.getElementById('inpOpen'),
+                inpNow: document.getElementById('inpNow'),
                 inpName: document.getElementById('inpName'),
-                inpHigh: document.getElementById('inpHigh'),
-                inpLow: document.getElementById('inpLow'),
-                inpClose: document.getElementById('inpClose'),
-                // Smart Modal
-                smartModal: document.getElementById('smartModal'),
-                smartContent: document.getElementById('smartModalContent'),
-                smartText: document.getElementById('smartText'),
-                imgPreview: document.getElementById('imgPreview'),
-                previewEl: document.getElementById('previewEl'),
-                uploadPlaceholder: document.getElementById('uploadPlaceholder'),
-                parseResult: document.getElementById('parseResult'),
-                // Result displays
+                // Result
+                resultModal: document.getElementById('resultModal'),
+                resultContent: document.getElementById('resultContent'),
                 resName: document.getElementById('resName'),
-                resAH: document.getElementById('resAH'),
-                resCDP: document.getElementById('resCDP'),
-                resNL: document.getElementById('resNL'),
+                resAdvice: document.getElementById('resAdvice'),
+                resTrendBadge: document.getElementById('resTrendBadge'),
+                valAH: document.getElementById('valAH'),
+                valNH: document.getElementById('valNH'),
+                valCDP: document.getElementById('valCDP'),
+                valNL: document.getElementById('valNL'),
+                valAL: document.getElementById('valAL'),
+                helpModal: document.getElementById('helpModal')
             };
-            const init = () => {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    stocks = JSON.parse(saved);
-                }
-                renderTable();
-            };
-            const save = () => {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(stocks));
-            };
-            // --- Core Logic: CDP Calculation ---
+            const format = (num) => (Math.round(num * 100) / 100).toFixed(2);
             const calculateCDP = (h, l, c) => {
                 const cdp = (h + l + 2 * c) / 4;
                 const ah = cdp + (h - l);
                 const nh = 2 * cdp - l;
                 const nl = 2 * cdp - h;
                 const al = cdp - (h - l);
-                return { 
-                    ah: formatPrice(ah), 
-                    nh: formatPrice(nh), 
-                    cdp: formatPrice(cdp), 
-                    nl: formatPrice(nl), 
-                    al: formatPrice(al) 
-                };
+                return { ah, nh, cdp, nl, al };
             };
-            const formatPrice = (num) => {
-                return (Math.round(num * 100) / 100).toFixed(2);
-            };
-            // --- Rendering ---
-            const renderTable = () => {
-                els.tableBody.innerHTML = '';
-                if (stocks.length === 0) {
-                    els.emptyState.classList.remove('hidden');
+            const analyze = () => {
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                const open = parseFloat(els.inpOpen.value);
+                const now = parseFloat(els.inpNow.value);
+                const name = els.inpName.value || '未命名個股';
+                if (isNaN(h) || isNaN(l) || isNaN(c)) {
+                    alert('請輸入完整的昨日 H/L/C 數據');
                     return;
                 }
-                els.emptyState.classList.add('hidden');
-                stocks.forEach((item, index) => {
-                    // 若是智能匯入的，可能已經有現成的數值，不需要重算，但為了保險如果 H/L/C 存在就重算
-                    let vals = item.vals;
-                    if (item.h && item.l && item.c) {
-                        vals = calculateCDP(item.h, item.l, item.c);
+                const vals = calculateCDP(h, l, c);
+                // Update Values
+                els.resName.textContent = name;
+                els.valAH.textContent = format(vals.ah);
+                els.valNH.textContent = format(vals.nh);
+                els.valCDP.textContent = format(vals.cdp);
+                els.valNL.textContent = format(vals.nl);
+                els.valAL.textContent = format(vals.al);
+                // Strategy Logic
+                let advice = "";
+                let badgeClass = "bg-gray-600";
+                let badgeText = "中性";
+                if (!isNaN(now)) {
+                    if (now > vals.ah) {
+                        advice = `股價強勢突破 AH (${format(vals.ah)})！<br><span class="text-red-400">多頭攻擊型態，持股續抱，空手者可嘗試追價但需嚴設停損。</span>`;
+                        badgeClass = "bg-red-600 text-white";
+                        badgeText = "強勢多頭";
+                    } else if (now > vals.cdp) {
+                        advice = `股價位於 CDP (${format(vals.cdp)}) 之上。<br><span class="text-orange-300">偏多操作，若回測 CDP 不破可進場，目標看 NH。</span>`;
+                        badgeClass = "bg-orange-600 text-white";
+                        badgeText = "偏多震盪";
+                    } else if (now < vals.al) {
+                        advice = `警告！股價跌破 AL (${format(vals.al)})。<br><span class="text-emerald-400">空頭確立，主力棄守，多單應無條件離場。</span>`;
+                        badgeClass = "bg-emerald-600 text-white";
+                        badgeText = "空頭殺戮";
+                    } else if (now < vals.cdp) {
+                        advice = `股價位於 CDP (${format(vals.cdp)}) 之下。<br><span class="text-gray-300">弱勢整理，反彈不過 CDP 應站在賣方，下方支撐看 NL。</span>`;
+                        badgeClass = "bg-green-600 text-white";
+                        badgeText = "偏空整理";
                     }
-                    const tr = document.createElement('tr');
-                    // 圖片縮圖按鈕 (如果有)
-                    let imgBtn = '';
-                    if (item.img) {
-                        imgBtn = `<button onclick="app.showImage('${index}')" class="text-blue-500 text-xs mt-1 underline"><i class="fas fa-image"></i> 圖表</button>`;
-                    }
-                    tr.innerHTML = `
-                        <th class="sticky-col bg-white">
-                            <div class="flex flex-col items-center justify-center">
-                                <span class="font-bold text-gray-800 leading-tight">${item.name}</span>
-                                ${imgBtn}
-                            </div>
-                        </th>
-                        <td class="bg-red-50">
-                            <div class="price-val text-bull">${vals.ah}</div>
-                        </td>
-                        <td class="bg-orange-50">
-                            <div class="price-val text-orange-600">${vals.nh}</div>
-                        </td>
-                        <td>
-                            <div class="price-val text-gray-900">${vals.cdp}</div>
-                        </td>
-                        <td class="bg-green-50">
-                            <div class="price-val text-bear">${vals.nl}</div>
-                        </td>
-                        <td class="bg-emerald-50 border-r border-gray-200">
-                            <div class="price-val text-emerald-700">${vals.al}</div>
-                        </td>
-                        <td>
-                            <button onclick="app.removeStock(${index})" class="text-gray-400 hover:text-red-500 p-2">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    els.tableBody.appendChild(tr);
-                });
+                } else {
+                    advice = `請輸入目前成交價以取得即時戰術建議。<br>關鍵點位：守穩 ${format(vals.cdp)} 為多方，跌破 ${format(vals.al)} 為停損。`;
+                }
+                els.resAdvice.innerHTML = advice;
+                els.resTrendBadge.className = `px-3 py-1 rounded text-xs font-bold ${badgeClass}`;
+                els.resTrendBadge.textContent = badgeText;
+                openModal();
             };
-            // --- Handlers ---
-            const openAddModal = () => {
-                els.inpName.value = '';
-                els.inpHigh.value = '';
-                els.inpLow.value = '';
-                els.inpClose.value = '';
-                openModal('addModal');
+            const simulate = (type) => {
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                if (isNaN(h) || isNaN(l) || isNaN(c)) {
+                    // Default Demo Values if empty
+                    els.inpH.value = 50.5;
+                    els.inpL.value = 48;
+                    els.inpC.value = 49;
+                    els.inpOpen.value = 49.2;
+                    // Recursive call with values filled
+                    setTimeout(() => simulate(type), 50);
+                    return;
+                }
+                const vals = calculateCDP(h || 50.5, l || 48, c || 49);
+                if (type === 'high') els.inpNow.value = format(vals.ah * 1.01); // Simulate Breakout
+                if (type === 'mid') els.inpNow.value = format(vals.cdp); // Simulate Pivot
+                if (type === 'low') els.inpNow.value = format(vals.al * 0.99); // Simulate Breakdown
+                // Highlight effect
+                els.inpNow.classList.add('bg-yellow-900');
+                setTimeout(() => els.inpNow.classList.remove('bg-yellow-900'), 200);
             };
-            const openSmartModal = () => {
-                els.smartText.value = '';
-                els.parseResult.classList.add('hidden');
-                tempImage = null;
-                resetImageUI();
-                openModal('smartModal');
-            };
-            const closeModal = (id) => {
-                const modal = document.getElementById(id);
-                const content = modal.firstElementChild;
-                content.classList.remove('sm:translate-y-0', 'translate-y-0');
-                content.classList.add('translate-y-full');
+            const openModal = () => {
+                els.resultModal.classList.remove('hidden');
                 setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 200);
-            };
-            const openModal = (id) => {
-                const modal = document.getElementById(id);
-                modal.classList.remove('hidden');
-                // Allow layout to calc
-                setTimeout(() => {
-                    const content = modal.firstElementChild;
-                    content.classList.remove('translate-y-full');
-                    content.classList.add('sm:translate-y-0', 'translate-y-0');
+                    els.resultContent.classList.remove('translate-y-full');
                 }, 10);
             };
-            // --- Manual Add Logic ---
-            const calculateAndAdd = () => {
-                const name = els.inpName.value.trim() || '未命名';
-                const h = parseFloat(els.inpHigh.value);
-                const l = parseFloat(els.inpLow.value);
-                const c = parseFloat(els.inpClose.value);
-                if (isNaN(h) || isNaN(l) || isNaN(c)) {
-                    alert('請輸入完整數值 (昨高/昨低/收盤)');
-                    return;
-                }
-                stocks.push({
-                    name, h, l, c, img: null,
-                    vals: calculateCDP(h, l, c)
-                });
-                save();
-                renderTable();
-                closeModal('addModal');
-            };
-            // --- Smart Parse Logic (Stone Strategy) ---
-            // 處理圖片 (轉 Base64 儲存)
-            const handleImage = (input) => {
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        tempImage = e.target.result;
-                        els.previewEl.src = tempImage;
-                        els.imgPreview.classList.remove('hidden');
-                        els.uploadPlaceholder.classList.add('hidden');
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            };
-            const resetImageUI = () => {
-                document.getElementById('imgUpload').value = '';
-                els.imgPreview.classList.add('hidden');
-                els.uploadPlaceholder.classList.remove('hidden');
-            };
-            const clearImage = (e) => {
-                e.stopPropagation();
-                tempImage = null;
-                resetImageUI();
-            };
-            // 監聽文字輸入進行解析
-            els.smartText.addEventListener('input', (e) => {
-                parseSmartText(e.target.value);
-            });
-            const parseSmartText = (text) => {
-                // 1. 嘗試抓取名稱 (括號內的數字或中文)
-                // 格式如：漢磊(3707) 或 2330 台積電
-                const nameMatch = text.match(/([^\s\d]+)\s*\((\d+)\)|(\d{4})/);
-                let name = '未知個股';
-                if (nameMatch) {
-                    name = nameMatch[0]; // 簡單抓取全稱
-                }
-                // 2. 嘗試抓取特定格式數值 "AH: 48.65" "CDP: 48.25"
-                // 支援：冒號、空格、全形冒號
-                const regexVal = (key) => {
-                    const re = new RegExp(`${key}[^0-9\.]*([0-9]+\.[0-9]+)`, 'i');
-                    const match = text.match(re);
-                    return match ? match[1] : null;
-                };
-                const ah = regexVal('AH') || regexVal('防守');
-                const cdp = regexVal('CDP') || regexVal('停損');
-                const nl = regexVal('NL') || regexVal('低點');
-                // 如果有抓到數據，顯示預覽
-                if (ah || cdp) {
-                    els.resName.innerText = name;
-                    els.resAH.innerText = ah || '-';
-                    els.resCDP.innerText = cdp || '-';
-                    els.resNL.innerText = nl || '-';
-                    els.parseResult.classList.remove('hidden');
-                    return { name, ah, cdp, nl };
-                }
-                return null;
-            };
-            const loadExample = () => {
-                els.smartText.value = `【極速操作】漢磊(3707) CDP 點位表\n一、關鍵點位\n現價：49.40\n防守點 (AH)：48.65\n停損點 (CDP)：48.25`;
-                parseSmartText(els.smartText.value);
-            };
-            const confirmSmartAdd = () => {
-                const parsed = parseSmartText(els.smartText.value);
-                // 情境 A: 只有文字解析到的結果 (直接存結果，不存H/L/C)
-                if (parsed && (parsed.ah || parsed.cdp)) {
-                    // 根據 CDP 簡單推算其他值 (如果不完整)
-                    const ahVal = parseFloat(parsed.ah) || 0;
-                    const cdpVal = parseFloat(parsed.cdp) || 0;
-                    // 模擬物件
-                    stocks.push({
-                        name: parsed.name,
-                        h: null, l: null, c: null,
-                        img: tempImage, // 附加上傳的圖片
-                        vals: {
-                            ah: parsed.ah || '-',
-                            nh: '-', // 無法逆推精準值
-                            cdp: parsed.cdp || '-',
-                            nl: parsed.nl || '-',
-                            al: '-'
-                        }
-                    });
-                } 
-                // 情境 B: 沒有文字，只有圖片 -> 建一個空白項目讓用戶填
-                else if (tempImage) {
-                     stocks.push({
-                        name: '圖片分析股',
-                        h: 0, l: 0, c: 0,
-                        img: tempImage,
-                        vals: { ah:'-', nh:'-', cdp:'-', nl:'-', al:'-' }
-                    });
-                    alert('已匯入圖片，請點擊該列進行數值編輯(功能待開發，目前僅顯示)');
-                } else {
-                    alert('請貼上分析文字或上傳圖片');
-                    return;
-                }
-                save();
-                renderTable();
-                closeModal('smartModal');
-            };
-            // --- Utils ---
-            const removeStock = (idx) => {
-                if(confirm('確定刪除此關注股？')) {
-                    stocks.splice(idx, 1);
-                    save();
-                    renderTable();
-                }
-            };
-            const clearAll = () => {
-                if(confirm('確定清空所有數據？')) {
-                    stocks = [];
-                    save();
-                    renderTable();
-                }
-            };
-            const showImage = (idx) => {
-                const item = stocks[idx];
-                if (item.img) {
-                    const w = window.open("", "_blank");
-                    w.document.write(`<img src="${item.img}" style="width:100%">`);
-                }
+            const closeResult = () => {
+                els.resultContent.classList.add('translate-y-full');
+                setTimeout(() => {
+                    els.resultModal.classList.add('hidden');
+                }, 300);
             };
             const toggleHelp = () => {
-                const m = document.getElementById('helpModal');
+                const m = els.helpModal;
                 m.classList.toggle('hidden');
             };
+            const copyResult = () => {
+                const name = els.resName.textContent;
+                const advice = els.resAdvice.innerText.replace(/\n/g, ' ');
+                const text = `【${name}】石頭戰法分析\nAH: ${els.valAH.textContent}\nCDP: ${els.valCDP.textContent}\nAL: ${els.valAL.textContent}\n----------------\n建議：${advice}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('分析報告已複製！');
+                });
+            };
             return {
-                init,
-                openAddModal,
-                openSmartModal,
-                closeModal,
-                calculateAndAdd,
-                removeStock,
-                clearAll,
+                analyze,
+                simulate,
+                closeResult,
                 toggleHelp,
-                handleImage,
-                clearImage,
-                loadExample,
-                confirmSmartAdd,
-                showImage
+                copyResult
             };
         })();
-        window.onload = app.init;
     </script>
 </body>
 </html>
