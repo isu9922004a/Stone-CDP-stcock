@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>石頭CDP多空進場神器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/....../6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        // 設定 Tailwind 台股配色習慣 (紅漲綠跌)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bull: '#dc2626', // 紅 (多)
+                        bear: '#16a34a', // 綠 (空)
+                        neutral: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --header-height: 60px;
+            --bull-bg: #fef2f2;
+            --bull-text: #dc2626;
+            --bear-bg: #f0fdf4;
+            --bear-text: #16a34a;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f1f5f9;
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .layout-grid {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100dvh;
+        }
+        /* HUD & Controls */
+        .status-bar {
+            background: white;
+            z-index: 40;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            height: var(--header-height);
+            flex-shrink: 0;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .app-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* Table Area */
+        .table-wrapper {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: #fff;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th, td {
+            padding: 10px 6px;
+            text-align: center;
+            white-space: nowrap;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+        /* 凍結首列 (股票名稱) */
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            background-color: white;
+            border-right: 2px solid #e2e8f0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+            min-width: 85px;
+            max-width: 100px;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8fafc;
+            z-index: 10;
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 700;
+            padding: 12px 4px;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        thead th.sticky-col {
+            z-index: 30;
+            background-color: #f8fafc;
+        }
+        /* 數值顯示 */
+        .price-val {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        /* CDP 標籤 */
+        .cdp-tag {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 2px;
+            display: inline-block;
+        }
+        /* 底部按鈕區 */
+        .footer-actions {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+            z-index: 40;
+            flex-shrink: 0;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+        .btn-main {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            width: 100%;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-ocr {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+        /* Modal 動畫 */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+        .modal-exit { opacity: 1; transform: scale(1); }
+        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 0.15s ease-in; }
+        /* 輸入框優化 */
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #64748b;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div class="layout-grid">
+        <div class="status-bar">
+            <div class="app-title">
+                <i class="fas fa-gem text-blue-600"></i>
+                石頭CDP進場神器
+            </div>
+            <div class="flex gap-3">
+                <button onclick="app.clearAll()" class="text-gray-400 hover:text-red-500 transition" title="清空">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button onclick="app.toggleHelp()" class="text-gray-400 hover:text-blue-600 transition" title="說明">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
+        <div class="table-wrapper" id="tableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sticky-col">股號/名稱</th>
+                        <th class="bg-red-50 text-bull">AH<br><span class="text-[10px]">突破買進</span></th>
+                        <th class="bg-orange-50 text-orange-600">NH<br><span class="text-[10px]">賣出點</span></th>
+                        <th class="bg-white text-gray-800">CDP<br><span class="text-[10px]">盤中樞</span></th>
+                        <th class="bg-green-50 text-bear">NL<br><span class="text-[10px]">買進點</span></th>
+                        <th class="bg-emerald-50 text-emerald-700">AL<br><span class="text-[10px]">跌破殺多</span></th>
+                        <th class="text-gray-400">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    </tbody>
+            </table>
+            <div id="emptyState" class="hidden flex flex-col items-center justify-center py-20 text-gray-400">
+                <i class="fas fa-chart-line text-4xl mb-3 opacity-20"></i>
+                <p class="text-sm">尚無追蹤個股</p>
+                <p class="text-xs mt-1">點擊下方按鈕開始分析</p>
+            </div>
+        </div>
+        <div class="footer-actions">
+            <button onclick="app.openSmartModal()" class="btn-main btn-ocr flex-1 bg-white text-gray-700 shadow-sm hover:bg-gray-50">
+                <i class="fas fa-camera text-blue-500"></i> 
+                <span class="text-sm">智能解析/匯入</span>
+            </button>
+            <button onclick="app.openAddModal()" class="btn-main flex-[2]">
+                <i class="fas fa-plus"></i> 手動新增
+            </button>
+        </div>
+    </div>
+    <div id="addModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white w-full sm:w-[400px] sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl transform transition-transform translate-y-full sm:translate-y-0" id="addModalContent">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-gray-800">新增追蹤個股</h3>
+                <button onclick="app.closeModal('addModal')" class="p-2 bg-gray-100 rounded-full text-gray-500"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="input-group">
+                    <label>股票名稱 / 代號</label>
+                    <input type="text" id="inpName" placeholder="例如：漢磊 (3707)">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="input-group">
+                        <label>昨日最高 (H)</label>
+                        <input type="number" id="inpHigh" step="0.01" class="text-bull font-bold">
+                    </div>
+                    <div class="input-group">
+                        <label>昨日最低 (L)</label>
+                        <input type="number" id="inpLow" step="0.01" class="text-bear font-bold">
+                    </div>
+                    <div class="input-group">
+                        <label>昨日收盤 (C)</label>
+                        <input type="number" id="inpClose" step="0.01">
+                    </div>
+                </div>
+            </div>
+            <button onclick="app.calculateAndAdd()" class="mt-8 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg active:scale-95 transition">
+                計算 CDP 並加入
+            </button>
+        </div>
+    </div>
+    <div id="smartModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-white w-full sm:w-[400px] sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl h-[85vh] flex flex-col" id="smartModalContent">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-magic text-purple-500 mr-2"></i>智能解析</h3>
+                <button onclick="app.closeModal('smartModal')" class="p-2 bg-gray-100 rounded-full text-gray-500"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <div class="mb-6 p-4 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 text-center relative group hover:border-blue-400 transition">
+                    <input type="file" id="imgUpload" accept="image/*" onchange="app.handleImage(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <div id="uploadPlaceholder">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-500 font-medium">點擊上傳 K 線圖 / 截圖</p>
+                        <p class="text-xs text-gray-400 mt-1">將作為縮圖附件保存</p>
+                    </div>
+                    <div id="imgPreview" class="hidden">
+                        <img id="previewEl" src="" class="h-32 mx-auto rounded shadow-sm object-contain">
+                        <button onclick="app.clearImage(event)" class="absolute top-2 right-2 bg-white rounded-full p-1 shadow text-red-500 z-10"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="input-group mb-4">
+                    <label class="flex justify-between">
+                        <span>貼上分析文字 (自動抓取數值)</span>
+                        <span class="text-xs text-blue-500 cursor-pointer" onclick="app.loadExample()">帶入範例</span>
+                    </label>
+                    <textarea id="smartText" rows="6" placeholder="請貼上如：「漢磊... AH:48.65...」之文字，系統將自動解析。" class="text-sm"></textarea>
+                </div>
+                <div id="parseResult" class="hidden bg-blue-50 p-3 rounded-lg border border-blue-100 mb-4">
+                    <div class="text-xs font-bold text-blue-800 mb-2">解析成功：</div>
+                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                        <div>名稱: <b id="resName">-</b></div>
+                        <div>AH: <b id="resAH">-</b></div>
+                        <div>CDP: <b id="resCDP">-</b></div>
+                        <div>NL: <b id="resNL">-</b></div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="app.confirmSmartAdd()" class="mt-4 w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-lg active:scale-95 transition">
+                <i class="fas fa-check mr-2"></i> 確認匯入
+            </button>
+        </div>
+    </div>
+    <div id="helpModal" class="fixed inset-0 z-[60] hidden bg-black/60 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="app.toggleHelp()" class="absolute top-4 right-4 text-gray-400"><i class="fas fa-times text-xl"></i></button>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">石頭戰法操作說明</h3>
+            <div class="space-y-4 text-sm text-gray-600">
+                <p><span class="inline-block w-6 h-6 bg-red-100 text-red-600 rounded text-center font-bold mr-2">1</span> <b>AH (Alien High)</b>：<br>強力突破點。若開盤越過此點，視為強勢多頭。</p>
+                <p><span class="inline-block w-6 h-6 bg-orange-100 text-orange-600 rounded text-center font-bold mr-2">2</span> <b>NH (Near High)</b>：<br>短線獲利點。如未過 AH，此處壓力大，可調節賣出。</p>
+                <p><span class="inline-block w-6 h-6 bg-gray-100 text-gray-600 rounded text-center font-bold mr-2">3</span> <b>CDP</b>：<br>多空分水嶺。之上偏多，之下偏空。</p>
+                <p><span class="inline-block w-6 h-6 bg-green-100 text-green-600 rounded text-center font-bold mr-2">4</span> <b>NL (Near Low)</b>：<br>買進支撐點。回檔不破此點可接多。</p>
+                <p><span class="inline-block w-6 h-6 bg-emerald-100 text-emerald-600 rounded text-center font-bold mr-2">5</span> <b>AL (Alien Low)</b>：<br>停損殺多點。跌破此點，趨勢轉空，無條件離場。</p>
+            </div>
+            <button onclick="app.toggleHelp()" class="mt-6 w-full py-2 bg-gray-800 text-white rounded-lg font-bold">了解</button>
+        </div>
+    </div>
+    <script>
+        const app = (() => {
+            let stocks = [];
+            const STORAGE_KEY = 'stone_cdp_v1';
+            let tempImage = null; // 暫存圖片 DataURL
+            // DOM Elements
+            const els = {
+                tableBody: document.getElementById('table-body'),
+                emptyState: document.getElementById('emptyState'),
+                // Add Modal
+                addModal: document.getElementById('addModal'),
+                addContent: document.getElementById('addModalContent'),
+                inpName: document.getElementById('inpName'),
+                inpHigh: document.getElementById('inpHigh'),
+                inpLow: document.getElementById('inpLow'),
+                inpClose: document.getElementById('inpClose'),
+                // Smart Modal
+                smartModal: document.getElementById('smartModal'),
+                smartContent: document.getElementById('smartModalContent'),
+                smartText: document.getElementById('smartText'),
+                imgPreview: document.getElementById('imgPreview'),
+                previewEl: document.getElementById('previewEl'),
+                uploadPlaceholder: document.getElementById('uploadPlaceholder'),
+                parseResult: document.getElementById('parseResult'),
+                // Result displays
+                resName: document.getElementById('resName'),
+                resAH: document.getElementById('resAH'),
+                resCDP: document.getElementById('resCDP'),
+                resNL: document.getElementById('resNL'),
+            };
+            const init = () => {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    stocks = JSON.parse(saved);
+                }
+                renderTable();
+            };
+            const save = () => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(stocks));
+            };
+            // --- Core Logic: CDP Calculation ---
+            const calculateCDP = (h, l, c) => {
+                const cdp = (h + l + 2 * c) / 4;
+                const ah = cdp + (h - l);
+                const nh = 2 * cdp - l;
+                const nl = 2 * cdp - h;
+                const al = cdp - (h - l);
+                return { 
+                    ah: formatPrice(ah), 
+                    nh: formatPrice(nh), 
+                    cdp: formatPrice(cdp), 
+                    nl: formatPrice(nl), 
+                    al: formatPrice(al) 
+                };
+            };
+            const formatPrice = (num) => {
+                return (Math.round(num * 100) / 100).toFixed(2);
+            };
+            // --- Rendering ---
+            const renderTable = () => {
+                els.tableBody.innerHTML = '';
+                if (stocks.length === 0) {
+                    els.emptyState.classList.remove('hidden');
+                    return;
+                }
+                els.emptyState.classList.add('hidden');
+                stocks.forEach((item, index) => {
+                    // 若是智能匯入的，可能已經有現成的數值，不需要重算，但為了保險如果 H/L/C 存在就重算
+                    let vals = item.vals;
+                    if (item.h && item.l && item.c) {
+                        vals = calculateCDP(item.h, item.l, item.c);
+                    }
+                    const tr = document.createElement('tr');
+                    // 圖片縮圖按鈕 (如果有)
+                    let imgBtn = '';
+                    if (item.img) {
+                        imgBtn = `<button onclick="app.showImage('${index}')" class="text-blue-500 text-xs mt-1 underline"><i class="fas fa-image"></i> 圖表</button>`;
+                    }
+                    tr.innerHTML = `
+                        <th class="sticky-col bg-white">
+                            <div class="flex flex-col items-center justify-center">
+                                <span class="font-bold text-gray-800 leading-tight">${item.name}</span>
+                                ${imgBtn}
+                            </div>
+                        </th>
+                        <td class="bg-red-50">
+                            <div class="price-val text-bull">${vals.ah}</div>
+                        </td>
+                        <td class="bg-orange-50">
+                            <div class="price-val text-orange-600">${vals.nh}</div>
+                        </td>
+                        <td>
+                            <div class="price-val text-gray-900">${vals.cdp}</div>
+                        </td>
+                        <td class="bg-green-50">
+                            <div class="price-val text-bear">${vals.nl}</div>
+                        </td>
+                        <td class="bg-emerald-50 border-r border-gray-200">
+                            <div class="price-val text-emerald-700">${vals.al}</div>
+                        </td>
+                        <td>
+                            <button onclick="app.removeStock(${index})" class="text-gray-400 hover:text-red-500 p-2">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    els.tableBody.appendChild(tr);
+                });
+            };
+            // --- Handlers ---
+            const openAddModal = () => {
+                els.inpName.value = '';
+                els.inpHigh.value = '';
+                els.inpLow.value = '';
+                els.inpClose.value = '';
+                openModal('addModal');
+            };
+            const openSmartModal = () => {
+                els.smartText.value = '';
+                els.parseResult.classList.add('hidden');
+                tempImage = null;
+                resetImageUI();
+                openModal('smartModal');
+            };
+            const closeModal = (id) => {
+                const modal = document.getElementById(id);
+                const content = modal.firstElementChild;
+                content.classList.remove('sm:translate-y-0', 'translate-y-0');
+                content.classList.add('translate-y-full');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 200);
+            };
+            const openModal = (id) => {
+                const modal = document.getElementById(id);
+                modal.classList.remove('hidden');
+                // Allow layout to calc
+                setTimeout(() => {
+                    const content = modal.firstElementChild;
+                    content.classList.remove('translate-y-full');
+                    content.classList.add('sm:translate-y-0', 'translate-y-0');
+                }, 10);
+            };
+            // --- Manual Add Logic ---
+            const calculateAndAdd = () => {
+                const name = els.inpName.value.trim() || '未命名';
+                const h = parseFloat(els.inpHigh.value);
+                const l = parseFloat(els.inpLow.value);
+                const c = parseFloat(els.inpClose.value);
+                if (isNaN(h) || isNaN(l) || isNaN(c)) {
+                    alert('請輸入完整數值 (昨高/昨低/收盤)');
+                    return;
+                }
+                stocks.push({
+                    name, h, l, c, img: null,
+                    vals: calculateCDP(h, l, c)
+                });
+                save();
+                renderTable();
+                closeModal('addModal');
+            };
+            // --- Smart Parse Logic (Stone Strategy) ---
+            // 處理圖片 (轉 Base64 儲存)
+            const handleImage = (input) => {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        tempImage = e.target.result;
+                        els.previewEl.src = tempImage;
+                        els.imgPreview.classList.remove('hidden');
+                        els.uploadPlaceholder.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            };
+            const resetImageUI = () => {
+                document.getElementById('imgUpload').value = '';
+                els.imgPreview.classList.add('hidden');
+                els.uploadPlaceholder.classList.remove('hidden');
+            };
+            const clearImage = (e) => {
+                e.stopPropagation();
+                tempImage = null;
+                resetImageUI();
+            };
+            // 監聽文字輸入進行解析
+            els.smartText.addEventListener('input', (e) => {
+                parseSmartText(e.target.value);
+            });
+            const parseSmartText = (text) => {
+                // 1. 嘗試抓取名稱 (括號內的數字或中文)
+                // 格式如：漢磊(3707) 或 2330 台積電
+                const nameMatch = text.match(/([^\s\d]+)\s*\((\d+)\)|(\d{4})/);
+                let name = '未知個股';
+                if (nameMatch) {
+                    name = nameMatch[0]; // 簡單抓取全稱
+                }
+                // 2. 嘗試抓取特定格式數值 "AH: 48.65" "CDP: 48.25"
+                // 支援：冒號、空格、全形冒號
+                const regexVal = (key) => {
+                    const re = new RegExp(`${key}[^0-9\.]*([0-9]+\.[0-9]+)`, 'i');
+                    const match = text.match(re);
+                    return match ? match[1] : null;
+                };
+                const ah = regexVal('AH') || regexVal('防守');
+                const cdp = regexVal('CDP') || regexVal('停損');
+                const nl = regexVal('NL') || regexVal('低點');
+                // 如果有抓到數據，顯示預覽
+                if (ah || cdp) {
+                    els.resName.innerText = name;
+                    els.resAH.innerText = ah || '-';
+                    els.resCDP.innerText = cdp || '-';
+                    els.resNL.innerText = nl || '-';
+                    els.parseResult.classList.remove('hidden');
+                    return { name, ah, cdp, nl };
+                }
+                return null;
+            };
+            const loadExample = () => {
+                els.smartText.value = `【極速操作】漢磊(3707) CDP 點位表\n一、關鍵點位\n現價：49.40\n防守點 (AH)：48.65\n停損點 (CDP)：48.25`;
+                parseSmartText(els.smartText.value);
+            };
+            const confirmSmartAdd = () => {
+                const parsed = parseSmartText(els.smartText.value);
+                // 情境 A: 只有文字解析到的結果 (直接存結果，不存H/L/C)
+                if (parsed && (parsed.ah || parsed.cdp)) {
+                    // 根據 CDP 簡單推算其他值 (如果不完整)
+                    const ahVal = parseFloat(parsed.ah) || 0;
+                    const cdpVal = parseFloat(parsed.cdp) || 0;
+                    // 模擬物件
+                    stocks.push({
+                        name: parsed.name,
+                        h: null, l: null, c: null,
+                        img: tempImage, // 附加上傳的圖片
+                        vals: {
+                            ah: parsed.ah || '-',
+                            nh: '-', // 無法逆推精準值
+                            cdp: parsed.cdp || '-',
+                            nl: parsed.nl || '-',
+                            al: '-'
+                        }
+                    });
+                } 
+                // 情境 B: 沒有文字，只有圖片 -> 建一個空白項目讓用戶填
+                else if (tempImage) {
+                     stocks.push({
+                        name: '圖片分析股',
+                        h: 0, l: 0, c: 0,
+                        img: tempImage,
+                        vals: { ah:'-', nh:'-', cdp:'-', nl:'-', al:'-' }
+                    });
+                    alert('已匯入圖片，請點擊該列進行數值編輯(功能待開發，目前僅顯示)');
+                } else {
+                    alert('請貼上分析文字或上傳圖片');
+                    return;
+                }
+                save();
+                renderTable();
+                closeModal('smartModal');
+            };
+            // --- Utils ---
+            const removeStock = (idx) => {
+                if(confirm('確定刪除此關注股？')) {
+                    stocks.splice(idx, 1);
+                    save();
+                    renderTable();
+                }
+            };
+            const clearAll = () => {
+                if(confirm('確定清空所有數據？')) {
+                    stocks = [];
+                    save();
+                    renderTable();
+                }
+            };
+            const showImage = (idx) => {
+                const item = stocks[idx];
+                if (item.img) {
+                    const w = window.open("", "_blank");
+                    w.document.write(`<img src="${item.img}" style="width:100%">`);
+                }
+            };
+            const toggleHelp = () => {
+                const m = document.getElementById('helpModal');
+                m.classList.toggle('hidden');
+            };
+            return {
+                init,
+                openAddModal,
+                openSmartModal,
+                closeModal,
+                calculateAndAdd,
+                removeStock,
+                clearAll,
+                toggleHelp,
+                handleImage,
+                clearImage,
+                loadExample,
+                confirmSmartAdd,
+                showImage
+            };
+        })();
+        window.onload = app.init;
+    </script>
+</body>
+</html>
