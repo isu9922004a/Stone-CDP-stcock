@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>石頭獲利分析戰法 V3.0 Ultimate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/....../6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0b101a',
+                        cardDark: '#111621',
+                        borderDark: '#232a3b',
+                        accentRed: '#ff4d4f',
+                        accentGreen: '#2ec7c9',
+                        textGray: '#8b949e',
+                        textLight: '#e6edf3'
+                    },
+                    fontFamily: {
+                        mono: ['"Roboto Mono"', 'monospace'],
+                        sans: ['"Noto Sans TC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b101a;
+            color: #e6edf3;
+            font-family: 'Noto Sans TC', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* 輸入框樣式 */
+        .input-dark {
+            background-color: #1c2230;
+            border: 1px solid #2d3548;
+            color: #e6edf3;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .input-dark:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            background-color: #232a3b;
+        }
+        .input-price-large {
+            background-color: #1c2230;
+            border: 2px solid #3b82f6;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+        /* 霓虹文字效果 */
+        .text-neon-red { color: #ff4d4f; text-shadow: 0 0 10px rgba(255, 77, 79, 0.3); }
+        .text-neon-green { color: #2ec7c9; text-shadow: 0 0 10px rgba(46, 199, 201, 0.3); }
+        /* 卡片共用樣式 */
+        .dashboard-card {
+            background-color: #111621;
+            border: 1px solid #232a3b;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+        /* Badge */
+        .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-active { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        /* 上傳區樣式 */
+        .upload-zone {
+            border: 2px dashed #2d3548;
+            background-color: rgba(17, 22, 33, 0.5);
+            transition: all 0.3s;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .upload-zone.has-image {
+            border-style: solid;
+            border-color: #232a3b;
+        }
+        /* 滾動條 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b101a; }
+        ::-webkit-scrollbar-thumb { background: #2d3548; border-radius: 3px; }
+    </style>
+</head>
+<body class="flex flex-col">
+    <header class="h-14 border-b border-borderDark flex items-center justify-between px-6 shrink-0 bg-[#0b101a]">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-layer-group text-blue-500 text-xl"></i>
+            <div>
+                <h1 class="text-lg font-bold tracking-wide text-white">石頭戰法戰情室 <span class="text-xs font-normal text-textGray ml-2">V3.0 Ultimate</span></h1>
+            </div>
+        </div>
+        <div class="text-right flex items-center gap-4">
+             <button onclick="app.clearAll()" class="text-xs text-gray-500 hover:text-red-400 transition"><i class="fas fa-trash-alt mr-1"></i>重置數據</button>
+             <div class="pl-4 border-l border-gray-800">
+                <div class="text-[10px] text-textGray">目前標的</div>
+                <div class="text-lg font-bold font-mono leading-none" id="headerTicker">--</div>
+            </div>
+        </div>
+    </header>
+    <div class="flex-1 grid grid-cols-12 gap-0 overflow-hidden">
+        <aside class="col-span-12 lg:col-span-3 bg-[#0f131a] border-r border-borderDark flex flex-col overflow-y-auto p-4 gap-4 z-10">
+            <div class="dashboard-card p-4">
+                <h3 class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider"><i class="fas fa-sliders-h mr-2"></i>市場參數</h3>
+                <div class="mb-3">
+                    <label class="text-[10px] text-textGray block mb-1">股票代號</label>
+                    <input type="text" id="inpName" placeholder="台積電 2330" class="input-dark w-full p-2 text-sm font-bold" oninput="app.updateHeader()">
+                </div>
+                <div class="mb-3 p-3 bg-black/20 rounded border border-white/5">
+                    <label class="text-[10px] text-textGray block mb-2 font-bold">昨日 K 棒 (CDP 基準)</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <span class="text-[10px] text-textGray block text-center">高 H</span>
+                            <input type="number" id="inpH" placeholder="-" class="input-dark w-full p-1 text-sm text-accentRed" step="0.1">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-textGray block text-center">低 L</span>
+                            <input type="number" id="inpL" placeholder="-" class="input-dark w-full p-1 text-sm text-accentGreen" step="0.1">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-textGray block text-center">收 C</span>
+                            <input type="number" id="inpC" placeholder="-" class="input-dark w-full p-1 text-sm" step="0.1">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 p-3 bg-blue-900/10 rounded border border-blue-500/20">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[10px] text-blue-300 font-bold block"><i class="fas fa-dot-circle mr-1"></i>SAR 拋物線值</label>
+                        <span class="text-[9px] text-blue-400/60">查閱券商軟體</span>
+                    </div>
+                    <input type="number" id="inpSAR" placeholder="輸入當前 SAR 點位" class="input-dark w-full p-2 font-mono text-blue-300 border-blue-500/30 focus:border-blue-400" step="0.1">
+                </div>
+                <div class="mb-3">
+                    <label class="text-[10px] text-textGray block mb-1">今日開盤 (Open)</label>
+                    <input type="number" id="inpOpen" placeholder="-" class="input-dark w-full p-2 font-bold text-white" step="0.1">
+                </div>
+                <div class="mb-4">
+                    <label class="text-[10px] text-textGray block mb-1">當前成交價 (Price)</label>
+                    <input type="number" id="inpNow" placeholder="輸入現價..." class="input-dark input-price-large w-full p-3" step="0.1" onkeyup="app.analyze()">
+                </div>
+                <button onclick="app.analyze()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-lg shadow-lg transition text-sm">
+                    <i class="fas fa-calculator mr-2"></i>立即分析
+                </button>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="app.simulate('bull')" class="py-2 bg-gray-800 hover:bg-red-900/40 border border-gray-700 hover:border-red-800 text-gray-400 hover:text-red-400 text-xs rounded transition">模擬多頭</button>
+                <button onclick="app.simulate('bear')" class="py-2 bg-gray-800 hover:bg-teal-900/40 border border-gray-700 hover:border-teal-800 text-gray-400 hover:text-teal-400 text-xs rounded transition">模擬空頭</button>
+                <button onclick="app.simulate('range')" class="py-2 bg-gray-800 hover:bg-yellow-900/40 border border-gray-700 hover:border-yellow-800 text-gray-400 hover:text-yellow-400 text-xs rounded transition">模擬盤整</button>
+            </div>
+            <div class="mt-auto text-[10px] text-gray-600 text-center">
+                V3.0 Ultimate (CDP+SAR)
+            </div>
+        </aside>
+        <main class="col-span-12 lg:col-span-9 bg-[#0b101a] flex flex-col h-full overflow-hidden relative">
+            <div class="h-[45%] p-4 flex gap-4 border-b border-borderDark">
+                <div class="flex-1 flex flex-col h-full">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <h4 class="text-xs font-bold text-textGray flex items-center"><i class="fas fa-image mr-2 text-purple-400"></i>戰情圖表分析 (K線/SAR)</h4>
+                        <div class="text-[10px] text-gray-500">支援 Ctrl+V 貼上</div>
+                    </div>
+                    <div id="dropZone" class="flex-1 upload-zone rounded-xl relative flex items-center justify-center cursor-pointer group overflow-hidden" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="app.handleFile(this.files[0])">
+                        <div id="uploadPlaceholder" class="text-center pointer-events-none group-hover:scale-105 transition duration-300">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-600 mb-2 group-hover:text-blue-400"></i>
+                            <p class="text-xs text-gray-500">拖曳圖片 或 貼上截圖</p>
+                            <p class="text-[9px] text-gray-600 mt-1">上傳 K 線圖輔助輸入</p>
+                        </div>
+                        <img id="imgPreview" class="absolute inset-0 w-full h-full object-contain hidden bg-black/80" src="">
+                        <button onclick="app.clearImage(event)" id="clearImgBtn" class="absolute top-2 right-2 bg-black/50 hover:bg-red-500/80 text-white rounded-full w-6 h-6 flex items-center justify-center hidden text-xs transition z-20"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="w-1/3 flex flex-col gap-4">
+                    <div class="dashboard-card p-5 flex-1 relative overflow-hidden flex flex-col justify-center">
+                        <div class="absolute top-0 right-0 p-3 opacity-5">
+                            <i class="fas fa-dot-circle text-6xl text-white"></i>
+                        </div>
+                        <div class="text-[10px] text-blue-400 font-bold mb-1 tracking-wider">SAR 趨勢雷達</div>
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <div class="text-2xl font-black text-gray-500" id="sarStatusText">等待輸入</div>
+                        </div>
+                        <div class="text-xs text-textGray font-mono mb-3">SAR 值: <span class="text-white font-bold" id="sarValDisp">--</span></div>
+                        <div class="mt-auto">
+                            <div class="text-[10px] text-gray-500 mb-1">SAR 戰法解讀：</div>
+                            <div class="p-2 bg-black/30 rounded border border-white/5 text-[10px] text-gray-400 leading-relaxed" id="sarAdvice">
+                                請輸入 SAR 值以啟動分析。<br>
+                                K線在SAR上方 = <span class="text-red-400">多</span><br>
+                                K線在SAR下方 = <span class="text-teal-400">空</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card p-4 h-1/3 flex items-center justify-between">
+                         <div>
+                            <div class="text-[10px] text-textGray">實體 K 棒狀態</div>
+                            <div class="font-bold text-sm text-gray-400" id="kLineText">--</div>
+                         </div>
+                         <div class="text-right">
+                            <div class="text-[10px] text-textGray">漲跌幅</div>
+                            <div class="font-mono font-bold text-gray-400" id="kPercent">--%</div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="h-[55%] p-6 overflow-y-auto bg-[#0b101a]">
+                <div class="flex gap-4 mb-6">
+                    <div class="flex-1 dashboard-card p-4 border-l-4 border-blue-600">
+                        <div class="text-[10px] text-blue-400 font-bold mb-1">防守重點 (Support)</div>
+                        <div class="text-lg font-bold text-white" id="adviceDef">請輸入數據</div>
+                    </div>
+                    <div class="flex-1 dashboard-card p-4 border-l-4 border-purple-600">
+                        <div class="text-[10px] text-purple-400 font-bold mb-1">進攻/壓力 (Resistance)</div>
+                        <div class="text-lg font-bold text-white" id="adviceAtt">請輸入數據</div>
+                    </div>
+                </div>
+                <div class="dashboard-card overflow-hidden">
+                    <div class="p-3 bg-[#161b26] border-b border-borderDark flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-textLight"><i class="fas fa-list-ul mr-2 text-gray-500"></i>CDP 關鍵階梯</h4>
+                        <span class="text-[10px] text-gray-600 font-mono">Unit: TWD</span>
+                    </div>
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-[#0f131a] text-[10px] text-textGray font-mono uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3">Level</th>
+                                <th class="p-3">Price</th>
+                                <th class="p-3">Description</th>
+                                <th class="p-3 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm font-mono text-textLight divide-y divide-borderDark" id="cdpTableBody">
+                            </tbody>
+                    </table>
+                </div>
+                <div class="h-10"></div>
+            </div>
+        </main>
+    </div>
+    <script>
+        const app = (() => {
+            const els = {
+                // Inputs
+                inpName: document.getElementById('inpName'),
+                inpH: document.getElementById('inpH'),
+                inpL: document.getElementById('inpL'),
+                inpC: document.getElementById('inpC'),
+                inpOpen: document.getElementById('inpOpen'),
+                inpNow: document.getElementById('inpNow'),
+                inpSAR: document.getElementById('inpSAR'), // New SAR Input
+                // Display
+                headerTicker: document.getElementById('headerTicker'),
+                // SAR Card
+                sarStatusText: document.getElementById('sarStatusText'),
+                sarValDisp: document.getElementById('sarValDisp'),
+                sarAdvice: document.getElementById('sarAdvice'),
+                // K-Line
+                kLineText: document.getElementById('kLineText'),
+                kPercent: document.getElementById('kPercent'),
+                // Advice
+                adviceDef: document.getElementById('adviceDef'),
+                adviceAtt: document.getElementById('adviceAtt'),
+                // Table
+                cdpTableBody: document.getElementById('cdpTableBody'),
+                // Image
+                dropZone: document.getElementById('dropZone'),
+                imgPreview: document.getElementById('imgPreview'),
+                uploadPlaceholder: document.getElementById('uploadPlaceholder'),
+                clearImgBtn: document.getElementById('clearImgBtn')
+            };
+            const format = num => (Math.round(num * 100) / 100).toFixed(2);
+            const updateHeader = () => {
+                els.headerTicker.textContent = els.inpName.value || '--';
+            };
+            const calculateCDP = (h, l, c) => {
+                const cdp = (h + l + 2 * c) / 4;
+                const ah = cdp + (h - l);
+                const nh = 2 * cdp - l;
+                const nl = 2 * cdp - h;
+                const al = cdp - (h - l);
+                return { ah, nh, cdp, nl, al };
+            };
+            const analyze = () => {
+                const h = parseFloat(els.inpH.value);
+                const l = parseFloat(els.inpL.value);
+                const c = parseFloat(els.inpC.value);
+                const open = parseFloat(els.inpOpen.value);
+                const now = parseFloat(els.inpNow.value);
+                const sar = parseFloat(els.inpSAR.value); // Get SAR
+                if (isNaN(h) || isNaN(l) || isNaN(c)) return;
+                const v = calculateCDP(h, l, c);
+                // 1. SAR Analysis (Book Logic)
+                if (!isNaN(now) && !isNaN(sar)) {
+                    els.sarValDisp.textContent = sar;
+                    if (now > sar) {
+                        // Bullish (Price above SAR)
+                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-up mr-2"></i>多頭排列`;
+                        els.sarStatusText.className = "text-2xl font-black text-neon-red tracking-wide";
+                        els.sarAdvice.innerHTML = `SAR 訊號為 <span class="text-red-400 font-bold">多 (Long)</span>。<br>價格位於拋物線上方，趨勢向上。<br><span class="text-white border-b border-red-500">策略：持股續抱 / 拉回找買點。</span>`;
+                    } else {
+                        // Bearish (Price below SAR)
+                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-down mr-2"></i>空頭排列`;
+                        els.sarStatusText.className = "text-2xl font-black text-neon-green tracking-wide";
+                        els.sarAdvice.innerHTML = `SAR 訊號為 <span class="text-teal-400 font-bold">空 (Short)</span>。<br>價格位於拋物線下方，趨勢向下。<br><span class="text-white border-b border-teal-500">策略：反彈找空點 / 設停損。</span>`;
+                    }
+                } else {
+                    els.sarStatusText.textContent = "等待輸入";
+                    els.sarStatusText.className = "text-2xl font-black text-gray-500";
+                    els.sarValDisp.textContent = isNaN(sar) ? "--" : sar;
+                    els.sarAdvice.innerHTML = "請輸入「現價」與「SAR 值」<br>以啟動多空趨勢判讀。";
+                }
+                // 2. K-Line Analysis
+                if (!isNaN(now) && !isNaN(open)) {
+                    const diff = now - open;
+                    const pChange = ((now - c) / c) * 100;
+                    if (diff >= 0) {
+                        els.kLineText.innerHTML = `<i class="fas fa-fire text-red-500 mr-1"></i>實體紅K`;
+                        els.kLineText.className = "font-bold text-sm text-red-400";
+                    } else {
+                        els.kLineText.innerHTML = `<i class="fas fa-snowflake text-teal-500 mr-1"></i>實體黑K`;
+                        els.kLineText.className = "font-bold text-sm text-teal-400";
+                    }
+                    els.kPercent.textContent = (pChange > 0 ? '+' : '') + format(pChange) + '%';
+                    els.kPercent.className = `font-mono font-bold ${pChange >= 0 ? 'text-red-400' : 'text-teal-400'}`;
+                }
+                // 3. CDP Table & Advice
+                renderTable(v, now);
+                // Simple Advice Logic
+                if (!isNaN(now)) {
+                    if (now > v.cdp) {
+                        els.adviceDef.textContent = `防守 CDP (${format(v.cdp)})`;
+                        els.adviceAtt.textContent = `挑戰 NH (${format(v.nh)})`;
+                    } else {
+                        els.adviceDef.textContent = `防守 NL (${format(v.nl)})`;
+                        els.adviceAtt.textContent = `壓力 CDP (${format(v.cdp)})`;
+                    }
+                }
+            };
+            const renderTable = (v, now) => {
+                const rows = [
+                    { name: "AH", val: v.ah, desc: "追買點 / 頂部壓力", color: "text-red-400" },
+                    { name: "NH", val: v.nh, desc: "賣出點 / 短線壓力", color: "text-orange-400" },
+                    { name: "CDP", val: v.cdp, desc: "多空分界核心線", color: "text-white font-bold" },
+                    { name: "NL", val: v.nl, desc: "買進點 / 短線支撐", color: "text-green-400" },
+                    { name: "AL", val: v.al, desc: "停損點 / 底部支撐", color: "text-teal-400" }
+                ];
+                els.cdpTableBody.innerHTML = rows.map(r => {
+                    let status = "";
+                    if (!isNaN(now)) {
+                        const diff = Math.abs(now - r.val);
+                        const range = r.val * 0.003; // 0.3% range
+                        if (diff <= range) status = `<span class="badge badge-active">ACTIVE</span>`;
+                        else if ((r.name === 'AH' && now > r.val) || (r.name === 'AL' && now < r.val)) status = `<span class="text-[10px] text-gray-500">PASSED</span>`;
+                    }
+                    return `
+                        <tr class="hover:bg-[#1c2230] transition border-b border-borderDark/50">
+                            <td class="p-3 font-bold ${r.color}">${r.name}</td>
+                            <td class="p-3 font-mono text-white">${format(r.val)}</td>
+                            <td class="p-3 text-[10px] text-gray-400">${r.desc}</td>
+                            <td class="p-3 text-right">${status}</td>
+                        </tr>
+                    `;
+                }).join('');
+            };
+            const simulate = (type) => {
+                // Defaults for demo
+                if(!els.inpH.value) {
+                    els.inpH.value = 105; els.inpL.value = 98; els.inpC.value = 100;
+                    els.inpOpen.value = 101; els.inpSAR.value = 102; // Set SAR for demo
+                }
+                const v = calculateCDP(parseFloat(els.inpH.value), parseFloat(els.inpL.value), parseFloat(els.inpC.value));
+                if (type === 'bull') {
+                    els.inpNow.value = format(v.ah * 1.01);
+                    els.inpSAR.value = format(v.cdp); // SAR below price
+                } else if (type === 'bear') {
+                    els.inpNow.value = format(v.al * 0.99);
+                    els.inpSAR.value = format(v.cdp); // SAR above price
+                } else {
+                    els.inpNow.value = format(v.cdp);
+                    els.inpSAR.value = format(v.nh); // Mixed
+                }
+                analyze();
+            };
+            const clearAll = () => {
+                document.querySelectorAll('input').forEach(i => i.value = '');
+                els.sarStatusText.textContent = "等待輸入";
+                els.sarStatusText.className = "text-2xl font-black text-gray-500";
+                els.cdpTableBody.innerHTML = '';
+                clearImage(new Event('click')); // clear image
+                updateHeader();
+            };
+            // Image Logic
+            const handleFile = (file) => {
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        els.imgPreview.src = e.target.result;
+                        els.imgPreview.classList.remove('hidden');
+                        els.clearImgBtn.classList.remove('hidden');
+                        els.uploadPlaceholder.classList.add('hidden');
+                        els.dropZone.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            const clearImage = (e) => {
+                e.stopPropagation();
+                els.imgPreview.src = "";
+                els.imgPreview.classList.add('hidden');
+                els.clearImgBtn.classList.add('hidden');
+                els.uploadPlaceholder.classList.remove('hidden');
+                els.dropZone.classList.remove('has-image');
+                document.getElementById('fileInput').value = "";
+            };
+            // Paste Support
+            window.addEventListener('paste', (e) => {
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let index in items) {
+                    const item = items[index];
+                    if (item.kind === 'file' && item.type.startsWith('image/')) {
+                        handleFile(item.getAsFile());
+                    }
+                }
+            });
+            // Drag & Drop
+            const dz = els.dropZone;
+            dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+            dz.addEventListener('dragleave', (e) => { e.preventDefault(); dz.classList.remove('dragover'); });
+            dz.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dz.classList.remove('dragover');
+                if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+            });
+            return {
+                analyze, simulate, updateHeader, handleFile, clearImage, clearAll
+            };
+        })();
+    </script>
+</body>
+</html>
