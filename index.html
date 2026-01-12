@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>石頭獲利分析戰法 V5.3 Commander (Logic Fix)</title>
+    <title>石頭獲利分析戰法 V5.4 Commander (Breakout Fix)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -51,7 +51,6 @@
         #toast { visibility: hidden; min-width: 250px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid #3b82f6; opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
         #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
-        /* Highlight */
         @keyframes highlight { 0% { background-color: #fef08a; color: #000; } 100% { background-color: #1c2230; color: #e6edf3; } }
         .flash-update { animation: highlight 1.5s ease-out; }
 
@@ -66,17 +65,14 @@
         body.light-mode .text-neon-red, body.light-mode .text-accentRed, body.light-mode .text-red-400, body.light-mode .text-red-500 { color: #dc2626 !important; text-shadow: none !important; font-weight: 800 !important; }
         body.light-mode .text-neon-green, body.light-mode .text-accentGreen, body.light-mode .text-teal-400, body.light-mode .text-teal-500, body.light-mode .text-green-400 { color: #059669 !important; text-shadow: none !important; font-weight: 800 !important; font-style: normal !important; }
         body.light-mode .text-blue-400, body.light-mode .text-blue-300 { color: #1d4ed8 !important; font-weight: 700 !important; }
-        body.light-mode .text-purple-400, body.light-mode .text-purple-300 { color: #7e22ce !important; font-weight: 700 !important; }
-        body.light-mode .text-orange-400 { color: #ea580c !important; font-weight: 700 !important; }
         body.light-mode .target-card { background-color: #f8fafc !important; border: 1px solid #e2e8f0 !important; }
         body.light-mode .target-card.reached { background-color: #dcfce7 !important; border: 2px solid #16a34a !important; }
         body.light-mode .target-card.next { background-color: #dbeafe !important; border: 2px solid #2563eb !important; box-shadow: 0 0 10px rgba(37, 99, 235, 0.2) !important; }
-        body.light-mode table tbody tr:hover { background-color: #f1f5f9 !important; }
+        body.light-mode tbody tr:hover { background-color: #f1f5f9 !important; }
         body.light-mode thead { background-color: #e2e8f0 !important; color: #1e293b !important; }
         body.light-mode .modal-content { background: #ffffff !important; color: #0f172a !important; border: 1px solid #cbd5e1; }
         body.light-mode #toast { background-color: #1e293b !important; color: #fff !important; }
 
-        /* Modal */
         .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 100; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-backdrop.open { display: flex; opacity: 1; }
         .modal-content { background: #1e293b; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 24px; color: #e6edf3; transform: translateY(20px); transition: transform 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -98,13 +94,13 @@
         <div class="flex items-center gap-3">
             <i class="fas fa-chess-king text-purple-500 text-xl"></i>
             <div>
-                <h1 class="text-lg font-bold tracking-wide text-white">石頭戰法戰情室 <span class="text-xs font-normal text-textGray ml-2">V5.3 Logic Fix</span></h1>
+                <h1 class="text-lg font-bold tracking-wide text-white">石頭戰法戰情室 <span class="text-xs font-normal text-textGray ml-2">V5.4 Breakout Fix</span></h1>
             </div>
         </div>
         
         <div class="text-right flex items-center gap-3">
              <button onclick="app.toggleHelp()" class="text-xs bg-blue-900/30 hover:bg-blue-800 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded transition flex items-center gap-2"><i class="fas fa-book-open"></i> 說明書</button>
-             <button onclick="app.toggleTheme()" id="themeBtn" class="text-xs bg-gray-700/50 hover:bg-gray-600 text-gray-200 border border-gray-500/30 px-3 py-1.5 rounded transition flex items-center gap-2" title="切換明亮/深色模式"><i class="fas fa-sun"></i> 明亮模式</button>
+             <button onclick="app.toggleTheme()" id="themeBtn" class="text-xs bg-gray-700/50 hover:bg-gray-600 text-gray-200 border border-gray-500/30 px-3 py-1.5 rounded transition flex items-center gap-2"><i class="fas fa-sun"></i> 明亮模式</button>
              <button onclick="app.copyReport()" class="text-xs bg-purple-900/30 hover:bg-purple-800 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded transition flex items-center gap-2"><i class="fas fa-copy"></i> 複製戰報</button>
              <div class="w-px h-4 bg-gray-700 mx-1"></div>
              <button onclick="app.clearAll()" class="text-xs text-gray-500 hover:text-red-400 transition flex items-center gap-1"><i class="fas fa-trash-alt"></i> 重置</button>
@@ -153,11 +149,6 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="text-[10px] text-textGray block mb-1">今日開盤 (Open)</label>
-                    <input type="number" id="inpOpen" placeholder="-" class="input-dark w-full p-2 font-bold text-white" step="0.1">
-                </div>
-
                 <div class="mb-4">
                     <label class="text-[10px] text-textGray block mb-1">當前成交價 (Price)</label>
                     <input type="number" id="inpNow" placeholder="輸入現價..." class="input-dark input-price-large w-full p-3" step="0.1" onkeyup="app.analyze()">
@@ -167,9 +158,9 @@
             </div>
 
             <div class="grid grid-cols-3 gap-2">
-                <button onclick="app.simulate('bull')" class="py-2 bg-gray-800 hover:bg-red-900/40 border border-gray-700 hover:border-red-800 text-gray-400 hover:text-red-400 text-xs rounded">模擬大漲</button>
+                <button onclick="app.simulate('bull')" class="py-2 bg-gray-800 hover:bg-red-900/40 border border-gray-700 hover:border-red-800 text-gray-400 hover:text-red-400 text-xs rounded">模擬極強</button>
+                <button onclick="app.simulate('breakout')" class="py-2 bg-gray-800 hover:bg-orange-900/40 border border-gray-700 hover:border-orange-800 text-gray-400 hover:text-orange-400 text-xs rounded">模擬突破</button>
                 <button onclick="app.simulate('bear')" class="py-2 bg-gray-800 hover:bg-teal-900/40 border border-gray-700 hover:border-teal-800 text-gray-400 hover:text-teal-400 text-xs rounded">模擬大跌</button>
-                <button onclick="app.simulate('range')" class="py-2 bg-gray-800 hover:bg-yellow-900/40 border border-gray-700 hover:border-yellow-800 text-gray-400 hover:text-yellow-400 text-xs rounded">模擬盤整</button>
             </div>
         </aside>
 
@@ -179,7 +170,7 @@
                 <div class="dashboard-card p-4 relative overflow-hidden flex flex-row items-center justify-between w-full group">
                     <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition"><i class="fas fa-dot-circle text-8xl text-white"></i></div>
                     <div class="flex flex-col justify-center w-1/3 border-r border-gray-800 pr-4">
-                        <div class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1">SAR 趨勢雷達</div>
+                        <div class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1">策略判讀雷達</div>
                         <div class="text-3xl font-black text-gray-600 leading-none" id="sarStatusText">--</div>
                     </div>
                     <div class="flex flex-col justify-center w-2/3 pl-4">
@@ -252,9 +243,8 @@
                 <button onclick="app.toggleHelp()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
             <div class="space-y-4 text-sm">
-                <div><h4 class="text-blue-400 font-bold mb-1">一、CDP 逆勢操作</h4><p class="text-gray-400 text-xs">AH(強突)、NH(短壓)、CDP(中樞)、NL(買點)、AL(停損)</p></div>
-                <div><h4 class="text-green-400 font-bold mb-1">二、動能指標</h4><ul class="space-y-1 pl-2 text-xs border-l-2 border-green-500/50"><li>MACD(OSC): 紅增強/綠增弱</li><li>KD(K): >80強勢鈍化/<20弱勢鈍化</li><li>九轉(TD): 9高檔/-9低檔</li></ul></div>
-                <div><h4 class="text-purple-400 font-bold mb-1">三、SAR 趨勢</h4><p class="text-gray-400 text-xs">現價>SAR多/現價<SAR空</p></div>
+                <div><h4 class="text-blue-400 font-bold mb-1">一、CDP 操作 (V5.4 Breakout Fix)</h4><p class="text-gray-400 text-xs">AH(強突追價)、NH(突破點/支撐)、CDP(多空分界)、NL(低接買點)、AL(停損)</p></div>
+                <div><h4 class="text-green-400 font-bold mb-1">二、重點邏輯</h4><ul class="space-y-1 pl-2 text-xs border-l-2 border-green-500/50"><li>突破 NH 為攻擊訊號，不可做空</li><li>跌破 AL 為崩盤訊號，不可接刀</li></ul></div>
             </div>
             <button onclick="app.toggleHelp()" class="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">我瞭解了</button>
         </div>
@@ -267,7 +257,7 @@
             let currentSimMode = null; 
 
             const els = {
-                inpName: document.getElementById('inpName'), inpH: document.getElementById('inpH'), inpL: document.getElementById('inpL'), inpC: document.getElementById('inpC'), inpOpen: document.getElementById('inpOpen'), inpNow: document.getElementById('inpNow'), inpSAR: document.getElementById('inpSAR'), inpMainCost: document.getElementById('inpMainCost'), inpOSC: document.getElementById('inpOSC'), inpK: document.getElementById('inpK'), inpTD: document.getElementById('inpTD'),
+                inpName: document.getElementById('inpName'), inpH: document.getElementById('inpH'), inpL: document.getElementById('inpL'), inpC: document.getElementById('inpC'), inpNow: document.getElementById('inpNow'), inpSAR: document.getElementById('inpSAR'), inpMainCost: document.getElementById('inpMainCost'), inpOSC: document.getElementById('inpOSC'), inpK: document.getElementById('inpK'), inpTD: document.getElementById('inpTD'),
                 headerTicker: document.getElementById('headerTicker'), sarStatusText: document.getElementById('sarStatusText'), sarValDisp: document.getElementById('sarValDisp'), sarAdvice: document.getElementById('sarAdvice'),
                 targetMatrixContainer: document.getElementById('targetMatrixContainer'),
                 cardT1: document.getElementById('cardT1'), valT1: document.getElementById('valT1'), cardT2: document.getElementById('cardT2'), valT2: document.getElementById('valT2'), cardT3: document.getElementById('cardT3'), valT3: document.getElementById('valT3'), cardT4: document.getElementById('cardT4'), valT4: document.getElementById('valT4'),
@@ -287,11 +277,8 @@
 
             const toggleTargetSection = () => {
                 const cost = parseFloat(els.inpMainCost.value);
-                if (!isNaN(cost) && cost > 0) {
-                    els.targetMatrixContainer.classList.remove('collapsed');
-                } else {
-                    els.targetMatrixContainer.classList.add('collapsed');
-                }
+                if (!isNaN(cost) && cost > 0) els.targetMatrixContainer.classList.remove('collapsed');
+                else els.targetMatrixContainer.classList.add('collapsed');
             };
 
             const calculateCDP = (h, l, c) => { const cdp = (h + l + 2 * c) / 4; return { ah: cdp + (h - l), nh: 2 * cdp - l, cdp: cdp, nl: 2 * cdp - h, al: cdp - (h - l) }; };
@@ -307,25 +294,17 @@
                 if (isNaN(h) || isNaN(l) || isNaN(c)) return;
                 const v = calculateCDP(h, l, c);
 
-                // --- LOGIC FIX: Prioritize Price Action over SAR ---
                 let trendState = "neutral"; 
-                // 1. Check Extreme Price Action First (Breakout/Breakdown)
+                // --- V5.4 Logic Fix: Breakout Priority ---
                 if (!isNaN(now)) {
-                    if (now > v.ah) trendState = "strong_bull"; // Price > AH (Super Strong)
-                    else if (now < v.al) trendState = "strong_bear"; // Price < AL (Super Weak)
-                    // 2. Check SAR if not extreme
-                    else if (!isNaN(sar)) {
-                        if (now > sar) trendState = "bull";
-                        else trendState = "bear";
-                    } 
-                    // 3. Fallback to CDP Pivot
-                    else {
-                        if (now > v.cdp) trendState = "bull";
-                        else trendState = "bear";
-                    }
+                    if (now > v.ah) trendState = "strong_bull";       // 價格 > AH (極強)
+                    else if (now > v.nh) trendState = "breakout_bull"; // ★ 價格在 NH 與 AH 之間 (突破攻擊)
+                    else if (now < v.al) trendState = "strong_bear";  // 價格 < AL (極弱)
+                    else if (!isNaN(sar) && now > sar) trendState = "bull"; // SAR 多頭
+                    else if (now > v.cdp) trendState = "bull_con";    // 價格 > CDP (盤整偏多)
+                    else trendState = "bear";                         // 空方
                 }
 
-                // --- UI Display Logic ---
                 if (!isNaN(now)) {
                     els.sarValDisp.textContent = !isNaN(sar) ? sar : "--";
                     let extraTD = "";
@@ -338,25 +317,23 @@
                         els.sarStatusText.innerHTML = `<i class="fas fa-rocket mr-2 text-accentRed"></i>極強多方`;
                         els.sarStatusText.className = "text-4xl font-black text-neon-red tracking-wide leading-none";
                         els.sarAdvice.innerHTML = `訊號：<span class="text-accentRed font-bold">Breakout (軋空)</span> | 策略：突破 AH，強勢噴出，防守上移${extraTD}`;
+                    } else if (trendState === "breakout_bull") {
+                        // ★ New Breakout UI State
+                        els.sarStatusText.innerHTML = `<i class="fas fa-fire mr-2 text-orange-500"></i>多方攻擊`;
+                        els.sarStatusText.className = "text-4xl font-black text-orange-500 tracking-wide leading-none";
+                        els.sarAdvice.innerHTML = `訊號：<span class="text-orange-500 font-bold">Attack (突破)</span> | 策略：站穩 NH 就是買點，目標挑戰 AH${extraTD}`;
                     } else if (trendState === "strong_bear") {
                         els.sarStatusText.innerHTML = `<i class="fas fa-skull-crossbones mr-2 text-accentGreen"></i>極弱空方`;
                         els.sarStatusText.className = "text-4xl font-black text-neon-green tracking-wide leading-none";
                         els.sarAdvice.innerHTML = `訊號：<span class="text-accentGreen font-bold">Collapse (崩盤)</span> | 策略：跌破 AL，趨勢轉空，反彈逃命${extraTD}`;
-                    } else if (trendState === "bull") {
-                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-up mr-2 text-accentRed"></i>多頭排列`;
-                        els.sarStatusText.className = "text-4xl font-black text-neon-red tracking-wide leading-none";
-                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentRed font-bold">Long</span> | 策略：價格在 SAR/CDP 之上，持股續抱${extraTD}`;
-                    } else if (trendState === "bear") {
-                        // Check for Divergence (Bear SAR but Price > CDP)
-                        if (now > v.cdp) {
-                            els.sarStatusText.innerHTML = `<i class="fas fa-balance-scale mr-2 text-orange-400"></i>震盪偏多`;
-                            els.sarStatusText.className = "text-4xl font-black text-orange-400 tracking-wide leading-none";
-                            els.sarAdvice.innerHTML = `訊號：<span class="text-orange-400 font-bold">Consolidation</span> | 策略：SAR看空但站穩CDP，區間操作${extraTD}`;
-                        } else {
-                            els.sarStatusText.innerHTML = `<i class="fas fa-arrow-down mr-2 text-accentGreen"></i>空頭排列`;
-                            els.sarStatusText.className = "text-4xl font-black text-neon-green tracking-wide leading-none";
-                            els.sarAdvice.innerHTML = `訊號：<span class="text-accentGreen font-bold">Short</span> | 策略：反彈找空點，嚴設停損${extraTD}`;
-                        }
+                    } else if (trendState === "bull" || trendState === "bull_con") {
+                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-up mr-2 text-accentRed"></i>多頭盤整`;
+                        els.sarStatusText.className = "text-4xl font-black text-accentRed tracking-wide leading-none";
+                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentRed font-bold">Long</span> | 策略：價格在 CDP 之上，偏多震盪${extraTD}`;
+                    } else {
+                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-down mr-2 text-accentGreen"></i>空頭排列`;
+                        els.sarStatusText.className = "text-4xl font-black text-neon-green tracking-wide leading-none";
+                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentGreen font-bold">Short</span> | 策略：反彈找空點，嚴設停損${extraTD}`;
                     }
                 } else { resetCards(); }
 
@@ -372,34 +349,25 @@
                     }
                 }
 
-                const rows = [ { n: "AH", v: v.ah, d: "追買點 / 頂部壓力", c: "text-accentRed" }, { n: "NH", v: v.nh, d: "賣出點 / 短線壓力", c: "text-orange-400" }, { n: "CDP", v: v.cdp, d: "多空分界核心線", c: "text-white" }, { n: "NL", v: v.nl, d: "買進點 / 短線支撐", c: "text-accentGreen" }, { n: "AL", v: v.al, d: "停損點 / 底部支撐", c: "text-teal-400" } ];
+                const rows = [ { n: "AH", v: v.ah, d: "追買點 / 頂部壓力", c: "text-accentRed" }, { n: "NH", v: v.nh, d: "突破點 / 短線壓力", c: "text-orange-400" }, { n: "CDP", v: v.cdp, d: "多空分界核心線", c: "text-white" }, { n: "NL", v: v.nl, d: "買進點 / 短線支撐", c: "text-accentGreen" }, { n: "AL", v: v.al, d: "停損點 / 底部支撐", c: "text-teal-400" } ];
                 els.cdpTableBody.innerHTML = rows.map(r => {
-                    let s = ""; if (!isNaN(now)) { const diff = Math.abs(now - r.v), range = r.v * 0.003; if (diff <= range) s = `<span class="badge bg-blue-500/20 text-blue-400 border border-blue-500/50">ACTIVE</span>`; else if ((r.n === 'AH' && now > r.v) || (r.n === 'AL' && now < r.v)) s = `<span class="text-[10px] text-gray-500">PASSED</span>`; }
+                    let s = ""; if (!isNaN(now)) { const diff = Math.abs(now - r.v), range = r.v * 0.003; if (diff <= range) s = `<span class="badge bg-blue-500/20 text-blue-400 border border-blue-500/50">ACTIVE</span>`; else if ((r.n === 'AH' && now > r.v) || (r.n === 'AL' && now < r.v) || (r.n === 'NH' && now > r.v)) s = `<span class="text-[10px] text-gray-500">PASSED</span>`; }
                     return `<tr class="hover:bg-[#1c2230] transition border-b border-borderDark/50"><td class="p-3 font-bold ${r.c}">${r.n}</td><td class="p-3 font-mono text-white text-lg">${format(r.v)}</td><td class="p-3 text-xs text-gray-400">${r.d}</td><td class="p-3 text-right">${s}</td></tr>`;
                 }).join('');
 
-                // --- Updated Strategy Logic ---
                 if (!isNaN(now)) {
                     let defText = "", attText = "";
-                    
                     if (trendState === "strong_bull") {
-                        defText = `防守 AH (${format(v.ah)})`;
-                        attText = `天空無壓力 (移動停利)`;
+                        defText = `防守 AH (${format(v.ah)})`; attText = `天空無壓力 (移動停利)`;
+                    } else if (trendState === "breakout_bull") {
+                        // ★ New Strategy Text
+                        defText = `防守 NH (${format(v.nh)})`; attText = `挑戰 AH (${format(v.ah)})`;
                     } else if (trendState === "strong_bear") {
-                        defText = `觀望 (勿接刀)`;
-                        attText = `壓力 AL (${format(v.al)})`;
-                    } else if (trendState === "bull") {
-                        defText = `防守 NL (${format(v.nl)})`;
-                        attText = `挑戰 NH (${format(v.nh)})`;
-                        if (!isNaN(kVal) && kVal > 80) attText = `🔥 強勢鈍化! 挑戰 AH`;
-                    } else { // Bear or Consolidation
-                        if (now > v.cdp) {
-                            defText = `防守 CDP (${format(v.cdp)})`;
-                            attText = `挑戰 NH (${format(v.nh)})`;
-                        } else {
-                            defText = `防守 AL (${format(v.al)})`;
-                            attText = `壓力 CDP (${format(v.cdp)})`;
-                        }
+                        defText = `觀望 (勿接刀)`; attText = `壓力 AL (${format(v.al)})`;
+                    } else if (trendState === "bull" || trendState === "bull_con") {
+                        defText = `防守 NL (${format(v.nl)})`; attText = `挑戰 NH (${format(v.nh)})`;
+                    } else { 
+                        defText = `防守 AL (${format(v.al)})`; attText = `壓力 CDP (${format(v.cdp)})`;
                     }
                     els.adviceDef.textContent = defText; els.adviceAtt.textContent = attText;
                 }
@@ -412,8 +380,8 @@
                 if(!els.inpH.value) { els.inpH.value = 100; els.inpL.value = 95; els.inpC.value = 98; els.inpSAR.value = 96; els.inpMainCost.value = 90; els.inpOSC.value = 0.5; els.inpK.value = 75; els.inpTD.value = 5; }
                 const v = calculateCDP(parseFloat(els.inpH.value), parseFloat(els.inpL.value), parseFloat(els.inpC.value));
                 if (type === 'bull') { els.inpNow.value = format(v.ah * 1.01); els.inpSAR.value = format(v.cdp); els.inpOSC.value = 1.2; els.inpK.value = 85; els.inpTD.value = 8; } 
+                else if (type === 'breakout') { els.inpNow.value = format((v.nh + v.ah) / 2); els.inpSAR.value = format(v.cdp); els.inpOSC.value = 0.8; els.inpK.value = 70; els.inpTD.value = 6; } // New Simulation
                 else if (type === 'bear') { els.inpNow.value = format(v.al * 0.99); els.inpSAR.value = format(v.cdp); els.inpOSC.value = -1.2; els.inpK.value = 15; els.inpTD.value = -8; } 
-                else { els.inpNow.value = format(v.cdp); els.inpSAR.value = format(v.nh); els.inpOSC.value = 0.1; els.inpK.value = 50; els.inpTD.value = 3; }
                 analyze(true);
             };
 
@@ -422,41 +390,39 @@
                 if (isNaN(h)) { showToast('請先輸入數據以生成報告'); return; }
                 const v = calculateCDP(h, l, c);
                 
-                // Logic Reconstruction for Report
-                let trendStr = "中性";
-                let strategyText = "";
-                let recBuy = "--", recSell = "--";
-                
-                // Determine Trend State (Same logic as analyze)
+                let trendStr = "中性", strategyText = "", recBuy = "--", recSell = "--";
                 let trendState = "neutral";
                 if (!isNaN(now)) {
                     if (now > v.ah) trendState = "strong_bull";
+                    else if (now > v.nh) trendState = "breakout_bull"; // ★ Logic fix
                     else if (now < v.al) trendState = "strong_bear";
                     else if (!isNaN(sar) && now > sar) trendState = "bull";
-                    else if (now > v.cdp) trendState = "bull_con"; // Consolidation
+                    else if (now > v.cdp) trendState = "bull_con";
                     else trendState = "bear";
                 }
 
-                // Logic Mapping
                 if (trendState === "strong_bull") {
                     trendStr = "🚀 極強多方 (軋空噴出)";
-                    strategyText = `建議方向：多方強勢，不可做空\n`;
-                    strategyText += `操作建議：已突破 AH (${format(v.ah)})，多頭氣勢極強。持股續抱，防守點上移至 AH，不建議追高，拉回不破 AH 再加碼。`;
+                    strategyText = `建議方向：多方強勢，不可做空\n操作建議：已突破 AH (${format(v.ah)})，多頭氣勢極強。持股續抱，防守點上移至 AH，不建議追高，拉回不破 AH 再加碼。`;
                     recBuy = `支撐 ${format(v.ah)}`;
+                } else if (trendState === "breakout_bull") {
+                    // ★ New Report Text for Breakout
+                    trendStr = "🔥 多方攻擊 (突破 NH)";
+                    strategyText = `建議方向：積極進場 (追價/突破)\n操作建議：股價已越過 NH (${format(v.nh)}) 轉強，依據戰法圖示，此為攻擊訊號。建議市價進場，目標挑戰 AH。`;
+                    recBuy = `市價 / 站穩 ${format(v.nh)}`; 
+                    recSell = `挑戰 AH (${format(v.ah)})`;
                 } else if (trendState === "strong_bear") {
                     trendStr = "☠️ 極弱空方 (崩盤)";
-                    strategyText = `建議方向：空方殺戮，避開接刀\n`;
-                    strategyText += `操作建議：已跌破 AL (${format(v.al)})，主力棄守。多單應無條件離場，空手者絕對不可進場接刀。`;
+                    strategyText = `建議方向：空方殺戮，避開接刀\n操作建議：已跌破 AL (${format(v.al)})，主力棄守。多單應無條件離場，空手者絕對不可進場接刀。`;
                     recBuy = `觀望 (等待站回 AL)`;
                 } else if (trendState === "bull" || trendState === "bull_con") {
                     trendStr = "🔴 多方 (震盪盤堅)";
-                    strategyText = `建議方向：多方 (建議買進)\n`;
-                    strategyText += `操作建議：股價位於支撐之上。建議在 ${format(v.nl)} ~ ${format(v.cdp)} 之間分批佈局多單。`;
+                    strategyText = `建議方向：多方 (建議低接)\n操作建議：股價位於支撐之上。建議在 ${format(v.nl)} ~ ${format(v.cdp)} 之間分批佈局多單。`;
                     recBuy = `${format(v.nl)} ~ ${format(v.cdp)}`;
+                    recSell = `壓力 NH ${format(v.nh)}`;
                 } else {
                     trendStr = "🟢 空方 (弱勢整理)";
-                    strategyText = `建議方向：空方 (保守觀望)\n`;
-                    strategyText += `操作建議：股價受壓，建議觀望。若盤中站穩 ${format(v.cdp)} 可嘗試短多，否則以反彈空為主。`;
+                    strategyText = `建議方向：空方 (保守觀望)\n操作建議：股價受壓，建議觀望。若盤中站穩 ${format(v.cdp)} 可嘗試短多，否則以反彈空為主。`;
                     recBuy = `站穩 ${format(v.cdp)}`;
                 }
 
@@ -470,17 +436,13 @@
                 if (!isNaN(cost) && cost > 0) { 
                     const t = calculateTargets(cost); 
                     targetText = `\n獲利了解價位（參考主力目標價）\n① 短線獲利：${format(t.t1)}\n② 出貨上緣：${format(t.t2)}\n③ 波段延伸：${format(t.t3)}\n④ 誘多末端：${format(t.t4)}`; 
-                    recSell = `${format(t.t1)} ~ ${format(t.t2)}`; 
-                } else {
-                    recSell = `${format(v.nh)} (短壓)`;
-                }
+                } 
 
                 let stars = "", starDesc = "";
                 if (now < v.al) { stars = "1顆星 ★☆☆☆☆"; starDesc = "趨勢非常不妙 ☹️（空頭排列）"; } else if (now < v.cdp) { stars = "2顆星 ★★☆☆☆"; starDesc = "正在谷底掙扎 😕（打底盤整）"; } else if (now < v.nh) { stars = "3顆星 ★★★☆☆"; starDesc = "準備要登大人 😏（突破頸線）"; } else if (now < v.ah) { stars = "4顆星 ★★★★☆"; starDesc = "多頭猛攻，獲利奔騰 🤑（主升段噴出）"; } else { stars = "5顆星 ★★★★★"; starDesc = "萬里無雲，飛向宇宙 🚀（創新高/天空沒有極限）"; }
                 const dateStr = new Date().toLocaleString('zh-TW', { hour12: false });
-                let reportTitle = `${name} 盤中趨勢分析 📈`;
-                if (currentSimMode === 'bull') reportTitle = `這是代號${name}的模擬大漲分析報告 🚀`; else if (currentSimMode === 'bear') reportTitle = `這是代號${name}的模擬大跌分析報告 📉`; else if (currentSimMode === 'range') reportTitle = `這是代號${name}的模擬盤整分析報告 ➖`;
-                const report = `📊 【石頭戰法戰情室】\n${reportTitle}\n📅 時間：${dateStr}\n-------------------------\n【市場數據】\n🔹 昨 H/L/C：${h} / ${l} / ${c}\n🔹 當前現價：${isNaN(now) ? '--' : now}\n🔹 SAR 數值：${isNaN(sar) ? '--' : sar}\n🌊 SAR 趨勢：${sarTrendStr}\n${indStr}\n-------------------------\n【CDP 關鍵點位】\n🚀 AH (突破)：${format(v.ah)}\n🛑 NH (壓力)：${format(v.nh)}\n⚖️ CDP(中樞)：${format(v.cdp)}\n🛡️ NL (支撐)：${format(v.nl)}\n☠️ AL (停損)：${format(v.al)}\n-------------------------\n【目前股價趨勢】\n${trendStr}\n\n${strategyText}\n-------------------------\n【結論】\n推薦進場買點價位：${recBuy}\n推薦獲利了結價位：${recSell}\n本檔股票推薦進場星星指數：${stars}\n${starDesc}\n-------------------------\n(由 石頭戰法 V5.3 Commander 生成)`;
+                
+                const report = `📊 【石頭戰法戰情室】\n${name} 盤中趨勢分析 📈\n📅 時間：${dateStr}\n-------------------------\n【市場數據】\n🔹 昨 H/L/C：${h} / ${l} / ${c}\n🔹 當前現價：${isNaN(now) ? '--' : now}\n🔹 SAR 數值：${isNaN(sar) ? '--' : sar}\n🌊 SAR 趨勢：${sarTrendStr}\n${indStr}\n-------------------------\n【CDP 關鍵點位】\n🚀 AH (強突)：${format(v.ah)}\n🔥 NH (突破)：${format(v.nh)}\n⚖️ CDP(中樞)：${format(v.cdp)}\n🛡️ NL (支撐)：${format(v.nl)}\n☠️ AL (停損)：${format(v.al)}\n-------------------------\n【目前股價趨勢】\n${trendStr}\n\n${strategyText}\n-------------------------\n【結論】\n推薦進場買點價位：${recBuy}\n推薦獲利了結價位：${recSell}\n本檔股票推薦進場星星指數：${stars}\n${starDesc}\n-------------------------\n(由 石頭戰法 V5.4 Commander 生成)`;
                 navigator.clipboard.writeText(report).then(() => { showToast(); });
             };
 
