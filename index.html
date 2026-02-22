@@ -1,477 +1,1156 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>石頭獲利分析戰法 V5.6 Commander</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>傑克.史東：N字戰法指揮中心 (V24 動能校準版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
-    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f1f5f9; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .invalid-target { text-decoration: line-through; color: #9ca3af; }
+        .input-error { border-color: #ef4444 !important; ring: 2px; ring-color: #ef4444; background-color: #fef2f2; }
+        
+        @keyframes highlightPulse {
+            0% { background-color: #fff; }
+            50% { background-color: #fef9c3; }
+            100% { background-color: #fff; }
+        }
+        .highlight-input { animation: highlightPulse 1s ease-in-out; }
+
+        details > summary { list-style: none; cursor: pointer; transition: all 0.2s; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary { margin-bottom: 0.5rem; }
+        details > summary:hover { background-color: #f8fafc; }
+
+        .ai-content h1, .ai-content h2, .ai-content h3 { font-weight: 800; margin-top: 0.5em; margin-bottom: 0.3em; color: #1e1b4b; }
+        .ai-content ul { list-style-type: disc; padding-left: 1.2em; margin-bottom: 0.5em; }
+        .ai-content p { margin-bottom: 0.5em; line-height: 1.6; }
+        .ai-content strong { color: #b91c1c; }
+        
+        .v24-badge {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #ffffff; 
+            text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border: 1px solid #93c5fd;
+        }
+        
+        .hidden { display: none !important; }
+    </style>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        bgDark: '#0b101a',
-                        cardDark: '#111621',
-                        borderDark: '#232a3b',
-                        accentRed: '#ff4d4f',
-                        accentGreen: '#2ec7c9',
-                        accentPurple: '#a78bfa',
-                        textGray: '#8b949e',
-                        textLight: '#e6edf3'
-                    },
-                    fontFamily: {
-                        mono: ['"Roboto Mono"', 'monospace'],
-                        sans: ['"Noto Sans TC"', 'sans-serif']
+        function toggleEncyclopedia() {
+            const content = document.getElementById('encyclopediaContent');
+            if (content) content.classList.toggle('hidden');
+        }
+    </script>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
+        <div class="bg-slate-900 p-5 text-white text-center relative z-20 shadow-md">
+            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v24-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V24 動能校準版</span></h1>
+            <p class="text-xs text-slate-400 mt-1">結構防守 × 斐波那契目標 × 智能動能校正</p>
+        </div>
+
+        <div class="bg-slate-50 border-b border-slate-200">
+            <div id="encyclopediaToggleBtn" class="p-3 text-center bg-blue-700 text-white font-bold text-sm cursor-pointer hover:bg-blue-800 transition-colors" onclick="toggleEncyclopedia()">
+                📖 點我打開：V24 波浪 × N字 戰術百科 ▼
+            </div>
+            <div id="encyclopediaContent" class="hidden max-h-[500px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
+                
+                <div class="bg-blue-50 p-3 rounded border border-blue-200 mb-2">
+                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ V24 核心判斷引擎升級</p>
+                    <div class="text-xs text-slate-700 space-y-2">
+                        <p><span class="font-bold text-blue-700">修正盲點：</span> 過去系統僅依賴「收盤價突破」來判定強勢。現在，即使收盤留上影線未過高，只要 <span class="font-bold text-red-600">RSI(5T)>60 且 MACD擴張</span>，系統將智能校正為「強勢整理(盤堅/軋空)」，避免高動能股被誤判為死板盤整。</p>
+                        <p><span class="font-bold text-red-600">風險鐵律：</span> 軋空低 (第2波低點) 絕對不可跌破起漲點 (第1波起點)。</p>
+                    </div>
+                </div>
+
+                <details class="group border border-orange-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
+                        <span>多空趨勢盤態分級 (Bull vs Bear)</span>
+                        <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-4">
+                        <div class="border-l-4 border-red-500 pl-2">
+                            <p class="font-bold text-red-800 mb-1">📈 多方盤態</p>
+                            <ul class="space-y-1">
+                                <li><span class="font-bold">⭐️ 盤堅盤：</span> N字回測測試支撐，守軋空低。</li>
+                                <li><span class="font-bold">⭐️⭐️ 軋空盤：</span> 高檔強勢整理，以盤代跌。</li>
+                                <li><span class="font-bold text-red-600">⭐️⭐️⭐️ 強軋空：</span> 噴出不回頭，空頭抵抗失敗。</li>
+                            </ul>
+                        </div>
+                        <div class="border-l-4 border-green-600 pl-2">
+                            <p class="font-bold text-green-900 mb-1">📉 空方盤態</p>
+                            <ul class="space-y-1">
+                                <li><span class="font-bold">⚠️ 盤跌盤：</span> 緩跌，多頭抵抗反彈。</li>
+                                <li><span class="font-bold">⚠️⚠️ 殺多盤：</span> 多頭抵抗失敗，反彈不過壓力。</li>
+                                <li><span class="font-bold text-green-700">⚠️⚠️⚠️ 強殺多：</span> 多頭放棄抵抗，跳空崩盤趕底。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-5 relative z-0">
+            
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                <h3 class="text-xs font-black text-blue-900 mb-2 flex items-center">
+                    🎮 戰術模擬 (自動帶入完美波浪數據)
+                </h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="simulate('strong')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded text-xs transition-colors flex items-center justify-center shadow-sm">
+                        🚀 極強 (第3波延伸)
+                    </button>
+                    <button onclick="simulate('break')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 rounded text-xs transition-colors flex items-center justify-center shadow-sm">
+                        🔥 突破 (第3波初升)
+                    </button>
+                    <button onclick="simulate('crash')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-xs transition-colors flex items-center justify-center shadow-sm">
+                        💀 大跌 (C波主跌)
+                    </button>
+                    <button onclick="simulate('flat')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 rounded text-xs transition-colors flex items-center justify-center shadow-sm">
+                        ➖ 盤整 (第4波整理)
+                    </button>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-slate-700 font-bold mb-1 text-sm">股票名稱/代號</label>
+                <input type="text" id="stockName" class="w-full p-2 border-2 border-slate-200 rounded focus:ring-2 focus:ring-slate-500 font-bold placeholder-slate-300 transition-colors" placeholder="例如：偉詮電 (2436)">
+            </div>
+
+            <div>
+                <label class="block text-slate-700 font-bold mb-2 text-sm">1. 目前寶塔線狀態 (趨勢判定)</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="setStatus('GREEN')" id="btn-green" class="py-3 px-4 border-2 rounded-lg font-bold transition-all border-green-500 bg-green-50 text-green-700 shadow-inner ring-2 ring-green-100 opacity-100">
+                        🟩 綠色 (空手/盤整)
+                    </button>
+                    <button onclick="setStatus('RED')" id="btn-red" class="py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60">
+                        🟥 紅色 (持有/多方)
+                    </button>
+                </div>
+                <input type="hidden" id="currentStatus" value="GREEN">
+            </div>
+
+            <div class="border-t border-slate-200 pt-4">
+                <h3 class="text-sm font-black text-slate-800 mb-3 border-l-4 border-blue-600 pl-2">波浪節點與價格 (Price Action)</h3>
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                    <div class="col-span-2 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-blue-900 font-bold mb-1 text-xs">目前價 (Current)</label>
+                            <input type="number" step="0.01" id="closePrice" class="w-full p-2 border-2 border-blue-200 rounded focus:ring-blue-500 text-lg font-mono font-bold text-blue-900" placeholder="跳動價">
+                        </div>
+                        <div>
+                            <label class="block text-red-700 font-bold mb-1 text-xs">轉折高 <span class="bg-red-100 px-1 rounded text-[10px]">h2 (第1波高)</span></label>
+                            <input type="number" step="0.01" id="todayHigh" class="w-full p-2 border-2 border-red-200 rounded focus:ring-red-500 text-lg font-mono font-bold text-red-700" placeholder="今日最高">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">前三高 (頸線區)</label>
+                        <input type="number" step="0.01" id="high3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="昨/前/大前">
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">起漲點 <span class="bg-slate-200 px-1 rounded text-[10px]">L (前三低)</span></label>
+                        <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="基礎測幅起點">
+                    </div>
+
+                    <!-- V24 關鍵點位卡片 -->
+                    <div class="col-span-2 bg-[#f8fafc] rounded-xl border-2 border-slate-200 mt-2 relative overflow-hidden shadow-sm">
+                        <!-- Watermark Icon -->
+                        <div class="absolute right-[5px] top-[5px] text-[70px] opacity-[0.04] pointer-events-none transform rotate-[-15deg]">🗝️</div>
+                
+                        <!-- Header & Input Area -->
+                        <div class="p-4 border-b border-slate-200 bg-white relative z-10">
+                            <div class="flex justify-between items-center mb-3">
+                                <label class="block text-[#1e293b] font-black text-[17px] tracking-wide">★ 關鍵點位 (軋空低 / 殺多高)</label>
+                                <button onclick="toggleEncyclopedia()" class="text-[11px] bg-[#475569] text-white px-2 py-1 rounded hover:bg-[#334155] cursor-pointer shadow flex items-center gap-1 transition-colors">❓ 填寫邏輯</button>
+                            </div>
+                            <p class="text-[13px] font-medium text-[#64748b] mb-4 flex items-start leading-relaxed">
+                                <span class="text-yellow-400 text-base mr-1 drop-shadow-sm">💡</span>
+                                <span>如何快速判斷軋空低：「首先找到寶塔線最近一次 (綠翻紅)的那根紅色寶塔線對應 K棒的最低點價位」</span>
+                            </p>
+                            <input type="number" step="0.01" id="breakoutLow" class="w-full p-3 border-2 border-slate-300 rounded-lg font-mono text-3xl text-slate-900 font-black bg-white focus:border-slate-500 focus:ring-0 shadow-inner transition-colors" placeholder="輸入點位">
+                        </div>
+                
+                        <!-- Instruction Area -->
+                        <div class="p-4 space-y-4 text-[13px] text-slate-700 bg-[#f8fafc]">
+                            <div class="leading-relaxed">
+                                <span class="bg-[#fef08a] text-[#713f12] px-1.5 py-0.5 rounded text-xs font-bold mr-1">智能判斷</span>
+                                <span class="font-bold text-[#475569]">若無軋空低(空方/盤整)，不填則系統自動抓取壓力或箱底。</span>
+                            </div>
+                            
+                            <hr class="border-slate-200 border-dashed">
+                            
+                            <div class="leading-relaxed">
+                                <div class="mb-1">
+                                    <span class="text-[#dc2626] font-bold text-[15px] mr-1">A.</span>
+                                    <span class="bg-[#fee2e2] text-[#991b1b] px-1.5 py-0.5 rounded text-xs font-bold mr-1 tracking-wide">突破當日(空手) :</span>
+                                    <span class="font-bold">比較 <span class="text-[#2563eb]">昨日收盤</span> 與 <span class="text-[#2563eb]">今日最低</span>，填兩者中較低價。</span>
+                                </div>
+                                <p class="text-[#94a3b8] ml-6 text-xs font-medium">(若有跳空缺口，防守昨收；若無缺口，防守今低)</p>
+                            </div>
+                            
+                            <div class="leading-relaxed">
+                                <span class="text-[#16a34a] font-bold text-[15px] mr-1">B.</span>
+                                <span class="bg-[#dcfce3] text-[#166534] px-1.5 py-0.5 rounded text-xs font-bold mr-1 tracking-wide">持有續抱 :</span>
+                                <span class="font-bold text-[#334155]">填寫「當初買進那天」(主控紅K) 計算出的軋空低點。</span>
+                            </div>
+                        </div>
+                
+                        <!-- Footer Warning -->
+                        <div class="bg-white py-3 border-t border-slate-200 flex justify-center items-center gap-2 text-[#dc2626] font-black text-[15px] shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+                            <span class="text-xl">⚡</span> 收盤價跌破此點 = 攻擊失敗 (必需停損)
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="border-t border-slate-200 pt-4">
+                <h3 class="text-sm font-black text-slate-800 mb-3 border-l-4 border-orange-500 pl-2">波浪雙動能輸入 (V24 量化模組)</h3>
+                
+                <div class="bg-orange-50 p-4 rounded-xl border-2 border-orange-200 shadow-inner space-y-4">
+                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded-lg border border-orange-100 shadow-sm">
+                        <input type="checkbox" id="checkNonFinance" class="form-checkbox h-5 w-5 text-orange-600 rounded" checked>
+                        <span class="text-sm text-slate-800 font-bold">排除金融股 (確認股性具備飆漲爆發力)</span>
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-4 pt-2 border-t border-orange-200/60">
+                        <div>
+                            <label class="block text-orange-900 font-black mb-1 text-xs">RSI 數值 <span class="bg-orange-200 text-orange-800 px-1 rounded text-[10px] ml-1">短天期 5T</span></label>
+                            <input type="number" step="0.01" id="rsiVal" class="w-full p-2 border-2 border-orange-300 rounded-lg focus:ring-orange-500 font-mono text-xl font-bold text-orange-900 placeholder-orange-300" placeholder="例如: 84.89">
+                            <p class="text-[10px] text-orange-600 mt-1 font-bold">>60 轉強 / >80 過熱</p>
+                        </div>
+                        <div>
+                            <label class="block text-orange-900 font-black mb-1 text-xs">MACD 柱狀體 <span class="bg-orange-200 text-orange-800 px-1 rounded text-[10px] ml-1">OSC 數值</span></label>
+                            <input type="number" step="0.01" id="macdVal" class="w-full p-2 border-2 border-orange-300 rounded-lg focus:ring-orange-500 font-mono text-xl font-bold text-orange-900 placeholder-orange-300" placeholder="例如: 1.38">
+                            <p class="text-[10px] text-orange-600 mt-1 font-bold">正值擴張 / 負值收斂</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-200 pt-4">
+                <h3 class="text-sm font-black text-slate-800 mb-3 border-l-4 border-purple-600 pl-2">成交量結構 (Volume)</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-purple-900 font-bold mb-1 text-xs">今日量 (Today Vol)</label>
+                        <input type="number" id="todayVol" class="w-full p-2 border-2 border-purple-200 rounded-lg focus:ring-purple-500 font-mono text-lg font-bold text-purple-900" placeholder="盤中預估量">
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">過去三日均量 (Avg Vol)</label>
+                        <input type="number" id="avgVol" class="w-full p-2 border-2 border-slate-300 rounded-lg font-mono text-sm font-bold text-slate-700" placeholder="輸入 5T均量">
+                    </div>
+                </div>
+            </div>
+
+            <div id="advancedInputs" class="hidden bg-indigo-50 p-3 rounded-lg mt-4 border border-indigo-100">
+                <h3 class="text-sm font-black text-indigo-900 mb-2">★ 盤態強弱判定參數 (輔助軋空低抓取)</h3>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日收盤</label>
+                        <input type="number" id="prevClose" class="w-full p-1.5 border border-indigo-200 rounded text-sm text-center font-bold text-blue-800">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">今日最低</label>
+                        <input type="number" id="todayLow" class="w-full p-1.5 border border-indigo-200 rounded text-sm text-center font-bold text-blue-800">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日最低</label>
+                        <input type="number" id="prevLow" class="w-full p-1.5 border border-indigo-200 rounded text-sm text-center">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-5 gap-2 mt-6">
+                <button onclick="calculateStrategy()" class="col-span-3 bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 text-lg tracking-widest border border-slate-700 flex justify-center items-center gap-2">
+                    ⚡ 執行立體驗算
+                </button>
+                <button onclick="clearInputs()" class="col-span-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-4 rounded-xl shadow-md transition-all active:scale-95 text-base border border-gray-300 flex items-center justify-center">
+                    🔄 重置
+                </button>
+            </div>
+
+            <div id="resultArea" class="hidden fade-in mt-6 pb-10">
+                <div id="resultBox" class="p-5 rounded-2xl border-l-8 shadow-xl bg-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span id="stockBadge" class="bg-slate-800 text-white text-[10px] px-2 py-0.5 rounded font-bold mb-1 inline-block"></span>
+                                <h2 id="resultTitle" class="text-2xl font-black leading-tight"></h2>
+                            </div>
+                            <span id="resultIcon" class="text-4xl"></span>
+                        </div>
+
+                        <div class="mb-3 flex flex-wrap gap-2">
+                            <span id="trendTag" class="text-xs font-bold px-2 py-1 rounded-md border"></span>
+                            <span id="volTag" class="text-xs font-bold px-2 py-1 rounded-md border"></span>
+                        </div>
+                        
+                        <!-- 動能量化結果區 -->
+                        <div id="momentumDisplay" class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs font-bold mb-3 shadow-sm text-slate-700">
+                            <div class="flex items-center gap-2 mb-1 border-b border-slate-200 pb-1">
+                                <span class="text-lg">📊</span> <span class="text-slate-900 tracking-wide uppercase">動能指標量化結果</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <div id="rsiResult" class=""></div>
+                                <div id="macdResult" class=""></div>
+                            </div>
+                        </div>
+
+                        <div id="momentumWarning" class="hidden bg-orange-100 border border-orange-400 text-orange-800 px-3 py-2 rounded-lg text-xs font-bold mb-3 shadow-sm flex items-center gap-2">
+                            <span class="text-lg">⚠️</span> 警告：動能未達標，高機率為 B波假突破或量價背離！
+                        </div>
+                        <div id="momentumSuccess" class="hidden bg-blue-100 border border-blue-400 text-blue-800 px-3 py-2 rounded-lg text-xs font-bold mb-3 shadow-sm flex items-center gap-2">
+                            <span class="text-lg">✅</span> 驗證通過：雙指標轉強，具備波浪主升段爆發特徵。
+                        </div>
+                        
+                        <p id="resultAction" class="text-2xl font-black mb-3 border-b pb-3"></p>
+                        
+                        <div id="targetBox" class="hidden bg-[#f0fdf4] p-4 rounded-xl border border-[#bbf7d0] mb-3 text-sm shadow-sm transition-all">
+                            <h5 id="targetHeader" class="font-bold text-[#166534] border-b border-[#bbf7d0] pb-2 mb-3 flex justify-between items-center">
+                                <span>🎯 斐波那契測幅 <span class="text-[11px] text-[#15803d] font-normal">(基準 $P_R$: <span id="valPR"></span>, 振幅 $A$: <span id="valA"></span>)</span></span>
+                                <span id="targetStatusBadge" class="text-[10px] bg-[#bbf7d0] px-1.5 py-0.5 rounded text-[#166534]">Active</span>
+                            </h5>
+                            <div id="targetList" class="space-y-2 font-mono text-slate-700">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs">一飽(1N) 基礎對稱：</span>
+                                    <span class="font-black text-[#15803d] text-base" id="target1"></span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs">二吐(2N) 1.618波浪延伸：</span>
+                                    <span class="font-black text-[#15803d] text-base" id="target2"></span>
+                                </div>
+                                <div class="flex justify-between items-center bg-[#dcfce3] -mx-2 px-2 py-1 rounded-md">
+                                    <span class="font-bold text-[#7e22ce] text-xs">五倍(5N) 2.618極限：</span>
+                                    <span class="font-black text-[#7e22ce] text-lg" id="target5"></span>
+                                </div>
+                            </div>
+                            <div id="targetInvalidMsg" class="hidden mt-3 text-center bg-red-100 text-red-600 font-bold py-2 rounded-lg text-xs border border-red-200">
+                                ❌ 跌破軋空低防守，測幅目標全數失效
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 shadow-sm">
+                            <p class="text-[11px] text-slate-500 font-black uppercase mb-2">★ 戰術指引 (Tactical Advice)</p>
+                            <p id="resultAdvice" class="text-sm text-slate-800 font-medium leading-relaxed"></p>
+                        </div>
+                        
+                        <div id="aiAnalysisBox" class="hidden mt-4 p-5 bg-indigo-50 border border-indigo-200 rounded-xl text-sm text-slate-700 shadow-inner relative">
+                            <div class="absolute top-0 right-0 p-2 opacity-[0.15] text-5xl">🌊</div>
+                            <h4 id="aiReportTitle" class="font-black text-indigo-900 mb-3 border-b border-indigo-200 pb-2 flex items-center text-base">
+                                🧠 傑克.史東 戰略分析報告
+                            </h4>
+                            <div id="aiContent" class="ai-content relative z-10"></div>
+                        </div>
+
+                        <div class="mt-4">
+                             <button onclick="copyReport()" id="copyBtn" class="w-full flex items-center justify-center space-x-2 bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl transition-all active:scale-95 text-base shadow-md">
+                                <span>📋 複製完整作戰報告</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let baseReportText = "";
+        let aiReportContent = "";
+        let currentSimulationType = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const prevCloseInput = document.getElementById('prevClose');
+            const todayLowInput = document.getElementById('todayLow');
+            const breakoutLowInput = document.getElementById('breakoutLow');
+
+            function autoCalcShortSqueezeLow() {
+                const status = document.getElementById('currentStatus').value;
+                if(status !== 'RED') return; 
+                const pc = parseFloat(prevCloseInput.value);
+                const tl = parseFloat(todayLowInput.value);
+                
+                if (!isNaN(pc) && !isNaN(tl)) {
+                    const suggestion = Math.min(pc, tl);
+                    if(breakoutLowInput.value === '' || parseFloat(breakoutLowInput.value) !== suggestion) {
+                         breakoutLowInput.value = suggestion;
+                         breakoutLowInput.classList.remove('highlight-input');
+                         void breakoutLowInput.offsetWidth; 
+                         breakoutLowInput.classList.add('highlight-input');
                     }
                 }
             }
+
+            prevCloseInput.addEventListener('input', autoCalcShortSqueezeLow);
+            todayLowInput.addEventListener('input', autoCalcShortSqueezeLow);
+            
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => {
+                    if (currentSimulationType) currentSimulationType = null;
+                });
+            });
+        });
+
+        async function copyReport() {
+            if (!baseReportText) { alert("請先執行運算！"); return; }
+            let fullReport = baseReportText;
+            if (aiReportContent) fullReport += `\n\n【四、🧠 傑克.史東戰略分析報告】\n${aiReportContent}`;
+
+            try {
+                await navigator.clipboard.writeText(fullReport);
+                showCopySuccess();
+            } catch (err) {
+                const textarea = document.createElement('textarea');
+                textarea.value = fullReport;
+                textarea.style.position = 'fixed'; 
+                textarea.style.left = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showCopySuccess();
+                } catch (e) {
+                    alert('複製失敗，請手動複製。');
+                }
+                document.body.removeChild(textarea);
+            }
         }
-    </script>
 
-    <style>
-        body { background-color: #0b101a; color: #e6edf3; font-family: 'Noto Sans TC', sans-serif; height: 100vh; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
-        .input-dark { background-color: #1c2230; border: 1px solid #2d3548; color: #e6edf3; border-radius: 6px; font-family: 'Roboto Mono', monospace; transition: all 0.3s; text-align: center; }
-        .input-dark:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); background-color: #232a3b; }
-        .input-price-large { background-color: #1c2230; border: 2px solid #3b82f6; font-size: 1.5rem; font-weight: 700; color: #60a5fa; }
-        .dashboard-card { background-color: #111621; border: 1px solid #232a3b; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); transition: transform 0.2s, background-color 0.3s, border-color 0.3s; }
-        .collapsible-section { transition: all 0.4s ease-in-out; overflow: hidden; max-height: 200px; opacity: 1; transform: scaleY(1); transform-origin: top; }
-        .collapsible-section.collapsed { max-height: 0; opacity: 0; transform: scaleY(0); margin: 0 !important; padding: 0 !important; }
-        .target-card { background: rgba(17, 22, 33, 0.8); border: 1px solid #232a3b; padding: 12px; border-radius: 8px; position: relative; overflow: hidden; transition: all 0.3s; }
-        .target-card.reached { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
-        .target-card.next { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); transform: translateY(-2px); }
-        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; }
-        #toast { visibility: hidden; min-width: 250px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid #3b82f6; opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
-        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-        @keyframes highlight { 0% { background-color: #fef08a; color: #000; } 100% { background-color: #1c2230; color: #e6edf3; } }
-        .flash-update { animation: highlight 1.5s ease-out; }
+        function showCopySuccess() {
+           const btn = document.getElementById('copyBtn');
+           const originalText = btn.innerHTML;
+           btn.innerHTML = '<span class="text-green-400">✅ 已複製到剪貼簿！</span>';
+           setTimeout(() => btn.innerHTML = originalText, 2000);
+        }
 
-        /* Light Mode */
-        body.light-mode { background-color: #f1f5f9 !important; color: #0f172a !important; }
-        body.light-mode header, body.light-mode aside, body.light-mode main { background-color: #f1f5f9 !important; border-color: #cbd5e1 !important; }
-        body.light-mode .dashboard-card { background-color: #ffffff !important; border: 1px solid #cbd5e1 !important; box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important; }
-        body.light-mode .input-dark { background-color: #ffffff !important; border: 1px solid #94a3b8 !important; color: #0f172a !important; font-weight: 700 !important; }
-        body.light-mode .input-price-large { background-color: #ffffff !important; border: 2px solid #2563eb !important; color: #1e3a8a !important; }
-        body.light-mode .text-gray-400, body.light-mode .text-gray-500, body.light-mode .text-gray-600, body.light-mode .text-textGray { color: #475569 !important; }
-        body.light-mode .text-white, body.light-mode .text-textLight { color: #0f172a !important; }
-        body.light-mode .text-neon-red, body.light-mode .text-accentRed, body.light-mode .text-red-400, body.light-mode .text-red-500 { color: #dc2626 !important; text-shadow: none !important; font-weight: 800 !important; }
-        body.light-mode .text-neon-green, body.light-mode .text-accentGreen, body.light-mode .text-teal-400, body.light-mode .text-teal-500, body.light-mode .text-green-400 { color: #059669 !important; text-shadow: none !important; font-weight: 800 !important; font-style: normal !important; }
-        body.light-mode .text-blue-400, body.light-mode .text-blue-300 { color: #1d4ed8 !important; font-weight: 700 !important; }
-        body.light-mode .text-purple-400, body.light-mode .text-purple-300 { color: #7e22ce !important; font-weight: 700 !important; }
-        body.light-mode .text-orange-400 { color: #ea580c !important; font-weight: 700 !important; }
-        body.light-mode .target-card { background-color: #f8fafc !important; border: 1px solid #e2e8f0 !important; }
-        body.light-mode .target-card.reached { background-color: #dcfce7 !important; border: 2px solid #16a34a !important; }
-        body.light-mode .target-card.next { background-color: #dbeafe !important; border: 2px solid #2563eb !important; box-shadow: 0 0 10px rgba(37, 99, 235, 0.2) !important; }
-        body.light-mode table tbody tr:hover { background-color: #f1f5f9 !important; }
-        body.light-mode thead { background-color: #e2e8f0 !important; color: #1e293b !important; }
-        body.light-mode .modal-content { background: #ffffff !important; color: #0f172a !important; border: 1px solid #cbd5e1; }
-        body.light-mode #toast { background-color: #1e293b !important; color: #fff !important; }
+        function simulate(type) {
+            clearInputs(false); 
+            currentSimulationType = type; 
 
-        .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 100; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
-        .modal-backdrop.open { display: flex; opacity: 1; }
-        .modal-content { background: #1e293b; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 24px; color: #e6edf3; transform: translateY(20px); transition: transform 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .modal-backdrop.open .modal-content { transform: translateY(0); }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0b101a; }
-        ::-webkit-scrollbar-thumb { background: #2d3548; border-radius: 3px; }
-        body.light-mode ::-webkit-scrollbar-track { background: #e5e7eb; }
-        body.light-mode ::-webkit-scrollbar-thumb { background: #94a3b8; }
-        
-        .text-neon-red { color: #ff4d4f; text-shadow: 0 0 15px rgba(255, 77, 79, 0.4); }
-        .text-neon-green { color: #2ec7c9; text-shadow: 0 0 15px rgba(46, 199, 201, 0.4); }
-    </style>
-</head>
-<body class="flex flex-col">
-
-    <header class="h-14 border-b border-borderDark flex items-center justify-between px-6 shrink-0 bg-[#0b101a]">
-        <div class="flex items-center gap-3">
-            <i class="fas fa-chess-king text-purple-500 text-xl"></i>
-            <div>
-                <h1 class="text-lg font-bold tracking-wide text-white">石頭戰法戰情室 <span class="text-xs font-normal text-textGray ml-2">V5.6 Commander</span></h1>
-            </div>
-        </div>
-        
-        <div class="text-right flex items-center gap-3">
-             <button onclick="app.toggleHelp()" class="text-xs bg-blue-900/30 hover:bg-blue-800 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded transition flex items-center gap-2"><i class="fas fa-book-open"></i> 說明書</button>
-             <button onclick="app.toggleTheme()" id="themeBtn" class="text-xs bg-gray-700/50 hover:bg-gray-600 text-gray-200 border border-gray-500/30 px-3 py-1.5 rounded transition flex items-center gap-2" title="切換明亮/深色模式"><i class="fas fa-sun"></i> 明亮模式</button>
-             <button onclick="app.copyReport()" class="text-xs bg-purple-900/30 hover:bg-purple-800 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded transition flex items-center gap-2"><i class="fas fa-copy"></i> 複製戰報</button>
-             <div class="w-px h-4 bg-gray-700 mx-1"></div>
-             <button onclick="app.clearAll()" class="text-xs text-gray-500 hover:text-red-400 transition flex items-center gap-1"><i class="fas fa-trash-alt"></i> 重置</button>
-             <div class="pl-4 border-l border-gray-800 ml-2">
-                <div class="text-[10px] text-textGray">目前標的</div>
-                <div class="text-lg font-bold font-mono leading-none" id="headerTicker">--</div>
-            </div>
-        </div>
-    </header>
-
-    <div class="flex-1 grid grid-cols-12 gap-0 overflow-hidden">
-        
-        <aside class="col-span-12 lg:col-span-3 bg-[#0f131a] border-r border-borderDark flex flex-col overflow-y-auto p-4 gap-4 z-10">
-            
-            <div class="dashboard-card p-4">
-                <h3 class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider"><i class="fas fa-sliders-h mr-2"></i>市場參數 (手動輸入)</h3>
+            if (type === 'strong') {
+                // 套用偉詮電 2436 實際參數，驗證 V24 智能校正
+                document.getElementById('stockName').value = "偉詮電 (2436) 範例";
+                document.getElementById('high3d').value = 59.80; 
+                document.getElementById('low3d').value = 56.30; 
+                document.getElementById('avgVol').value = 11204;
+                setStatus('RED');
+                document.getElementById('prevClose').value = 58.00;
+                document.getElementById('todayLow').value = 56.30; 
+                document.getElementById('closePrice').value = 59.40;
+                document.getElementById('todayHigh').value = 61.60; 
+                document.getElementById('breakoutLow').value = 56.30; 
+                document.getElementById('todayVol').value = 17887;
                 
-                <div class="mb-3">
-                    <label class="text-[10px] text-textGray block mb-1">股票代號</label>
-                    <input type="text" id="inpName" placeholder="例如：台積電 2330" class="input-dark w-full p-2 text-sm font-bold" oninput="app.updateHeader()">
-                </div>
-
-                <div class="mb-3 p-3 bg-black/20 rounded border border-white/5">
-                    <label class="text-[10px] text-textGray block mb-2 font-bold">1. 昨日 K 棒 (CDP 基準)</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div><span class="text-[10px] text-textGray block text-center">高 H</span><input type="number" id="inpH" placeholder="-" class="input-dark w-full p-1 text-sm text-accentRed" step="0.1"></div>
-                        <div><span class="text-[10px] text-textGray block text-center">低 L</span><input type="number" id="inpL" placeholder="-" class="input-dark w-full p-1 text-sm text-accentGreen" step="0.1"></div>
-                        <div><span class="text-[10px] text-textGray block text-center">收 C</span><input type="number" id="inpC" placeholder="-" class="input-dark w-full p-1 text-sm" step="0.1"></div>
-                    </div>
-                </div>
-
-                <div class="mb-3 p-3 bg-blue-900/10 rounded border border-blue-500/20">
-                    <div class="flex justify-between items-center mb-1"><label class="text-[10px] text-blue-300 font-bold block"><i class="fas fa-chart-line mr-1"></i>2. 趨勢與成本</label></div>
-                    <div class="grid grid-cols-2 gap-2 mb-2">
-                        <div><span class="text-[9px] text-blue-400/60 block text-center">SAR 值</span><input type="number" id="inpSAR" placeholder="-" class="input-dark w-full p-1 font-mono text-sm" step="0.1"></div>
-                        <div><span class="text-[9px] text-purple-400/60 block text-center">主力成本</span><input type="number" id="inpMainCost" placeholder="選填" class="input-dark w-full p-1 font-mono text-sm" step="0.1" oninput="app.toggleTargetSection()"></div>
-                    </div>
-                </div>
-
-                <div class="mb-3 p-3 bg-green-900/10 rounded border border-green-500/20">
-                    <div class="flex justify-between items-center mb-1"><label class="text-[10px] text-green-300 font-bold block"><i class="fas fa-tachometer-alt mr-1"></i>3. 動能指標</label></div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div><span class="text-[9px] text-gray-400 block text-center">OSC</span><input type="number" id="inpOSC" placeholder="柱狀" class="input-dark w-full p-1 font-mono text-sm" step="0.01"></div>
-                        <div><span class="text-[9px] text-gray-400 block text-center">K值</span><input type="number" id="inpK" placeholder="80" class="input-dark w-full p-1 font-mono text-sm" step="0.1"></div>
-                        <div><span class="text-[9px] text-gray-400 block text-center">九轉</span><input type="number" id="inpTD" placeholder="9" class="input-dark w-full p-1 font-mono text-sm" step="1"></div>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="text-[10px] text-textGray block mb-1">今日開盤 (Open)</label>
-                    <input type="number" id="inpOpen" placeholder="輸入開盤價" class="input-dark w-full p-2 font-bold text-white" step="0.1">
-                </div>
-
-                <div class="mb-4">
-                    <label class="text-[10px] text-textGray block mb-1">當前成交價 (Price)</label>
-                    <input type="number" id="inpNow" placeholder="輸入現價..." class="input-dark input-price-large w-full p-3" step="0.1" onkeyup="app.analyze()">
-                </div>
-
-                <button onclick="app.analyze()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-lg shadow-lg transition text-sm mb-3 tracking-wide"><i class="fas fa-calculator mr-2"></i>立即分析</button>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="app.simulate('bull')" class="py-3 bg-gray-800 hover:bg-red-900/40 border border-gray-700 hover:border-red-800 text-gray-400 hover:text-red-400 text-xs rounded transition flex flex-col items-center justify-center gap-1">
-                    <i class="fas fa-rocket"></i>模擬極強
-                </button>
-                <button onclick="app.simulate('breakout')" class="py-3 bg-gray-800 hover:bg-orange-900/40 border border-gray-700 hover:border-orange-800 text-gray-400 hover:text-orange-400 text-xs rounded transition flex flex-col items-center justify-center gap-1">
-                    <i class="fas fa-fire"></i>模擬突破
-                </button>
-                <button onclick="app.simulate('bear')" class="py-3 bg-gray-800 hover:bg-teal-900/40 border border-gray-700 hover:border-teal-800 text-gray-400 hover:text-teal-400 text-xs rounded transition flex flex-col items-center justify-center gap-1">
-                    <i class="fas fa-skull"></i>模擬大跌
-                </button>
-                <button onclick="app.simulate('range')" class="py-3 bg-gray-800 hover:bg-yellow-900/40 border border-gray-700 hover:border-yellow-800 text-gray-400 hover:text-yellow-400 text-xs rounded transition flex flex-col items-center justify-center gap-1">
-                    <i class="fas fa-minus"></i>模擬盤整
-                </button>
-            </div>
-        </aside>
-
-        <main class="col-span-12 lg:col-span-9 bg-[#0b101a] flex flex-col h-full overflow-hidden p-6 gap-5 relative">
-            
-            <div class="h-[20%] shrink-0 flex gap-4">
-                <div class="dashboard-card p-4 relative overflow-hidden flex flex-row items-center justify-between w-full group">
-                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition"><i class="fas fa-dot-circle text-8xl text-white"></i></div>
-                    <div class="flex flex-col justify-center w-1/3 border-r border-gray-800 pr-4">
-                        <div class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1">策略判讀雷達</div>
-                        <div class="text-3xl font-black text-gray-600 leading-none" id="sarStatusText">--</div>
-                    </div>
-                    <div class="flex flex-col justify-center w-2/3 pl-4">
-                        <div class="flex justify-between items-center mb-1"><span class="text-xs text-textGray">基準 SAR 值: <span class="font-mono text-white font-bold" id="sarValDisp">--</span></span></div>
-                        <div class="text-xs text-gray-400 leading-relaxed" id="sarAdvice">輸入數據以啟動分析。</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="targetMatrixContainer" class="collapsible-section collapsed shrink-0">
-                <div class="flex justify-between items-end mb-2 px-1">
-                    <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider"><i class="fas fa-crosshairs mr-1"></i>主力目標價矩陣</h4>
-                    <span class="text-[10px] text-gray-600">Smart Target System</span>
-                </div>
-                <div class="grid grid-cols-4 gap-4">
-                    <div class="target-card" id="cardT1">
-                        <div class="text-[10px] text-gray-400 mb-1">短線獲利</div>
-                        <div class="font-mono text-lg font-bold text-blue-400" id="valT1">--</div>
-                        <div class="status-badge absolute top-2 right-2"></div>
-                    </div>
-                    <div class="target-card" id="cardT2">
-                        <div class="text-[10px] text-gray-400 mb-1">出貨上緣</div>
-                        <div class="font-mono text-lg font-bold text-teal-400" id="valT2">--</div>
-                        <div class="status-badge absolute top-2 right-2"></div>
-                    </div>
-                    <div class="target-card" id="cardT3">
-                        <div class="text-[10px] text-gray-400 mb-1">波段延伸</div>
-                        <div class="font-mono text-lg font-bold text-orange-400" id="valT3">--</div>
-                        <div class="status-badge absolute top-2 right-2"></div>
-                    </div>
-                    <div class="target-card" id="cardT4">
-                        <div class="text-[10px] text-gray-400 mb-1">誘多末端</div>
-                        <div class="font-mono text-lg font-bold text-red-400" id="valT4">--</div>
-                        <div class="status-badge absolute top-2 right-2"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 h-[15%]">
-                <div class="dashboard-card p-4 border-l-4 border-blue-600 flex flex-col justify-center">
-                    <div class="text-[10px] text-blue-400 font-bold mb-1 uppercase">防守重點 (Support)</div>
-                    <div class="text-xl font-bold text-white tracking-wide" id="adviceDef">等待數據...</div>
-                </div>
-                <div class="dashboard-card p-4 border-l-4 border-purple-600 flex flex-col justify-center">
-                    <div class="text-[10px] text-purple-400 font-bold mb-1 uppercase">進攻/壓力 (Resistance)</div>
-                    <div class="text-xl font-bold text-white tracking-wide" id="adviceAtt">等待數據...</div>
-                </div>
-            </div>
-
-            <div class="dashboard-card flex-1 overflow-hidden flex flex-col">
-                <div class="p-3 bg-[#161b26] border-b border-borderDark flex justify-between items-center shrink-0">
-                    <h4 class="text-xs font-bold text-textLight"><i class="fas fa-list-ul mr-2 text-gray-500"></i>CDP 關鍵階梯</h4>
-                </div>
-                <div class="overflow-y-auto flex-1">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-[#0f131a] text-[10px] text-textGray font-mono uppercase tracking-wider sticky top-0 z-10 shadow-sm">
-                            <tr><th class="p-3">Level</th><th class="p-3">Price</th><th class="p-3">Desc</th><th class="p-3 text-right">Status</th></tr>
-                        </thead>
-                        <tbody class="text-sm font-mono text-textLight divide-y divide-borderDark" id="cdpTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <div id="helpModal" class="modal-backdrop">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
-                <h3 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-book"></i> 石頭戰法操作手冊</h3>
-                <button onclick="app.toggleHelp()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div class="space-y-4 text-sm">
-                <div><h4 class="text-blue-400 font-bold mb-1">一、CDP 操作</h4><p class="text-gray-400 text-xs">AH(強突追價)、NH(突破點/支撐)、CDP(多空分界)、NL(低接買點)、AL(停損)</p></div>
-                <div><h4 class="text-green-400 font-bold mb-1">二、重點邏輯</h4><ul class="space-y-1 pl-2 text-xs border-l-2 border-green-500/50"><li>突破 NH 為攻擊訊號，不可做空</li><li>跌破 AL 為崩盤訊號，不可接刀</li></ul></div>
-            </div>
-            <button onclick="app.toggleHelp()" class="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">我瞭解了</button>
-        </div>
-    </div>
-
-    <div id="toast"><i class="fas fa-check-circle text-green-400 mr-2"></i>戰報已複製</div>
-
-    <script>
-        const app = (() => {
-            let currentSimMode = null; 
-
-            const els = {
-                inpName: document.getElementById('inpName'), inpH: document.getElementById('inpH'), inpL: document.getElementById('inpL'), inpC: document.getElementById('inpC'), inpOpen: document.getElementById('inpOpen'), inpNow: document.getElementById('inpNow'), inpSAR: document.getElementById('inpSAR'), inpMainCost: document.getElementById('inpMainCost'), inpOSC: document.getElementById('inpOSC'), inpK: document.getElementById('inpK'), inpTD: document.getElementById('inpTD'),
-                headerTicker: document.getElementById('headerTicker'), sarStatusText: document.getElementById('sarStatusText'), sarValDisp: document.getElementById('sarValDisp'), sarAdvice: document.getElementById('sarAdvice'),
-                targetMatrixContainer: document.getElementById('targetMatrixContainer'),
-                cardT1: document.getElementById('cardT1'), valT1: document.getElementById('valT1'), cardT2: document.getElementById('cardT2'), valT2: document.getElementById('valT2'), cardT3: document.getElementById('cardT3'), valT3: document.getElementById('valT3'), cardT4: document.getElementById('cardT4'), valT4: document.getElementById('valT4'),
-                adviceDef: document.getElementById('adviceDef'), adviceAtt: document.getElementById('adviceAtt'), cdpTableBody: document.getElementById('cdpTableBody'), toast: document.getElementById('toast'), helpModal: document.getElementById('helpModal'),
-                themeBtn: document.getElementById('themeBtn')
-            };
-
-            const format = num => (Math.round(num * 100) / 100).toFixed(2);
-            const updateHeader = () => { els.headerTicker.textContent = els.inpName.value || '--'; };
-            const toggleHelp = () => { els.helpModal.classList.toggle('open'); };
-            
-            const toggleTheme = () => {
-                document.body.classList.toggle('light-mode');
-                const isLight = document.body.classList.contains('light-mode');
-                els.themeBtn.innerHTML = isLight ? '<i class="fas fa-moon"></i> 深色模式' : '<i class="fas fa-sun"></i> 明亮模式';
-            };
-
-            const toggleTargetSection = () => {
-                const cost = parseFloat(els.inpMainCost.value);
-                if (!isNaN(cost) && cost > 0) els.targetMatrixContainer.classList.remove('collapsed');
-                else els.targetMatrixContainer.classList.add('collapsed');
-            };
-
-            const calculateCDP = (h, l, c) => { const cdp = (h + l + 2 * c) / 4; return { ah: cdp + (h - l), nh: 2 * cdp - l, cdp: cdp, nl: 2 * cdp - h, al: cdp - (h - l) }; };
-            const calculateTargets = (cost) => ({ t1: cost * 1.045, t2: cost * 1.09, t3: cost * 1.2, t4: cost * 1.3 });
-
-            const analyze = (isSim = false) => {
-                if (!isSim) currentSimMode = null;
-                toggleTargetSection(); 
-
-                const h = parseFloat(els.inpH.value), l = parseFloat(els.inpL.value), c = parseFloat(els.inpC.value), now = parseFloat(els.inpNow.value), sar = parseFloat(els.inpSAR.value), cost = parseFloat(els.inpMainCost.value);
-                const osc = parseFloat(els.inpOSC.value), kVal = parseFloat(els.inpK.value), td = parseInt(els.inpTD.value);
-
-                if (isNaN(h) || isNaN(l) || isNaN(c)) return;
-                const v = calculateCDP(h, l, c);
-
-                let trendState = "neutral"; 
-                if (!isNaN(now)) {
-                    if (now > v.ah) trendState = "strong_bull";       
-                    else if (now > v.nh) trendState = "breakout_bull"; 
-                    else if (now < v.al) trendState = "strong_bear";  
-                    else if (!isNaN(sar) && now > sar) trendState = "bull"; 
-                    else if (now > v.cdp) trendState = "bull_con";    
-                    else trendState = "bear";                         
-                }
-
-                if (!isNaN(now)) {
-                    els.sarValDisp.textContent = !isNaN(sar) ? sar : "--";
-                    let extraTD = "";
-                    if (!isNaN(td)) {
-                        if (td >= 9) extraTD = `<br><span class="text-accentPurple text-sm">⚠️ 九轉(9)高檔警戒</span>`;
-                        else if (td <= -9) extraTD = `<br><span class="text-accentPurple text-sm">✨ 九轉(-9)反彈契機</span>`;
-                    }
-
-                    if (trendState === "strong_bull") {
-                        els.sarStatusText.innerHTML = `<i class="fas fa-rocket mr-2 text-accentRed"></i>極強多方`;
-                        els.sarStatusText.className = "text-4xl font-black text-neon-red tracking-wide leading-none";
-                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentRed font-bold">Breakout (軋空)</span> | 策略：突破 AH，強勢噴出，防守上移${extraTD}`;
-                    } else if (trendState === "breakout_bull") {
-                        els.sarStatusText.innerHTML = `<i class="fas fa-fire mr-2 text-orange-500"></i>多方攻擊`;
-                        els.sarStatusText.className = "text-4xl font-black text-orange-500 tracking-wide leading-none";
-                        els.sarAdvice.innerHTML = `訊號：<span class="text-orange-500 font-bold">Attack (突破)</span> | 策略：站穩 NH 就是買點，目標挑戰 AH${extraTD}`;
-                    } else if (trendState === "strong_bear") {
-                        els.sarStatusText.innerHTML = `<i class="fas fa-skull-crossbones mr-2 text-accentGreen"></i>極弱空方`;
-                        els.sarStatusText.className = "text-4xl font-black text-neon-green tracking-wide leading-none";
-                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentGreen font-bold">Collapse (崩盤)</span> | 策略：跌破 AL，趨勢轉空，反彈逃命${extraTD}`;
-                    } else if (trendState === "bull" || trendState === "bull_con") {
-                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-up mr-2 text-accentRed"></i>多頭盤整`;
-                        els.sarStatusText.className = "text-4xl font-black text-accentRed tracking-wide leading-none";
-                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentRed font-bold">Long</span> | 策略：價格在 CDP 之上，偏多震盪${extraTD}`;
-                    } else {
-                        els.sarStatusText.innerHTML = `<i class="fas fa-arrow-down mr-2 text-accentGreen"></i>空頭排列`;
-                        els.sarStatusText.className = "text-4xl font-black text-neon-green tracking-wide leading-none";
-                        els.sarAdvice.innerHTML = `訊號：<span class="text-accentGreen font-bold">Short</span> | 策略：反彈找空點，嚴設停損${extraTD}`;
-                    }
-                } else { resetCards(); }
-
-                if (!isNaN(cost) && cost > 0) {
-                    const t = calculateTargets(cost);
-                    const updateCard = (card, valEl, targetVal, nowPrice) => {
-                        valEl.textContent = format(targetVal); card.classList.remove('reached', 'next', 'opacity-50'); card.querySelector('.status-badge').innerHTML = '';
-                        if (!isNaN(nowPrice) && nowPrice >= targetVal) { card.classList.add('reached'); card.querySelector('.status-badge').innerHTML = '<i class="fas fa-check-circle text-accentGreen"></i>'; }
-                    };
-                    updateCard(els.cardT1, els.valT1, t.t1, now); updateCard(els.cardT2, els.valT2, t.t2, now); updateCard(els.cardT3, els.valT3, t.t3, now); updateCard(els.cardT4, els.valT4, t.t4, now);
-                    if (!isNaN(now)) {
-                        if (now < t.t1) els.cardT1.classList.add('next'); else if (now < t.t2) els.cardT2.classList.add('next'); else if (now < t.t3) els.cardT3.classList.add('next'); else if (now < t.t4) els.cardT4.classList.add('next');
-                    }
-                }
-
-                const rows = [ { n: "AH", v: v.ah, d: "追買點 / 頂部壓力", c: "text-accentRed" }, { n: "NH", v: v.nh, d: "突破點 / 短線壓力", c: "text-orange-400" }, { n: "CDP", v: v.cdp, d: "多空分界核心線", c: "text-white" }, { n: "NL", v: v.nl, d: "買進點 / 短線支撐", c: "text-accentGreen" }, { n: "AL", v: v.al, d: "停損點 / 底部支撐", c: "text-teal-400" } ];
-                els.cdpTableBody.innerHTML = rows.map(r => {
-                    let s = ""; if (!isNaN(now)) { const diff = Math.abs(now - r.v), range = r.v * 0.003; if (diff <= range) s = `<span class="badge bg-blue-500/20 text-blue-400 border border-blue-500/50">ACTIVE</span>`; else if ((r.n === 'AH' && now > r.v) || (r.n === 'AL' && now < r.v) || (r.n === 'NH' && now > r.v)) s = `<span class="text-[10px] text-gray-500">PASSED</span>`; }
-                    return `<tr class="hover:bg-[#1c2230] transition border-b border-borderDark/50"><td class="p-3 font-bold ${r.c}">${r.n}</td><td class="p-3 font-mono text-white text-lg">${format(r.v)}</td><td class="p-3 text-xs text-gray-400">${r.d}</td><td class="p-3 text-right">${s}</td></tr>`;
-                }).join('');
-
-                if (!isNaN(now)) {
-                    let defText = "", attText = "";
-                    if (trendState === "strong_bull") {
-                        defText = `防守 AH (${format(v.ah)})`; attText = `天空無壓力 (移動停利)`;
-                    } else if (trendState === "breakout_bull") {
-                        defText = `防守 NH (${format(v.nh)})`; attText = `挑戰 AH (${format(v.ah)})`;
-                    } else if (trendState === "strong_bear") {
-                        defText = `觀望 (勿接刀)`; attText = `壓力 AL (${format(v.al)})`;
-                    } else if (trendState === "bull" || trendState === "bull_con") {
-                        defText = `防守 NL (${format(v.nl)})`; attText = `挑戰 NH (${format(v.nh)})`;
-                    } else { 
-                        defText = `防守 AL (${format(v.al)})`; attText = `壓力 CDP (${format(v.cdp)})`;
-                    }
-                    els.adviceDef.textContent = defText; els.adviceAtt.textContent = attText;
-                }
-            };
-
-            const resetCards = () => { els.sarStatusText.textContent = "等待輸入"; els.sarStatusText.className = "text-4xl font-black text-gray-600 leading-none"; els.sarValDisp.textContent = "--"; els.sarAdvice.textContent = "請在左側輸入數據以啟動分析。"; };
-
-            const simulate = (type) => {
-                currentSimMode = type;
-                if(!els.inpH.value) { els.inpH.value = 100; els.inpL.value = 95; els.inpC.value = 98; els.inpSAR.value = 96; els.inpMainCost.value = 90; els.inpOSC.value = 0.5; els.inpK.value = 75; els.inpTD.value = 5; }
-                const v = calculateCDP(parseFloat(els.inpH.value), parseFloat(els.inpL.value), parseFloat(els.inpC.value));
-                if (type === 'bull') { els.inpNow.value = format(v.ah * 1.01); els.inpSAR.value = format(v.cdp); els.inpOSC.value = 1.2; els.inpK.value = 85; els.inpTD.value = 8; } 
-                else if (type === 'breakout') { els.inpNow.value = format((v.nh + v.ah) / 2); els.inpSAR.value = format(v.cdp); els.inpOSC.value = 0.8; els.inpK.value = 70; els.inpTD.value = 6; }
-                else if (type === 'bear') { els.inpNow.value = format(v.al * 0.99); els.inpSAR.value = format(v.cdp); els.inpOSC.value = -1.2; els.inpK.value = 15; els.inpTD.value = -8; } 
-                else if (type === 'range') { els.inpNow.value = format(v.cdp); els.inpSAR.value = format(v.nh); els.inpOSC.value = 0.1; els.inpK.value = 50; els.inpTD.value = 0; }
-                analyze(true);
-            };
-
-            const copyReport = () => {
-                const name = els.inpName.value || "未命名標的", h = parseFloat(els.inpH.value), l = parseFloat(els.inpL.value), c = parseFloat(els.inpC.value), open = parseFloat(els.inpOpen.value), now = parseFloat(els.inpNow.value), sar = parseFloat(els.inpSAR.value), cost = parseFloat(els.inpMainCost.value), osc = parseFloat(els.inpOSC.value), kVal = parseFloat(els.inpK.value), td = parseInt(els.inpTD.value);
-                if (isNaN(h)) { showToast('請先輸入數據以生成報告'); return; }
-                const v = calculateCDP(h, l, c);
+                document.getElementById('rsiVal').value = 84.89;
+                document.getElementById('macdVal').value = 1.38;
                 
-                let trendStr = "中性", strategyText = "", recBuy = "--", recSell = "--";
-                let trendState = "neutral";
-                let reportTitle = `${name} 盤中趨勢分析 📈`;
-
-                if (currentSimMode === 'bull') reportTitle = `這是代號${name}的模擬極強分析報告 🚀`;
-                else if (currentSimMode === 'breakout') reportTitle = `這是代號${name}的模擬突破分析報告 🔥`;
-                else if (currentSimMode === 'bear') reportTitle = `這是代號${name}的模擬大跌分析報告 📉`;
-                else if (currentSimMode === 'range') reportTitle = `這是代號${name}的模擬盤整分析報告 ➖`;
+            } else if (type === 'break') {
+                document.getElementById('stockName').value = "轉機股 (第3波初升段)";
+                document.getElementById('high3d').value = 100;
+                document.getElementById('low3d').value = 90; 
+                document.getElementById('avgVol').value = 1000;
+                setStatus('GREEN'); 
+                document.getElementById('closePrice').value = 105;
+                document.getElementById('todayHigh').value = 105;
+                document.getElementById('prevClose').value = 99;
+                document.getElementById('todayLow').value = 99;
+                document.getElementById('breakoutLow').value = 99;
+                document.getElementById('todayVol').value = 1800;
                 
-                if (!isNaN(now)) {
-                    if (now > v.ah) trendState = "strong_bull";
-                    else if (now > v.nh) trendState = "breakout_bull";
-                    else if (now < v.al) trendState = "strong_bear";
-                    else if (!isNaN(sar) && now > sar) trendState = "bull";
-                    else if (now > v.cdp) trendState = "bull_con";
-                    else trendState = "bear";
+                document.getElementById('rsiVal').value = 62.0;
+                document.getElementById('macdVal').value = 0.35;
+
+            } else if (type === 'crash') {
+                document.getElementById('stockName').value = "弱勢股 (C波主跌段)";
+                document.getElementById('high3d').value = 100;
+                document.getElementById('low3d').value = 90; 
+                document.getElementById('avgVol').value = 1000;
+                setStatus('RED'); 
+                document.getElementById('closePrice').value = 85; 
+                document.getElementById('todayHigh').value = 92;
+                document.getElementById('prevClose').value = 95;
+                document.getElementById('breakoutLow').value = 95; 
+                document.getElementById('todayVol').value = 3000;
+                
+                document.getElementById('rsiVal').value = 25.5;
+                document.getElementById('macdVal').value = -1.80;
+
+            } else if (type === 'flat') {
+                document.getElementById('stockName').value = "橫盤股 (第4波整理)";
+                document.getElementById('high3d').value = 100;
+                document.getElementById('low3d').value = 90; 
+                document.getElementById('avgVol').value = 1000;
+                setStatus('GREEN');
+                document.getElementById('closePrice').value = 95; 
+                document.getElementById('todayHigh').value = 98;
+                document.getElementById('breakoutLow').value = 90;
+                document.getElementById('todayVol').value = 600;
+                
+                document.getElementById('rsiVal').value = 50.0;
+                document.getElementById('macdVal').value = -0.15;
+            }
+
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.classList.remove('highlight-input');
+                void input.offsetWidth;
+                input.classList.add('highlight-input');
+            });
+            
+            setTimeout(() => {
+                calculateStrategy();
+                const resultArea = document.getElementById('resultArea');
+                resultArea.classList.remove('hidden');
+                resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function clearInputs(hideResult = true) {
+            document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => input.value = '');
+            document.getElementById('checkNonFinance').checked = true;
+            
+            document.getElementById('aiAnalysisBox').classList.add('hidden');
+            document.getElementById('aiContent').innerHTML = '';
+            aiReportContent = "";
+            currentSimulationType = null;
+            if(hideResult) document.getElementById('resultArea').classList.add('hidden');
+            setStatus('GREEN');
+            if(hideResult) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function formatNumber(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+        function formatPrice(num) { return parseFloat(num).toFixed(2); }
+        
+        function setStatus(status) {
+            document.getElementById('currentStatus').value = status;
+            document.getElementById('btn-green').className = status === 'GREEN' ? "py-3 px-4 border-2 rounded-lg font-bold transition-all border-green-500 bg-green-50 text-green-700 shadow-inner ring-2 ring-green-100 opacity-100" : "py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60";
+            document.getElementById('btn-red').className = status === 'RED' ? "py-3 px-4 border-2 rounded-lg font-bold transition-all border-red-500 bg-red-50 text-red-700 shadow-inner ring-2 ring-red-100 opacity-100" : "py-3 px-4 border-2 rounded-lg font-bold transition-all border-slate-200 text-slate-400 hover:bg-slate-50 opacity-60";
+            
+            if(status === 'GREEN') {
+                document.getElementById('advancedInputs').classList.add('hidden');
+            } else {
+                document.getElementById('advancedInputs').classList.remove('hidden');
+            }
+        }
+
+        function calculateStrategy() {
+            document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
+            document.getElementById('aiAnalysisBox').classList.add('hidden');
+            document.getElementById('aiContent').innerHTML = '';
+            aiReportContent = "";
+
+            const stockName = document.getElementById('stockName').value || "未輸入股名";
+            const status = document.getElementById('currentStatus').value;
+            const close = parseFloat(document.getElementById('closePrice').value);
+            const todayH = parseFloat(document.getElementById('todayHigh').value);
+            const high3d = parseFloat(document.getElementById('high3d').value);
+            const L = parseFloat(document.getElementById('low3d').value); 
+            
+            let breakoutLow = parseFloat(document.getElementById('breakoutLow').value);
+            let userInputLow = document.getElementById('breakoutLow').value !== '';
+            
+            const todayVol = parseFloat(document.getElementById('todayVol').value);
+            const avgVol = parseFloat(document.getElementById('avgVol').value);
+
+            // V24 動能量化參數
+            const rsiVal = parseFloat(document.getElementById('rsiVal').value);
+            const macdVal = parseFloat(document.getElementById('macdVal').value);
+
+            let hasError = false;
+            let errorMsg = "請檢查紅框欄位：\n";
+            if (!status) { errorMsg += "- 請選擇目前狀態\n"; hasError = true; }
+            if (isNaN(close)) { document.getElementById('closePrice').classList.add('input-error'); errorMsg += "- 請輸入目前價\n"; hasError = true; }
+            if (isNaN(high3d)) { document.getElementById('high3d').classList.add('input-error'); errorMsg += "- 請輸入前三高\n"; hasError = true; }
+            if (isNaN(L)) { document.getElementById('low3d').classList.add('input-error'); errorMsg += "- 請輸入起漲點 (前三低 L)\n"; hasError = true; }
+            if (hasError) { alert(errorMsg); return; }
+
+            let h2 = isNaN(todayH) ? close : todayH;
+            if(h2 < close) h2 = close;
+            
+            const PR = !isNaN(breakoutLow) ? breakoutLow : L; 
+            const gap_A = h2 - L; 
+            
+            let target1 = 0, target2 = 0, target5 = 0;
+            let isTargetValid = true;
+            
+            if (!isNaN(breakoutLow) && close < breakoutLow) isTargetValid = false;
+
+            if (gap_A > 0) {
+                target1 = PR + (1.0 * gap_A);
+                target2 = PR + (1.618 * gap_A);
+                target5 = PR + (2.618 * gap_A);
+                
+                document.getElementById('valA').innerText = formatPrice(gap_A);
+                document.getElementById('valPR').innerText = formatPrice(PR);
+                document.getElementById('target1').innerText = formatPrice(target1);
+                document.getElementById('target2').innerText = formatPrice(target2);
+                document.getElementById('target5').innerText = formatPrice(target5);
+                
+                const targetBox = document.getElementById('targetBox');
+                targetBox.classList.remove('hidden');
+                if (isTargetValid) {
+                    targetBox.className = "bg-[#f0fdf4] p-4 rounded-xl border border-[#bbf7d0] mb-3 text-sm shadow-sm";
+                    document.getElementById('targetList').classList.remove('invalid-target');
+                    document.getElementById('targetInvalidMsg').classList.add('hidden');
+                    document.getElementById('targetStatusBadge').innerText = "Active";
+                    document.getElementById('targetStatusBadge').className = "text-[10px] bg-[#bbf7d0] px-1.5 py-0.5 rounded text-[#166534]";
                 } else {
-                    trendStr = "⏳ 等待開盤 / 數據不足";
-                    strategyText = "請輸入「當前成交價」以啟動趨勢分析";
+                    targetBox.className = "bg-gray-100 p-4 rounded-xl border border-gray-300 mb-3 text-sm shadow-sm opacity-80";
+                    document.getElementById('targetList').classList.add('invalid-target');
+                    document.getElementById('targetInvalidMsg').classList.remove('hidden');
+                    document.getElementById('targetStatusBadge').innerText = "失效 (結構破壞)";
+                    document.getElementById('targetStatusBadge').className = "text-[10px] bg-red-200 px-1.5 py-0.5 rounded text-red-800 font-bold";
                 }
+            }
 
-                if (!isNaN(now)) {
-                    if (trendState === "strong_bull") {
-                        trendStr = "🚀 極強多方 (軋空噴出)";
-                        strategyText = `建議方向：多方強勢，不可做空\n操作建議：已突破 AH (${format(v.ah)})，多頭氣勢極強。持股續抱，防守點上移至 AH，不建議追高，拉回不破 AH 再加碼。`;
-                        recBuy = `支撐 ${format(v.ah)}`;
-                    } else if (trendState === "breakout_bull") {
-                        trendStr = "🔥 多方攻擊 (突破 NH)";
-                        strategyText = `建議方向：積極進場 (追價/突破)\n操作建議：股價已越過 NH (${format(v.nh)}) 轉強，依據戰法圖示，此為攻擊訊號。建議市價進場，目標挑戰 AH。`;
-                        recBuy = `市價 / 站穩 ${format(v.nh)}`; 
-                        recSell = `挑戰 AH (${format(v.ah)})`;
-                    } else if (trendState === "strong_bear") {
-                        trendStr = "☠️ 極弱空方 (崩盤)";
-                        strategyText = `建議方向：空方殺戮，避開接刀\n操作建議：已跌破 AL (${format(v.al)})，主力棄守。多單應無條件離場，空手者絕對不可進場接刀。`;
-                        recBuy = `觀望 (等待站回 AL)`;
-                    } else if (trendState === "bull" || trendState === "bull_con") {
-                        trendStr = "🔴 多方 (震盪盤堅)";
-                        strategyText = `建議方向：多方 (建議低接)\n操作建議：股價位於支撐之上。建議在 ${format(v.nl)} ~ ${format(v.cdp)} 之間分批佈局多單。`;
-                        recBuy = `${format(v.nl)} ~ ${format(v.cdp)}`;
-                        recSell = `壓力 NH ${format(v.nh)}`;
+            // V24 核心修正：動能凌駕價格邏輯
+            let determinedType = 'flat'; 
+            let isBreakdown = false;
+            
+            const isIndicatorStrong = (!isNaN(rsiVal) && rsiVal >= 60) && (!isNaN(macdVal) && macdVal > 0);
+
+            if (status === 'RED') {
+                if (close < PR || close < L) { 
+                    // 跌破防守，優先判定為崩壞
+                    isBreakdown = true; 
+                    determinedType = 'crash'; 
+                } 
+                else if (close > high3d || isIndicatorStrong) { 
+                    // ★ V24 修正：即使收盤未過前高，只要動能極強 (RSI>60 且 MACD>0)，系統強制判定為強勢多頭整理，不准落入盤整
+                    determinedType = 'strong'; 
+                } 
+                else {
+                    determinedType = 'flat';
+                }
+            } else { // GREEN
+                if (close > high3d) {
+                    determinedType = 'break';
+                } else if (close < PR || close < L) {
+                    determinedType = 'crash';
+                } else {
+                    determinedType = 'flat';
+                }
+            }
+
+            const typeToRender = currentSimulationType ? currentSimulationType : determinedType;
+            renderV24Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow, rsiVal, macdVal);
+        }
+
+        function renderV24Simulation(type, PR, gap_A, target1, target2, target5, userInputLow, rsiVal, macdVal) {
+             const resultArea = document.getElementById('resultArea');
+             resultArea.classList.remove('hidden');
+             const resultBox = document.getElementById('resultBox');
+             
+             const stockName = document.getElementById('stockName').value || "模擬個股";
+             const close = parseFloat(document.getElementById('closePrice').value);
+             const todayH = parseFloat(document.getElementById('todayHigh').value);
+             const high3d = parseFloat(document.getElementById('high3d').value);
+             const L = parseFloat(document.getElementById('low3d').value);
+             const avgVol = parseFloat(document.getElementById('avgVol').value);
+             const prevClose = parseFloat(document.getElementById('prevClose').value);
+             const todayLow = parseFloat(document.getElementById('todayLow').value);
+             const todayVol = parseFloat(document.getElementById('todayVol').value);
+             
+             let rsiStr = "未輸入";
+             let rsiState = "未知";
+             let rsiColor = "text-slate-500";
+             let rsiHtml = `<span class="text-slate-500">RSI(5T): 未輸入</span>`;
+             let isRsiStrong = false;
+             let isRsiOverheated = false;
+
+             if(!isNaN(rsiVal)) {
+                 if(rsiVal >= 80) { rsiState = "高檔過熱 🔥"; rsiColor = "text-red-600"; isRsiStrong = true; isRsiOverheated = true;}
+                 else if(rsiVal >= 60) { rsiState = "強勢多方 📈"; rsiColor = "text-orange-600"; isRsiStrong = true; }
+                 else if(rsiVal >= 40) { rsiState = "中性盤整 ➖"; rsiColor = "text-slate-600"; }
+                 else { rsiState = "弱勢空方 📉"; rsiColor = "text-green-600"; }
+                 rsiStr = `${rsiVal} (${rsiState})`;
+                 rsiHtml = `<span class="text-slate-600">RSI(5T):</span> <span class="${rsiColor} font-black text-sm">${rsiVal}</span> <span class="text-[10px] text-slate-500 bg-slate-200 px-1 rounded">${rsiState}</span>`;
+             }
+
+             let macdStr = "未輸入";
+             let macdState = "未知";
+             let macdColor = "text-slate-500";
+             let macdHtml = `<span class="text-slate-500">MACD: 未輸入</span>`;
+             let isMacdStrong = false;
+
+             if(!isNaN(macdVal)) {
+                 if(macdVal > 0) { macdState = "正值擴張 🔴"; macdColor = "text-red-600"; isMacdStrong = true; }
+                 else { macdState = "綠柱收斂 🟢"; macdColor = "text-green-600"; }
+                 macdStr = `${macdVal} (${macdState})`;
+                 macdHtml = `<span class="text-slate-600">MACD:</span> <span class="${macdColor} font-black text-sm">${macdVal}</span> <span class="text-[10px] text-slate-500 bg-slate-200 px-1 rounded">${macdState}</span>`;
+             }
+
+             document.getElementById('rsiResult').innerHTML = rsiHtml;
+             document.getElementById('macdResult').innerHTML = macdHtml;
+
+             const momentumPass = (isRsiStrong && isMacdStrong) && (!isNaN(rsiVal) && !isNaN(macdVal));
+             
+             document.getElementById('momentumWarning').classList.add('hidden');
+             document.getElementById('momentumSuccess').classList.add('hidden');
+
+             let breakoutLow = parseFloat(document.getElementById('breakoutLow').value);
+             let keyPointLabel = "軋空低"; 
+
+             if (isNaN(breakoutLow)) {
+                 if (type === 'strong' || type === 'break') {
+                     if (!isNaN(prevClose) && !isNaN(todayLow)) breakoutLow = Math.min(prevClose, todayLow);
+                     else breakoutLow = L; 
+                 } else if (type === 'crash') {
+                     if (!isNaN(prevClose) && !isNaN(todayH)) breakoutLow = Math.max(prevClose, todayH);
+                     else breakoutLow = isNaN(todayH) ? high3d : todayH;
+                     keyPointLabel = "殺多高 (壓力)";
+                 } else if (type === 'flat') {
+                     breakoutLow = L;
+                     keyPointLabel = "箱體底";
+                 }
+             } else {
+                  if (type === 'crash') keyPointLabel = "殺多高 (壓力)";
+                  else if (type === 'flat') keyPointLabel = "箱體底";
+             }
+             
+             const v_break = Math.round(avgVol * 1.3);
+             const v_strong = Math.round(avgVol * 1.5);
+             const v_wash = Math.round(avgVol * 0.8);
+             
+             let volStatusStr = "量能溫和 (觀望)";
+             if (todayVol >= v_break) volStatusStr = `攻擊量達標 (符合1.3倍) ✅`;
+             else if (todayVol <= v_wash) volStatusStr = `量縮洗盤達標 (符合0.8倍) ✅`;
+             else volStatusStr = "量能介於攻擊與洗盤之間";
+
+             let volumeSummary = `本檔「${stockName}」${volStatusStr}`;
+
+             let rTitleText = "", rActionText = "", rBoxClass = "", rTitleClass = "", rActionClass = "", rIconText = "", rTrendText = "", rVolText = "";
+             let v24BaseReport = "";
+             let v24AIReport = "";
+
+             const fP = (num) => isNaN(num) ? "---" : formatPrice(num);
+             const fN = (num) => isNaN(num) ? "---" : formatNumber(num);
+
+             if (type === 'strong') {
+                if(!momentumPass && !isNaN(rsiVal) && !isNaN(macdVal)) document.getElementById('momentumWarning').classList.remove('hidden');
+                else if(momentumPass) document.getElementById('momentumSuccess').classList.remove('hidden');
+
+                let subType = "🛡️ 盤堅盤 (Solid Bull)";
+                let subTypeDesc = "N字回測有守 (測試支撐)";
+                
+                // 動態判定盤堅/軋空/強軋空
+                if (!isNaN(todayLow) && !isNaN(breakoutLow) && !isNaN(prevClose)) {
+                    const buffer = breakoutLow * 1.015;
+                    if (todayLow <= buffer) {
+                        subType = "🛡️ 盤堅盤 (Solid Bull)";
+                        subTypeDesc = "N字回測有守 (測試支撐)";
+                    } else if (todayLow > prevClose || close > prevClose * 1.04) {
+                        subType = "🔥 強軋空盤 (Super Squeeze)";
+                        subTypeDesc = "強勢噴出 (最強勢)";
                     } else {
-                        trendStr = "🟢 空方 (弱勢整理)";
-                        strategyText = `建議方向：空方 (保守觀望)\n操作建議：股價受壓，建議觀望。若盤中站穩 ${format(v.cdp)} 可嘗試短多，否則以反彈空為主。`;
-                        recBuy = `站穩 ${format(v.cdp)}`;
+                        subType = "🚩 軋空盤 (Short Squeeze)";
+                        subTypeDesc = "高檔強勢整理 (以盤代跌)";
                     }
                 }
 
-                let sarTrendStr = !isNaN(sar) ? (!isNaN(now) && now > sar ? "🔴 多頭" : "🟢 空頭") : "無數據";
-                let indStr = "";
-                if (!isNaN(osc)) indStr += `🔹 MACD柱狀：${osc > 0 ? '🔴 紅柱 (強)' : '🟢 綠柱 (弱)'}\n`;
-                if (!isNaN(kVal)) { let d = "中性"; if(kVal>80) d="🔥 高檔鈍化"; else if(kVal<20) d="❄️ 低檔鈍化"; indStr += `🔹 KD指標(K)：${kVal} (${d})\n`; }
-                if (!isNaN(td)) { let d = "中性"; if(td>=9) d="⚠️ 轉折警戒"; else if(td<=-9) d="✨ 反彈契機"; indStr += `🔹 九轉計數：${td} (${d})`; }
-                
-                let targetText = "";
-                if (!isNaN(cost) && cost > 0) { 
-                    const t = calculateTargets(cost); 
-                    targetText = `\n獲利了解價位（參考主力目標價）\n① 短線獲利：${format(t.t1)}\n② 出貨上緣：${format(t.t2)}\n③ 波段延伸：${format(t.t3)}\n④ 誘多末端：${format(t.t4)}`; 
-                } 
+                let guideTrend = `多方攻擊 (${subType.split(' ')[1]})`;
+                let guideDesc = "";
 
-                let stars = "--", starDesc = "-- (等待數據)";
-                if (!isNaN(now)) {
-                    if (now < v.al) { stars = "1顆星 ★☆☆☆☆"; starDesc = "趨勢非常不妙 ☹️（空頭排列）"; } else if (now < v.cdp) { stars = "2顆星 ★★☆☆☆"; starDesc = "正在谷底掙扎 😕（打底盤整）"; } else if (now < v.nh) { stars = "3顆星 ★★★☆☆"; starDesc = "準備要登大人 😏（突破頸線）"; } else if (now < v.ah) { stars = "4顆星 ★★★★☆"; starDesc = "多頭猛攻，獲利奔騰 🤑（主升段噴出）"; } else { stars = "5顆星 ★★★★★"; starDesc = "萬里無雲，飛向宇宙 🚀（創新高/天空沒有極限）"; }
+                if(isRsiOverheated && isMacdStrong) {
+                    guideDesc = `依圖一所示，趨勢維持強勢。唯 RSI 顯示高檔過熱 (${rsiVal})，需提防急殺回馬槍洗盤。守住軋空低可續抱，隨時準備停利。`;
+                } else if(momentumPass) {
+                    guideDesc = `依圖一所示，動能量化雙指標強勢，高機率為第3波主升段。守住軋空低可續抱，上看1.618延伸目標。`;
+                } else {
+                    guideDesc = `⚠️ 雖然價格仍在強勢區間，但動能指標(RSI/MACD)未獲全面確認。防範B波假突破或量價背離，跌破${fP(breakoutLow)}必須停損。`;
                 }
-                const dateStr = new Date().toLocaleString('zh-TW', { hour12: false });
+
+                rTitleText = subType; 
+                rActionText = momentumPass ? "死抱不放 (讓利潤奔跑)" : (isRsiOverheated ? "高檔過熱 (隨時停利)" : "風險偏高 (嚴防回檔)"); 
+                rBoxClass = "bg-red-50 border-red-600";
+                rTitleClass = "text-2xl font-black text-red-700"; 
+                rActionClass = "text-2xl font-black text-red-800 border-b border-red-300 pb-2 mb-2";
+                rIconText = "🚀"; 
+                rTrendText = subType; 
+                rVolText = todayVol >= v_break ? "攻擊量達標" : "量縮整理";
+
+                const washPrice7 = (close * 0.93).toFixed(2); 
+                const manualStr = userInputLow ? "(手動輸入)" : "(系統判定)";
+
+                v24BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
+
+嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
+
+傑克.史東 N 字戰法指揮中心 V24 動能校準版
+
+股名：${stockName}
+
+【一、個股現況分析】
+
+📌 操作指令：【 ${rActionText} 】
+
+(請確認模組狀態符合條件再操作)
+
+⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
+⚡ 量能狀態： ${todayVol >= v_break ? "攻擊量達標 (1.3倍↑)" : "高檔換手量"}
+
+💰 當前現價： ${fP(close)}
+
+📉 7% 洗盤：跌到${washPrice7}$ (當日盤中最大容忍值)
+
+📈 盤勢型態： ${subType}
+   ╰─ 特徵診斷： ${subTypeDesc}
+
+✅ 波段目標： 5N (${fP(target5)})
+
+⚠️ 結構防守(${keyPointLabel})： ${fP(breakoutLow)} ${manualStr}
+
+🎯 斐波那契測幅 (h2=${fP(todayH)}, PR=${fP(PR)}, A=${fP(gap_A)})
+• 一飽(1N)：${fP(target1)} (基礎對稱)
+• 二吐(2N)：${fP(target2)} (1.618波浪延伸)
+• 五倍(5N)：${fP(target5)} (2.618波浪極限)
+
+★ 量價推演：
+• 攻擊門檻(1.3x)：${fN(v_break)} ${todayVol >= v_break ? "(✅達標)" : ""}
+• 洗盤門檻(0.8x)：${fN(v_wash)} ${todayVol <= v_wash ? "(✅達標)" : ""}
+${volumeSummary}
+
+★ 戰術指引：
+📈 趨勢：${guideTrend}。
+${guideDesc}
+(⚡ 系統校準：動能凌駕價格，拒絕誤判為盤整)
+-------------------
+防守：不破軋空低，目標才有效。
+
+【二、明日開盤・量能作戰劇本】
+
+💡 戰術小卡： 預估量 = 09:15 成交量 × 8
+
+🔴 劇本 A（極強鎖攻）： 預估量 > ${fN(v_strong)} 張，抱緊。
+🟢 劇本 B（續強推進）： 預估量 ${fN(v_break)}~${fN(v_strong)} 張，續抱。
+🟡 劇本 C（量縮整理）： 預估量 < ${fN(v_wash)} 張，續抱，防守${fP(breakoutLow)}。
+
+【三、📌 極強盤操作策略專屬・關鍵三問】
+
+❓ Q1：漲這麼多了，我很怕，能不能先賣一趟？
+
+邏輯說明： 在軋空主升段中，最容易犯的錯誤是「因為怕高而賣在主升段中途」。
+操作建議： 價格未跌破 ${fP(breakoutLow)} 且 MACD 未明顯收斂 → 堅持抱（Hold）。
+
+❓ Q2：盤中如果急殺跳水，要不要跑？
+
+邏輯： 看收盤，不看盤中。強勢股常見「洗盤急殺」。只要收盤未破結構防守，視為換手。
+
+❓ Q3：什麼情況下，死抱會失效？
+
+否決條款：
+1. 量價背離 (創高但 RSI 未創高，或脫離過熱區)。
+2. 收盤跌破 ${fP(breakoutLow)} (結構防守點) → 必須減碼/停損。`;
+
+                v24AIReport = `(一) 波浪與動能診斷：\n${isRsiOverheated ? '短線動能 RSI(5T) 進入 >80 的極度過熱區，這是第3波延伸或第5波末端的強烈特徵，主力極易在此發動劇烈洗盤。請嚴控停損！' : (momentumPass ? '主力資金持續挹注，價格與動能指標雙倍共振，確立為第3波推進浪。延伸浪的工作是「甩掉逆勢的人」，切勿輕易做空。' : '價格創高但指標不配合，留意第5波末端或B波反彈陷阱。')}\n(二) 教練心法：\n「波浪不是用來精準猜頂，而是用來定義結構防守。只要軋空低不破，趨勢就還在！」\n\n---
+【附錄：多頭趨勢的三大盤態診斷 (V24校準)】
+本系統已根據您輸入的價格結構，判定本檔個股目前屬於：${subType}
+1. 盤堅盤 (Solid Bull)：N字上漲、回檔深。空頭抵抗強，需透過回測洗盤，只要守住「軋空低」，緩步趨堅。
+2. 軋空盤 (Short Squeeze)：高檔旗型/楔型整理。空頭抵抗弱，「以盤代跌」，修正時間但不修正價格，隨後再往上攻。
+3. 強軋空盤 (Super Squeeze)：噴出不回頭，K線連紅。空頭抵抗完全失敗，主力不給上車機會，為最強勢盤態。`;
+
+             } else if (type === 'break') {
+                if(!momentumPass && !isNaN(rsiVal) && !isNaN(macdVal)) document.getElementById('momentumWarning').classList.remove('hidden');
+                else if(momentumPass) document.getElementById('momentumSuccess').classList.remove('hidden');
+
+                rTitleText = "🚀 三盤突破 (翻紅)"; 
+                rActionText = momentumPass ? "積極進場試單" : "保守觀望 (防假突破)"; 
+                rBoxClass = "bg-orange-50 border-orange-500";
+                rTitleClass = "text-2xl font-black text-orange-600"; 
+                rActionClass = "text-2xl font-black text-orange-700 border-b border-orange-200 pb-2 mb-2";
+                rIconText = "🚀"; rTrendText = "🔥 突破頸線 (N字起點)"; rVolText = "帶量突破 (Day 1)";
                 
-                const report = `📊 【石頭戰法戰情室】\n${reportTitle}\n📅 時間：${dateStr}\n-------------------------\n【市場數據】\n🔹 昨 H/L/C：${h} / ${l} / ${c}\n🔹 今日開盤：${isNaN(open) ? '--' : open}\n🔹 當前現價：${isNaN(now) ? '--' : now}\n🔹 SAR 數值：${isNaN(sar) ? '--' : sar}\n🌊 SAR 趨勢：${sarTrendStr}\n${indStr}\n-------------------------\n【CDP 關鍵點位】\n🚀 AH (強突)：${format(v.ah)}\n🔥 NH (突破)：${format(v.nh)}\n⚖️ CDP(中樞)：${format(v.cdp)}\n🛡️ NL (支撐)：${format(v.nl)}\n☠️ AL (停損)：${format(v.al)}\n-------------------------\n【目前股價趨勢】\n${trendStr}\n\n${strategyText}\n-------------------------\n【結論】\n推薦進場買點價位：${recBuy}\n推薦獲利了結價位：${recSell}\n本檔股票推薦進場星星指數：${stars}\n${starDesc}\n-------------------------\n(由 石頭戰法 V5.6 Commander 生成)`;
-                navigator.clipboard.writeText(report).then(() => { showToast(); });
-            };
+                let guideTrend = "多方啟動 (N字突破)";
+                let guideDesc = momentumPass 
+                    ? `依圖一所示，股價帶量突破頸線，量化動能雙指標(RSI/MACD)轉強確認，極具備第3波攻擊潛力，建議積極進場佈局。`
+                    : `⚠️ 突破雖發生，但動能量化指標(RSI/MACD)並未同步轉強，無法確認為主升段起點。可能是量價背離或B波假突破，以極小資金試單或觀望。`;
+                
+                const passStr = momentumPass ? "積極進場試單" : "保守觀望";
 
-            const showToast = (msg) => { const t = els.toast; if(msg) { t.textContent = msg; t.innerHTML = msg; } else t.innerHTML = '<i class="fas fa-check-circle text-green-400 mr-2"></i>戰報已複製'; t.className = "show"; setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000); };
-            const clearAll = () => { document.querySelectorAll('input').forEach(i => i.value = ''); resetCards(); els.adviceDef.textContent = "等待數據..."; els.adviceAtt.textContent = "等待數據..."; els.cdpTableBody.innerHTML = ''; els.targetMatrixContainer.classList.add('collapsed'); [els.cardT1, els.cardT2, els.cardT3, els.cardT4].forEach(c => { c.classList.remove('reached', 'next'); c.classList.add('opacity-50'); c.querySelector('.status-badge').innerHTML = ''; }); [els.valT1, els.valT2, els.valT3, els.valT4].forEach(el => el.textContent = '--'); currentSimMode = null; updateHeader(); };
+                v24BaseReport = `2. 【模擬突破】(起漲第一天)
 
-            return { analyze, simulate, updateHeader, clearAll, copyReport, toggleHelp, toggleTheme, toggleTargetSection };
-        })();
+嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
+
+傑克.史東 N 字戰法指揮中心 V24 動能校準版
+
+股名：${stockName}
+
+【一、個股現況分析】
+
+📌 操作指令：【 ${passStr} 】
+
+⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
+⚡ 量能狀態： 帶量突破 (Day 1)
+
+💰 當前現價： ${fP(close)}
+
+🛡️ 結構防守(${keyPointLabel})： ${fP(breakoutLow)} (系統判定)
+
+📈 盤勢型態： 🚀 突破頸線 (N字起點)
+
+✅ 目標直指： 1.618波浪延伸 (${fP(target2)})
+
+🎯 斐波那契測幅 (h2=${fP(todayH)}, PR=${fP(PR)}, A=${fP(gap_A)})
+• 一飽(1N)：${fP(target1)} (基礎)
+• 二吐(2N)：${fP(target2)} (1.618延伸)
+• 五倍(5N)：${fP(target5)} (2.618極限)
+
+★ 量價推演：
+• 攻擊門檻(1.3x)：${fN(v_break)} ${todayVol >= v_break ? "(✅達標)" : ""}
+• 洗盤門檻(0.8x)：${fN(v_wash)} ${todayVol <= v_wash ? "(✅達標)" : ""}
+${volumeSummary}
+
+★ 戰術指引：
+📈 趨勢：${guideTrend}。
+${guideDesc}
+(⚡ 長紅力道：轉強 (表態))
+-------------------
+防守：不破軋空低，目標才有效。
+
+【二、明日開盤・量能作戰劇本】
+
+🔴 劇本 A (跳空開高)： 市價追 (Buy)，強勢缺口不補，行情噴出。
+🟢 劇本 B (平盤震盪)： 佈局 (Buy)，趁盤中拉回建立基本部位。
+
+【三、📌 突破操作策略明日實戰・關鍵三問】
+
+❓ Q1：昨天沒買到，明天開高可以直接追嗎？
+
+建議：
+開盤漲幅 ≤ 3% → 市價直接追買。
+開盤漲幅 > 5% → 等盤中回測均價線再接。
+
+❓ Q2：怎麼判斷突破是真的還是假？
+
+判斷標準： 量化雙動能(RSI>60/MACD>0) + 三天原則 + 軋空低防守 (防守價位：${fP(breakoutLow)})
+
+❓ Q3：買進後開始盤跌怎麼辦？
+
+防守策略： 嚴守 ${fP(breakoutLow)} 關卡。
+停損點： 收盤跌破 ${fP(breakoutLow)} → 無條件停損出場。`;
+
+                v24AIReport = `(一) 突破與量化診斷： ${momentumPass ? '「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，短天期(5T)雙動能指標提供了堅實後盾。' : '動能不足的價格突破，常常是主力藉此誘多拉高出貨的手段，不宜重壓。'}\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
+
+             } else if (type === 'flat') {
+                rTitleText = "💤 盤整延續"; rActionText = "觀望 / 空手"; rBoxClass = "bg-slate-50 border-slate-400";
+                rTitleClass = "text-2xl font-black text-slate-700"; rActionClass = "text-2xl font-black text-slate-800 border-b border-slate-300 pb-2 mb-2";
+                rIconText = "🐢"; rTrendText = "💤 箱型震盪"; rVolText = "量縮整理";
+
+                const boxTop = isNaN(high3d) ? close * 1.05 : high3d;
+                const boxBottom = isNaN(breakoutLow) ? close * 0.95 : breakoutLow;
+
+                let guideTrend = "多空平衡 (第4波整理)";
+                let guideDesc = "";
+                
+                // V24 修正矛盾文案
+                if (momentumPass) {
+                    guideDesc = "指標(RSI/MACD)雖有轉強跡象，但價格受制於箱頂無法有效突破。建議持股續抱，空手者等待實體突破再加碼。";
+                } else {
+                    guideDesc = "量縮整理階段，方向未明。短線 RSI(5T) 與 MACD 皆無攻擊表態，建議觀望，等待帶量且帶動能突破箱頂再行動。";
+                }
+
+                v24BaseReport = `3. 【模擬盤整】(觀望等待)
+
+嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
+
+傑克.史東 N 字戰法指揮中心 V24 動能校準版
+
+股名：${stockName}
+
+【一、個股現況分析】
+
+📌 操作指令：【 觀望 / 空手 】
+
+⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
+⚡ 量能狀態： 量縮整理 (人氣退潮)
+
+💰 當前現價： ${fP(close)}
+
+📦 箱體區間： ${fP(boxBottom)} (底) ~ ${fP(boxTop)} (頂)
+
+⚠️ 防守要點： 箱底支撐 (${keyPointLabel}) ${fP(boxBottom)} 不可破
+
+★ 量價推演：
+• 攻擊門檻(1.3x)：${fN(v_break)} ${todayVol >= v_break ? "(✅達標)" : ""}
+• 洗盤門檻(0.8x)：${fN(v_wash)} ${todayVol <= v_wash ? "(✅達標)" : ""}
+${volumeSummary}
+
+★ 戰術指引：
+📈 趨勢：${guideTrend}。
+${guideDesc}
+-------------------
+防守：箱底不破，保留反攻機會。
+
+【二、明日開盤・量能作戰劇本】
+
+🔴 劇本 A (點火攻擊)： 預估量 > ${fN(v_break)} 張且過箱頂，進場。
+🟢 劇本 B (持續盤整)： 觀望。
+
+【三、📌 盤整操作策略專屬・關鍵三問】
+
+❓ Q1：現在價格好便宜，我能不能先買起來放？
+
+建議： ❌ 不建議現在買！資金有機會成本。
+
+❓ Q2：要看到什麼訊號，才代表盤整結束？
+
+🔥 點火訊號： 第一根帶量且短線量化指標轉強 (RSI(5T)>60/MACD>0) 的紅 K 棒。
+判斷條件： 成交量 ≥ ${fN(Math.round(avgVol * 1.5))} 且 收盤價強勢站上箱頂 ${fP(boxTop)} 元。
+
+❓ Q3：成交量越來越少，是不是沒人玩了？
+
+💡 解讀： 量縮其實是好事，代表籌碼沉澱。「極致量縮」往往是變盤的前兆。`;
+
+                v24AIReport = `(一) 結構與量化診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
+
+             } else if (type === 'crash') {
+                let bearType = "📉 盤跌盤 (Slow Bear)";
+                let bearDesc = "多頭抵抗，緩步盤跌";
+                
+                if (!isNaN(todayH) && !isNaN(prevClose) && !isNaN(breakoutLow)) {
+                    if (todayH < prevClose) {
+                        bearType = "💀 強殺多 (Strong Killing Bulls)";
+                        bearDesc = "多頭不抵抗，無反彈 (跳空缺口)";
+                    } else if (todayH >= prevClose && close < prevClose) {
+                        bearType = "🔪 殺多盤 (Killing Bulls)";
+                        bearDesc = "多頭抵抗失敗，反彈無力 (上影線)";
+                    }
+                }
+
+                rTitleText = bearType; 
+                rActionText = "停損 / 反手放空"; 
+                rBoxClass = "bg-green-100 border-green-600";
+                rTitleClass = "text-2xl font-black text-green-900"; 
+                rActionClass = "text-2xl font-black text-green-900 underline border-b border-green-300 pb-2 mb-2";
+                rIconText = "📉"; rTrendText = bearType; rVolText = "帶量下殺";
+                
+                const drop20 = (close * 0.8).toFixed(2);
+
+                let guideTrend = `空方趨勢 (${bearType.split(' ')[1] || bearType})`;
+                let guideDesc = "";
+                if(bearType.includes("強殺多")) guideDesc = "依圖二所示，空頭完全控盤，動能指標崩壞，跳空下跌，建議絕對空手或追空。";
+                else if(bearType.includes("殺多盤")) guideDesc = "依圖二所示，反彈遇壓不過，留上影線且指標轉弱，建議反彈站在賣方。";
+                else guideDesc = "依圖二所示，多頭試圖抵抗但趨勢向下，短線指標無力，建議反彈找空點。";
+
+                v24BaseReport = `4. 【模擬大跌】(C波崩盤)
+
+嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
+
+傑克.史東 N 字戰法指揮中心 V24 動能校準版
+
+「本策略僅為個人分析參考，投資有風險，操作需自負盈虧」
+
+股名：${stockName}
+
+【一、個股現況分析】
+
+📌 操作指令：【 停損 / 反手放空 】
+
+(請確認模組狀態符合條件再操作)
+
+⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
+⚡ 量能狀態： 帶量下殺 (主力出貨)
+
+💰 當前現價： ${fP(close)}
+
+📉 20% 跌幅： 跌到${drop20}$ (無底深淵)
+
+📈 盤勢型態： ${bearType}
+   ╰─ 特徵診斷： ${bearDesc}
+
+✅ 下檔支撐： 深不可測 (勿猜底)
+
+⚠️ 壓力關卡： ${fP(breakoutLow)} (${keyPointLabel})
+
+★ 量價推演：
+• 攻擊門檻(1.3x)：${fN(v_break)} ${todayVol >= v_break ? "(✅達標)" : ""}
+${volumeSummary}
+
+★ 戰術指引：
+📉 趨勢：${guideTrend}。
+${guideDesc}
+(⚡ 長紅力道：無 (長黑))
+-------------------
+防守：站不上殺多高，空方趨勢不變。
+
+【二、明日開盤・量能作戰劇本】
+
+💡 戰術小卡： 預估量 = 09:15 成交量 × 8
+
+🔴 劇本 A (跳空大跌)
+🔹 防守壓力：${fP(breakoutLow)}
+🔹 條件： 預估量 > ${fN(v_strong)} 張 (1.5x↑) 且 開低。
+👉 指令： 若帶量確認跌破前低，可追空 (Short)，嚴防無量空殺。
+
+🟢 劇本 B (弱勢反彈)
+🔹 防守壓力：${fP(breakoutLow)}
+🔹 條件： 量縮 (${fN(v_wash)}張，約 0.8x) 紅盤。
+👉 指令： 逃命 (Exit)，保留資金等待下一波下跌。
+
+🟡 劇本 C (量縮緩跌)
+🔹 防守壓力：${fP(breakoutLow)}
+🔹 條件： 預估量 < ${fN(v_wash)} 張 (0.8x↓)。
+👉 指令： 空單續抱 (Hold Short)。
+
+⚫ 劇本 D (V型反轉)
+🔹 防守壓力：${fP(breakoutLow)}
+🔹 條件： 收盤站回 ${fP(breakoutLow)}、量能達 ${fN(v_break)} 且 指標轉強
+👉 指令： 回補空單 (Cover)，可能為假跌破，先退場觀望。
+
+【三、📌 大跌盤操作策略專屬・關鍵三問】
+
+❓ Q1：已經跌了，能不能進場攤平？
+❌ 警告： 這是自殺行為！散戶最大的悲哀，就是在 C 波裡往下攤平。
+
+❓ Q2：我想放空，哪裡是最好的空點？
+反彈壓力區： ${fP(breakoutLow)} 附近 (${keyPointLabel})
+📈 建議操作： 等待股價反彈至壓力區卻漲不動，出現上影線時為勝率最高的空點。
+
+❓ Q3：如果明天開紅盤，是不是代表止跌了？
+❌ 迷思： 紅盤 ≠ 止跌。
+關鍵判斷： 若股價仍 < ${fP(breakoutLow)} 或短線指標無起色 → 只是死貓跳，空頭趨勢未改。`;
+
+                v24AIReport = `(一) 結構診斷： 情緒崩解，資金全面撤退，量化動能雙雙崩壞。\n(二) 教練心法： 「截斷虧損，讓利潤奔跑。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 空方主跌段\n🎯 核心策略： 只出不進，嚴禁抄底。\n\n---
+【附錄：空方趨勢的三大盤態診斷 (V24校準)】
+本系統已根據您輸入的價格結構，判定本檔個股目前屬於：${bearType}
+1. 盤跌盤 (Slow Bear)：多頭仍有抵抗，反彈幅度較大(可能過昨高)，但趨勢緩步向下。
+2. 殺多盤 (Killing Bulls)：多頭抵抗失敗，反彈無力(僅留上影線)，弱勢整理後續跌。
+3. 強殺多 (Strong Killing Bulls)：空方完全控盤，多頭放棄抵抗，常伴隨跳空缺口，崩跌速度最快。`;
+             }
+             
+             resultBox.className = `p-6 rounded-2xl border-l-8 shadow-xl relative overflow-hidden ${rBoxClass}`;
+             document.getElementById('stockBadge').innerText = stockName;
+             document.getElementById('resultTitle').innerText = rTitleText;
+             document.getElementById('resultTitle').className = rTitleClass;
+             document.getElementById('resultAction').innerText = rActionText;
+             document.getElementById('resultAction').className = rActionClass;
+             document.getElementById('resultIcon').innerText = rIconText;
+             document.getElementById('trendTag').innerText = rTrendText;
+             document.getElementById('trendTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm"; 
+             document.getElementById('volTag').innerText = rVolText;
+             document.getElementById('volTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm";
+             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V24 戰略報告。";
+             
+             document.getElementById('aiAnalysisBox').classList.remove('hidden');
+             const htmlContent = marked.parse(v24AIReport);
+             document.getElementById('aiContent').innerHTML = htmlContent;
+
+             baseReportText = v24BaseReport;
+             aiReportContent = v24AIReport;
+        }
     </script>
 </body>
 </html>
