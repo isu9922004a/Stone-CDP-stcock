@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>傑克.史東：N字戰法指揮中心 (V29 盤態解析版)</title>
+    <title>傑克.史東：N字戰法指揮中心 (V32 終極百科對稱版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -37,7 +37,7 @@
         .ai-content p { margin-bottom: 0.5em; line-height: 1.6; }
         .ai-content strong { color: #b91c1c; }
         
-        .v29-badge {
+        .v32-badge {
             background: linear-gradient(135deg, #1e293b 0%, #000000 100%);
             color: #fbbf24; 
             text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
@@ -58,49 +58,385 @@
 
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <div class="bg-slate-900 p-5 text-white text-center relative z-20 shadow-md">
-            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v29-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V29 盤態解析版</span></h1>
+            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v32-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V32 終極對稱版</span></h1>
             <p class="text-xs text-slate-400 mt-1">極致價格結構 × 盤態影像完美校準</p>
         </div>
 
         <div class="bg-slate-50 border-b border-slate-200">
             <div id="encyclopediaToggleBtn" class="p-3 text-center bg-blue-700 text-white font-bold text-sm cursor-pointer hover:bg-blue-800 transition-colors" onclick="toggleEncyclopedia()">
-                📖 點我打開：V29 純淨波浪 × N字 戰術百科 ▼
+                📖 點我打開：純淨波浪 × N字 戰術百科 ▼
             </div>
             <div id="encyclopediaContent" class="hidden max-h-[500px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
                 
                 <div class="bg-blue-50 p-3 rounded border border-blue-200 mb-2">
-                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ V29 盤態邏輯影像校準 (圖2-17/2-22)</p>
+                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ 最新版盤態邏輯影像校準 (圖2-17/2-22)</p>
                     <div class="text-xs text-slate-700 space-y-2">
                         <p><span class="font-bold text-blue-700">多方修正：</span> 依據標準圖譜，明確區分回檔深度。「盤堅盤」跌破頸線但守軋空低；「軋空盤」守穩頸線之上；「強軋空」回檔最低點完全脫離頸線(懸空)。</p>
-                        <p><span class="font-bold text-red-700">空方修正：</span> 明確定義反彈力道。「強殺多」無反彈跳空；「殺多盤」反彈碰不到壓力；「盤跌盤」反彈刺穿壓力但收低。</p>
+                        <p><span class="font-bold text-red-700">空方修正：</span> 明確定義反彈力道。「強殺多」最高價未觸及前低；「殺多盤」盤中突破前低但收盤跌回；「盤跌盤」收盤突破前低但受制於殺多高。</p>
                         <p><span class="font-bold text-red-600">風險鐵律：</span> 軋空低 (第2波低點) 絕對不可跌破起漲點 (第1波起點)。</p>
                     </div>
                 </div>
 
-                <details class="group border border-orange-200 rounded overflow-hidden">
-                    <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
-                        <span>多空趨勢盤態分級 (Bull vs Bear)</span>
-                        <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
-                    </summary>
-                    <div class="p-3 text-xs text-slate-700 bg-white space-y-4">
-                        <div class="border-l-4 border-red-500 pl-2">
-                            <p class="font-bold text-red-800 mb-1">📈 多方盤態</p>
-                            <ul class="space-y-1">
-                                <li><span class="font-bold">⭐️ 盤堅盤 (圖①)：</span> 過高後拉回跌破頸線，N字測試支撐。</li>
-                                <li><span class="font-bold">⭐️⭐️ 軋空盤 (圖②)：</span> 高檔強勢整理，收盤守穩頸線之上。</li>
-                                <li><span class="font-bold text-red-600">⭐️⭐️⭐️ 強軋空 (圖③)：</span> 跳空或強勢過高，回檔最低點不破前高頸線。</li>
-                            </ul>
+                <!-- 💡 關鍵點位定義 -->
+                <div class="bg-red-50 p-2 rounded border border-red-200 mb-2 mt-2">
+                    <p class="font-bold text-red-800 border-b border-red-200 pb-1 mb-1">💡 關鍵點位定義</p>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-white p-2 rounded border border-red-100">
+                            <span class="text-red-700 font-black block mb-1">🛡️ 軋空低 (支撐)</span>
+                            <span class="text-slate-600">多頭防守點</span><br>
+                            <span class="font-bold">Min { 昨收, 今低 }</span>
                         </div>
-                        <div class="border-l-4 border-green-600 pl-2">
-                            <p class="font-bold text-green-900 mb-1">📉 空方盤態</p>
-                            <ul class="space-y-1">
-                                <li><span class="font-bold">⚠️ 盤跌盤 (圖①)：</span> 反彈刺穿壓力，但收低緩步盤跌。</li>
-                                <li><span class="font-bold">⚠️⚠️ 殺多盤 (圖②)：</span> 反彈不過壓力，多頭抵抗失敗留上影線。</li>
-                                <li><span class="font-bold text-green-700">⚠️⚠️⚠️ 強殺多 (圖③)：</span> 多頭毫無抵抗，跳空缺口或連黑下殺。</li>
+                        <div class="bg-white p-2 rounded border border-green-100">
+                            <span class="text-green-700 font-black block mb-1">🔨 殺多高 (壓力)</span>
+                            <span class="text-slate-600">空頭壓力點</span><br>
+                            <span class="font-bold">Max { 昨收, 今高 }</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 1: 基礎趨勢 -->
+                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-2 mb-1">第一篇：基礎趨勢與轉折 (定多空)</div>
+                <details class="group border border-indigo-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-indigo-800 bg-indigo-50 p-3">
+                        <span>1. 趨勢篇：末升低 & 末跌高</span>
+                        <span class="text-indigo-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p><span class="font-bold text-red-600">● 末升低 (Last Rising Low)：</span>多頭趨勢中，最後一波上漲的「起漲點」。<br><strong>意義：</strong>多頭最後防線。跌破 = 多翻空。</p>
+                        <p><span class="font-bold text-green-600">● 末跌高 (Last Falling High)：</span>空頭趨勢中，最後一次反彈的「起跌點」。<br><strong>意義：</strong>空頭最後防線。突破 = 空翻多。</p>
+                    </div>
+                </details>
+
+                <details class="group border border-indigo-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-indigo-800 bg-indigo-50 p-3">
+                        <span>2. 轉折訊號：日出線 & 日落線</span>
+                        <span class="text-indigo-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p><span class="font-bold text-red-600">🌅 日出線 (Sunrise)：</span>高過昨高，收盤收高。<br>用途：回檔時的止跌買訊。</p>
+                        <p><span class="font-bold text-green-600">🌇 日落線 (Sunset)：</span>低破昨低，收盤收低。<br>用途：上漲時的止漲賣訊。</p>
+                        <p class="bg-indigo-50 p-1 rounded font-bold text-center">口訣：回檔找日出，上漲防日落。</p>
+                    </div>
+                </details>
+
+                <details class="group border border-purple-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-purple-800 bg-purple-50 p-3">
+                        <span>3. 防守篇：軋空低定義</span>
+                        <span class="text-purple-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                        <p><span class="font-bold bg-indigo-100 text-indigo-800 px-1 rounded">翻紅K棒：</span> 寶塔線由綠翻紅 (收盤 > 前三高) 當天的那根K棒。</p>
+                        <p><span class="font-bold bg-purple-100 text-purple-800 px-1 rounded">軋空低 (SSL)：</span> 主力的成本防守線。</p>
+                    </div>
+                </details>
+
+                 <!-- 寶塔線邏輯 -->
+                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4 mb-1">第二篇：寶塔線與盤態圖解 (重點)</div>
+
+                <details class="group border border-blue-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-blue-800 bg-blue-50 p-3">
+                        <span>4. 原理篇：寶塔線 (TOW) 邏輯詳解</span>
+                        <span class="text-blue-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                         <div class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                            <p class="font-bold text-yellow-900 border-b border-yellow-200 pb-1 mb-1">💡 為什麼觀察三天？ (參數=3)</p>
+                            <ul class="list-decimal list-inside space-y-1 text-yellow-800">
+                                <li><span class="font-bold">過濾假訊號：</span>避免「一日行情」。</li>
+                                <li><span class="font-bold">心理防線：</span>Day 1 變盤，Day 2 延續，Day 3 確立。</li>
+                                <li><span class="font-bold">操作精髓：</span>綠翻紅後，若連續三天不破 Day 1 低點，多頭確立。</li>
                             </ul>
                         </div>
                     </div>
                 </details>
+
+                <!-- Part 2: 盤態與攻擊 -->
+                <details class="group border border-orange-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-orange-800 bg-orange-50 p-3">
+                        <span>5. 心法篇：盤態分類 (多空雙向圖解)</span>
+                        <span class="text-orange-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-4">
+                        <div>
+                            <p class="font-bold bg-red-100 text-red-800 px-1 rounded inline-block mb-1">📈 多方趨勢 (Bullish)</p>
+                            <div class="flex flex-col items-center my-2 p-2 border border-slate-200 rounded bg-white">
+                                <div class="w-full text-center text-[10px] text-gray-500 mb-1">▼ 圖一：多方盤態與空頭抵抗 ▼</div>
+                                <div class="w-full h-auto rounded shadow-sm bg-gray-100 p-2 text-center text-xs text-gray-500 flex justify-around">
+                                    <div class="w-1/3 border-r border-gray-300 px-1 text-left">
+                                        <div class="font-bold text-orange-600 mb-1">① 盤堅盤</div>
+                                        <div class="text-[9px] leading-tight text-slate-600">跌破頸線，守軋空低</div>
+                                    </div>
+                                    <div class="w-1/3 border-r border-gray-300 px-1 text-left">
+                                        <div class="font-bold text-blue-600 mb-1">② 軋空盤</div>
+                                        <div class="text-[9px] leading-tight text-slate-600">跌破頸線，收盤站回</div>
+                                    </div>
+                                    <div class="w-1/3 px-1 text-left">
+                                        <div class="font-bold text-red-600 mb-1">③ 強軋空</div>
+                                        <div class="text-[9px] leading-tight text-slate-600">最低價未跌破頸線</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-200 pt-2">
+                            <p class="font-bold bg-green-100 text-green-800 px-1 rounded inline-block mb-1">📉 空方趨勢 (Bearish)</p>
+                            <div class="flex flex-col items-center my-2 p-2 border border-slate-200 rounded bg-white">
+                                <div class="w-full text-center text-[10px] text-gray-500 mb-1">▼ 圖二：空方盤態與多頭抵抗 ▼</div>
+                                <div class="w-full h-auto rounded shadow-sm bg-gray-100 p-2 text-center text-xs text-gray-500 flex justify-around">
+                                    <div class="w-1/3 border-r border-gray-300 px-1 text-left">
+                                        <div class="font-bold text-slate-600 mb-1">① 盤跌盤</div>
+                                        <div class="text-[9px] leading-tight text-slate-600">
+                                            ● 突破前低<br>
+                                            ● 收盤突破<br>
+                                            ● 緩跌受制殺多高
+                                        </div>
+                                    </div>
+                                    <div class="w-1/3 border-r border-gray-300 px-1 text-left">
+                                        <div class="font-bold text-green-600 mb-1">② 殺多盤</div>
+                                        <div class="text-[9px] leading-tight text-slate-600">
+                                            ● 突破前低<br>
+                                            ● 收盤跌破前低<br>
+                                            ● 留上影線
+                                        </div>
+                                    </div>
+                                    <div class="w-1/3 px-1 text-left">
+                                        <div class="font-bold text-green-800 mb-1">③ 強殺多</div>
+                                        <div class="text-[9px] leading-tight text-slate-600">
+                                            ● 最高未觸及前低<br>
+                                            ● 無力反彈<br>
+                                            ● 崩盤趕底
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+                
+                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4 mb-1">第三篇：實戰與離場 (SOP)</div>
+
+                <details class="group border border-green-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-green-800 bg-green-50 p-3">
+                        <span>6. 攻擊篇：N字測幅 (手稿公式)</span>
+                        <span class="text-green-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p>參數：<span class="font-bold text-red-600">h2 (今日最高)</span>，<span class="font-bold text-green-600">L (前三低)</span></p>
+                        <div class="bg-green-50 p-2 rounded border border-green-100 font-mono">
+                            <p>● <span class="font-bold">一飽 (1N)：</span> h2 × 2 - L (V測距/翻箱)</p>
+                            <p>● <span class="font-bold">二吐 (2N)：</span> 一飽 + (h2 - L) (強勢飆股)</p>
+                            <p>● <span class="font-bold">五倍 (5x)：</span> h2 + 5 × (h2 - L) (摺疊翻箱)</p>
+                            <p class="text-[10px] text-slate-500 mt-1 italic">註：系統採用主控盤 V 測距算法，比傳統 N 測距 (CD=AB) 更具攻擊性，專抓噴出段。</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="group border border-indigo-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-indigo-800 bg-indigo-50 p-3">
+                        <span>7. 進階篇：長紅隔日強弱判定</span>
+                        <span class="text-indigo-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p class="font-bold">突破帶量長紅棒，隔日走勢至關重要：</p>
+                        <ol class="list-decimal list-inside space-y-1 ml-1">
+                            <li><span class="font-bold text-red-600">繼續漲：</span> 強勢 (Strong)。</li>
+                            <li><span class="font-bold text-red-500">不破 1/3：</span> 次強 (Normal)。</li>
+                            <li><span class="font-bold text-orange-500">不破 1/2：</span> 次次強 (Weak but Hold)。</li>
+                            <li><span class="font-bold text-gray-500">跌破 1/2 或低點：</span> 假突破 (False Breakout)。</li>
+                        </ol>
+                    </div>
+                </details>
+                
+                <details class="group border border-red-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-red-800 bg-red-50 p-3">
+                        <span>8. 離場篇：世紀鋼 (9958) 賣訊</span>
+                        <span class="text-red-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p class="font-bold text-red-700">賣出三部曲 (世紀鋼教訓)：</p>
+                        <ol class="list-decimal list-inside ml-1">
+                            <li><span class="font-bold">趨勢轉弱：</span>均線 (EMA 8/21/55) 上漲變緩或走平。</li>
+                            <li><span class="font-bold">結構跌破：</span>三盤跌破 + 跌破所有均線。</li>
+                            <li><span class="font-bold">指標確認：</span>落尾日落 + 寶塔翻綠。</li>
+                        </ol>
+                        <p class="bg-red-50 p-1 text-center font-bold text-red-900 mt-1">結論：多頭已死，果斷換股！</p>
+                    </div>
+                </details>
+                
+                <!-- 輸入指南 -->
+                 <details class="group border border-gray-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-gray-800 bg-gray-50 p-3">
+                        <span>9. SOP：盤中輸入指南</span>
+                        <span class="text-gray-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white">
+                        <p><strong>智慧輸入法：</strong></p>
+                        <p>只需輸入「昨收」、「今低」，系統會自動比對並填入符合邏輯的「軋空低」。</p>
+                        <p class="mt-1 text-slate-500">其他欄位：跳動價、今日最高(算目標)、前三高/低(昨前大前) 照常輸入即可。</p>
+                    </div>
+                </details>
+
+                <!-- 預判教學 -->
+                <details class="group border border-sky-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-sky-800 bg-sky-50 p-3">
+                        <span>10. 預判篇：如何模擬未來走勢？</span>
+                        <span class="text-sky-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-2">
+                        <p class="font-bold text-red-600 border-b border-sky-100 pb-1">Q: 怎麼預測明天？(模擬戰情室用法)</p>
+                        <ol class="list-decimal list-inside ml-1 space-y-2">
+                            <li><span class="font-bold bg-blue-100 text-blue-800 px-1 rounded">情境按鈕 (新手)：</span>
+                                <div class="pl-4 text-slate-500 mt-1">
+                                    點擊上方「極強」、「突破」等按鈕，系統會自動填入完美的數據，讓您練習「看到這種盤態該如何應對」。
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </details>
+
+                <!-- 模組切換說明 -->
+                <details class="group border border-teal-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-teal-800 bg-teal-50 p-3">
+                        <span>11. 說明篇：模組切換使用說明 (必讀)</span>
+                        <span class="text-teal-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                             <p class="font-bold text-slate-800 mb-1">【模擬極強】(多頭最強勢)</p>
+                             <ul class="list-disc list-inside pl-1 text-slate-600 space-y-1">
+                                <li>「突破 → 極強」需滿足連續攻擊量與結構不破</li>
+                                <li class="text-red-600 font-bold">禁止跨模組混用指令</li>
+                             </ul>
+                        </div>
+                    </div>
+                </details>
+                
+                <!-- N字戰法心法 (Newbie Friendly) -->
+                <details class="group border border-pink-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-pink-800 bg-pink-50 p-3">
+                        <span>12. 觀念篇：N字戰法心法邏輯說明</span>
+                        <span class="text-pink-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                         <p class="bg-yellow-50 p-1 rounded mt-1 border border-yellow-200"><strong>💡 小白金句：</strong> 只有當股價走出「N」字形，衝過前波高點，才代表主力是真的要拉抬這檔股票！</p>
+                    </div>
+                </details>
+                
+                <!-- 主控盤態精華 -->
+                 <details class="group border border-purple-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-purple-800 bg-purple-50 p-3">
+                        <span>13. 實戰篇：主控盤態精華 (核心筆記)</span>
+                        <span class="text-purple-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                         <div class="bg-purple-50 p-2 rounded border border-purple-200">
+                             <p class="font-bold text-purple-900 mb-1 border-b border-purple-200 pb-1">1. 突破與空頭抵抗</p>
+                             <p class="mb-1 text-slate-600">當股價突破前高後，次日通常會出現「開高走低」或「避雷針」，這是前波解套賣壓造成的正常現象。若拉回不破軋空低，則為抵抗成功。</p>
+                        </div>
+                    </div>
+                </details>
+
+                 <!-- 主控盤進階 -->
+                 <details class="group border border-gray-200 rounded overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold text-gray-800 bg-gray-50 p-3">
+                        <span>14. 宗師篇：主控盤核心理論</span>
+                        <span class="text-gray-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 bg-white space-y-3">
+                         <div class="bg-gray-50 p-2 rounded border border-gray-200">
+                             <p class="font-bold text-gray-900 mb-1 border-b border-gray-200 pb-1">1. 極短線轉折：出頭與落尾</p>
+                             <ul class="list-disc list-inside pl-1 text-slate-600 space-y-1">
+                                <li><strong>出頭 (止跌)：</strong> 今高 > 昨高。</li>
+                                <li><strong>落尾 (止漲)：</strong> 今低 < 昨低。</li>
+                             </ul>
+                        </div>
+                    </div>
+                </details>
+                
+                <!-- 軋空低 SOP -->
+                <details class="group border border-red-200 rounded overflow-hidden bg-red-50">
+                    <summary class="flex justify-between items-center font-bold text-red-800 bg-red-100 p-3">
+                        <span>15. 關鍵點位篇：軋空低 (SSL) 判斷SOP</span>
+                        <span class="text-red-500 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-3 text-xs text-slate-700 space-y-3">
+                        <p><strong>如何快速判斷軋空低：</strong><br>「首先找到寶塔線最近一次 (綠翻紅) 的那根紅色寶塔線，對應 K 棒的最低點價位。」</p>
+                        
+                        <div class="bg-white p-2 rounded border border-red-200">
+                            <p class="font-bold text-red-900 mb-1">★ 關鍵點位 (軋空低 / 殺多高) 填寫邏輯</p>
+                            
+                            <p class="mb-2"><span class="bg-yellow-200 text-yellow-900 px-1 rounded font-bold">智能判斷：</span>若無軋空低 (空方/盤整)，不填則系統自動抓取壓力或箱底。</p>
+                            
+                            <ul class="list-none pl-0 space-y-2">
+                                <li>
+                                    <span class="text-red-700 font-bold">A. 突破當日 (空手)：</span>
+                                    比較 <span class="text-blue-600">昨日收盤</span> 與 <span class="text-blue-600">今日最低</span>，填兩者中較低價。
+                                    <br><span class="text-slate-500">(若有跳空缺口，防守昨收；若無缺口，防守今低)</span>
+                                </li>
+                                <li>
+                                    <span class="text-green-700 font-bold">B. 持有續抱：</span>
+                                    填寫「當初買進那天」(主控紅K) 計算出的軋空低點。
+                                </li>
+                            </ul>
+                            
+                            <p class="mt-2 text-center text-red-600 font-black border-t border-red-100 pt-1">
+                                ⚡ 收盤價跌破此點 = 攻擊失敗 (必需停損)
+                            </p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 趨勢盤態詳解 -->
+                <details class="group border border-blue-200 rounded overflow-hidden bg-blue-50">
+                    <summary class="flex justify-between items-center font-bold text-blue-900 bg-blue-100 p-3">
+                        <span>16. 趨勢盤態詳解：多空強度分級</span>
+                        <span class="text-blue-600 transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="p-4 text-xs text-slate-700 space-y-4 bg-white">
+                        
+                        <!-- 多方 -->
+                        <div class="border-l-4 border-red-500 pl-3">
+                            <h3 class="font-black text-red-800 mb-2 text-sm bg-red-50 inline-block px-2 py-1 rounded">📈 多方盤態 (Bullish)</h3>
+                            <ul class="space-y-3">
+                                <li>
+                                    <span class="font-bold text-red-600 block">1、⭐️ 盤堅盤（穩健推升格局）</span>
+                                    <span class="text-slate-600">這是多頭市場中最常見的「步步為營」型態，走勢雖然震盪，但底部越墊越高。行進間伴隨深度的 N 字回測洗盤，以測試下方支撐力道。</span>
+                                </li>
+                                <li>
+                                    <span class="font-bold text-red-700 block">2、⭐️⭐️ 軋空盤（蓄勢待發格局）</span>
+                                    <span class="text-slate-600">多頭動能已經明顯增強，走勢呈現「強勢整理」。股價在過高之後雖然有拉回，但收盤價依然強勢守穩在「前高頸線」之上。</span>
+                                </li>
+                                <li>
+                                    <span class="font-black text-red-800 block">3、⭐️⭐️⭐️ 強軋空盤（極端噴出格局）</span>
+                                    <span class="text-slate-600">多方最強勢、最具爆發力的型態。股價通常以跳空或拉出強勢長紅來表態，回檔的最低點完全懸空（連碰都不碰前高頸線）。</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <hr class="border-slate-200">
+
+                        <!-- 空方 -->
+                        <div class="border-l-4 border-green-600 pl-3">
+                            <h3 class="font-black text-green-900 mb-2 text-sm bg-green-50 inline-block px-2 py-1 rounded">📉 空方盤態 (Bearish)</h3>
+                            <ul class="space-y-3">
+                                <li>
+                                    <span class="font-bold text-green-600 block">1、⚠️ 盤跌盤（多方嘗試抵抗，緩步探底）</span>
+                                    <span class="text-slate-600">盤中反彈試圖突破前波低點(頸線)，甚至收盤價站上，但整體趨勢仍受制於上方殺多高，高點逐步降低，溫水煮青蛙。</span>
+                                </li>
+                                <li>
+                                    <span class="font-bold text-green-700 block">2、⚠️⚠️ 殺多盤（多頭抵抗失敗，賣壓加劇）</span>
+                                    <span class="text-slate-600">盤中最高價雖試圖突破前波低點，但收盤價卻跌回其下，留下明顯「上影線」，多頭面臨停損賣壓，修正壓力加劇。</span>
+                                </li>
+                                <li>
+                                    <span class="font-black text-green-800 block">3、⚠️⚠️⚠️ 強殺多（多頭完全放棄，加速崩跌）</span>
+                                    <span class="text-slate-600">盤中反彈最高價完全碰不到前波低點，最常見的表現是直接出現「跳空缺口」向下殺盤。空方完全主導，加速趕底。</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </details>
+
             </div>
         </div>
 
@@ -153,21 +489,21 @@
                             <input type="number" step="0.01" id="closePrice" class="w-full p-2 border-2 border-blue-200 rounded focus:ring-blue-500 text-lg font-mono font-bold text-blue-900" placeholder="跳動價">
                         </div>
                         <div>
-                            <label class="block text-red-700 font-bold mb-1 text-xs">轉折高 <span class="bg-red-100 px-1 rounded text-[10px]">h2 (第1波高)</span></label>
-                            <input type="number" step="0.01" id="todayHigh" class="w-full p-2 border-2 border-red-200 rounded focus:ring-red-500 text-lg font-mono font-bold text-red-700" placeholder="今日最高">
+                            <label class="block text-red-700 font-bold mb-1 text-xs">今日最高 <span class="bg-red-100 px-1 rounded text-[10px]">h2 (多方)</span></label>
+                            <input type="number" step="0.01" id="todayHigh" class="w-full p-2 border-2 border-red-200 rounded focus:ring-red-500 text-lg font-mono font-bold text-red-700" placeholder="轉折高">
                         </div>
                     </div>
                     
                     <div>
-                        <label class="block text-slate-500 font-bold mb-1 text-xs">前三高 (頸線區)</label>
-                        <input type="number" step="0.01" id="high3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="昨/前/大前">
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">前波高點 (前三高)</label>
+                        <input type="number" step="0.01" id="high3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="多方頸線">
                     </div>
                     <div>
-                        <label class="block text-slate-500 font-bold mb-1 text-xs">起漲點 <span class="bg-slate-200 px-1 rounded text-[10px]">L (前三低)</span></label>
-                        <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="基礎測幅起點">
+                        <label class="block text-slate-500 font-bold mb-1 text-xs">前波低點 (前三低 L)</label>
+                        <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="空方頸線/起漲點">
                     </div>
 
-                    <!-- V29 關鍵點位卡片 -->
+                    <!-- V32 關鍵點位卡片 -->
                     <div class="col-span-2 bg-[#f8fafc] rounded-xl border-2 border-slate-200 mt-2 relative overflow-hidden shadow-sm">
                         <!-- Watermark Icon -->
                         <div class="absolute right-[5px] top-[5px] text-[70px] opacity-[0.04] pointer-events-none transform rotate-[-15deg]">🗝️</div>
@@ -234,7 +570,7 @@
             </div>
 
             <div id="advancedInputs" class="hidden bg-indigo-50 p-3 rounded-lg mt-4 border border-indigo-100">
-                <h3 class="text-sm font-black text-indigo-900 mb-2">★ 盤態強弱判定參數 (輔助軋空低抓取)</h3>
+                <h3 class="text-sm font-black text-indigo-900 mb-2">★ 盤態強弱判定參數 (自動比對用)</h3>
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-[10px] text-gray-500 font-bold mb-1">昨日收盤</label>
@@ -412,17 +748,18 @@
             currentSimulationType = type; 
 
             if (type === 'strong') {
-                document.getElementById('stockName').value = "盛群 (6202) 範例";
-                document.getElementById('high3d').value = 58.20; 
-                document.getElementById('low3d').value = 47.00; 
-                document.getElementById('avgVol').value = 11370;
+                // 已校準盛群 (6202) 實際參數，真實展現圖③ 強軋空盤
+                document.getElementById('stockName').value = "盛群 (6202) 實戰";
+                document.getElementById('high3d').value = 58.20; // 前波高點頸線
+                document.getElementById('low3d').value = 49.10;  // 起漲低點
+                document.getElementById('avgVol').value = 18322; // 5T均量
                 setStatus('RED');
-                document.getElementById('prevClose').value = 62.70;
-                document.getElementById('todayLow').value = 60.50; 
-                document.getElementById('closePrice').value = 63.20;
-                document.getElementById('todayHigh').value = 65.70; 
-                document.getElementById('breakoutLow').value = 60.50; 
-                document.getElementById('todayVol').value = 29402;
+                document.getElementById('prevClose').value = 62.10; 
+                document.getElementById('todayLow').value = 60.50; // 最低點 > 頸線58.20 = 強軋空
+                document.getElementById('closePrice').value = 62.80; // 目前價
+                document.getElementById('todayHigh').value = 65.70; // 轉折高
+                document.getElementById('breakoutLow').value = 60.50; // 軋空低防守
+                document.getElementById('todayVol').value = 19017;
                 
             } else if (type === 'break') {
                 document.getElementById('stockName').value = "轉機股 (第3波初升段)";
@@ -438,15 +775,16 @@
                 document.getElementById('todayVol').value = 1800;
 
             } else if (type === 'crash') {
-                document.getElementById('stockName').value = "弱勢股 (C波主跌段)";
+                // V32 空方實戰參數，展示圖③ 強殺多
+                document.getElementById('stockName').value = "弱勢股 (強殺多範例)";
                 document.getElementById('high3d').value = 100;
-                document.getElementById('low3d').value = 90; 
+                document.getElementById('low3d').value = 90; // 前波低點 (空方頸線)
                 document.getElementById('avgVol').value = 1000;
                 setStatus('RED'); 
                 document.getElementById('closePrice').value = 85; 
-                document.getElementById('todayHigh').value = 92;
+                document.getElementById('todayHigh').value = 88; // 最高價 < 前低90 = 強殺多
                 document.getElementById('prevClose').value = 95;
-                document.getElementById('breakoutLow').value = 95; 
+                document.getElementById('breakoutLow').value = 95; // 殺多高壓力
                 document.getElementById('todayVol').value = 3000;
 
             } else if (type === 'flat') {
@@ -529,8 +867,8 @@
             let errorMsg = "請檢查紅框欄位：\n";
             if (!status) { errorMsg += "- 請選擇目前狀態\n"; hasError = true; }
             if (isNaN(close)) { document.getElementById('closePrice').classList.add('input-error'); errorMsg += "- 請輸入目前價\n"; hasError = true; }
-            if (isNaN(high3d)) { document.getElementById('high3d').classList.add('input-error'); errorMsg += "- 請輸入前三高\n"; hasError = true; }
-            if (isNaN(L)) { document.getElementById('low3d').classList.add('input-error'); errorMsg += "- 請輸入起漲點 (前三低 L)\n"; hasError = true; }
+            if (isNaN(high3d)) { document.getElementById('high3d').classList.add('input-error'); errorMsg += "- 請輸入前波高點\n"; hasError = true; }
+            if (isNaN(L)) { document.getElementById('low3d').classList.add('input-error'); errorMsg += "- 請輸入前波低點\n"; hasError = true; }
             if (hasError) { alert(errorMsg); return; }
 
             let h2 = isNaN(todayH) ? close : todayH;
@@ -572,7 +910,6 @@
                 }
             }
 
-            // V29 核心修正：完全依據圖2-17與2-22進行判定
             let determinedType = 'flat'; 
             let isBreakdown = false;
             
@@ -598,10 +935,10 @@
             }
 
             const typeToRender = currentSimulationType ? currentSimulationType : determinedType;
-            renderV29Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
+            renderV32Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
         }
 
-        function renderV29Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
+        function renderV32Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
              const resultArea = document.getElementById('resultArea');
              resultArea.classList.remove('hidden');
              const resultBox = document.getElementById('resultBox');
@@ -650,31 +987,36 @@
              let volumeSummary = `本檔「${stockName}」${volStatusStr}`;
 
              let rTitleText = "", rActionText = "", rBoxClass = "", rTitleClass = "", rActionClass = "", rIconText = "", rTrendText = "", rVolText = "";
-             let v29BaseReport = "";
-             let v29AIReport = "";
+             let v32BaseReport = "";
+             let v32AIReport = "";
 
              const fP = (num) => isNaN(num) ? "---" : formatPrice(num);
              const fN = (num) => isNaN(num) ? "---" : formatNumber(num);
 
              if (type === 'strong') {
+                // V32: 完美貼合圖片定義的多方邏輯
                 let subType = "🛡️ 盤堅盤 (Solid Bull)";
-                let subTypeDesc = "過高後拉回跌破頸線，N字測試支撐 (圖①)";
+                let subTypeDesc = "收盤跌破頸線，但守穩軋空低測試支撐 (圖①)";
                 
                 if (!isNaN(todayLow) && !isNaN(high3d)) {
                     if (todayLow > high3d) { 
                         subType = "🔥 強軋空盤 (Super Squeeze)";
-                        subTypeDesc = "回檔最低點完全未碰頸線，強勢脫離成本區 (圖③)";
+                        subTypeDesc = "最低價未跌破頸線，完全懸空強勢脫離 (圖③)";
                     } else if (close >= high3d) { 
                         subType = "🚩 軋空盤 (Short Squeeze)";
-                        subTypeDesc = "高檔強勢整理，收盤守穩頸線之上 (圖②)";
+                        subTypeDesc = "盤中跌破頸線，但收盤價強勢守穩其上 (圖②)";
                     } else { 
                         subType = "🛡️ 盤堅盤 (Solid Bull)";
-                        subTypeDesc = "過高後拉回跌破頸線，N字測試支撐 (圖①)";
+                        subTypeDesc = "收盤跌破頸線，但守穩軋空低測試支撐 (圖①)";
                     }
                 }
 
                 let guideTrend = `多方攻擊 (${subType.split(' ')[1]})`;
                 let guideDesc = `依盤態圖譜所示，價格結構維持強勢。只要收盤不跌破軋空低防守線 ${fP(breakoutLow)}，空頭抵抗將被化解。建議持股續抱，上看 1.618 倍延伸波段目標。`;
+
+                let levelText = "⭐️ 盤堅盤";
+                if (subType.includes("軋空盤") && !subType.includes("強")) levelText = "⭐️⭐️ 軋空盤";
+                if (subType.includes("強軋空盤")) levelText = "⭐️⭐️⭐️ 強軋空盤";
 
                 rTitleText = subType; 
                 rActionText = "死抱不放 (讓利潤奔跑)"; 
@@ -688,11 +1030,11 @@
                 const washPrice7 = (close * 0.93).toFixed(2); 
                 const manualStr = userInputLow ? "(手動輸入)" : "(系統判定)";
 
-                v29BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
+                v32BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V29 盤態解析版
+傑克.史東 N 字戰法指揮中心 V32 終極百科版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -758,7 +1100,7 @@ ${guideDesc}
 1. 高檔爆量留長黑，且未能創新高。
 2. 收盤跌破 ${fP(breakoutLow)} (結構防守點) → 必須減碼/停損。`;
 
-                v29AIReport = `🎯 系統判定本檔個股目前屬於：**${subType}**
+                v32AIReport = `🎯 系統判定本檔個股目前屬於：**${levelText} (${subType.split(' ')[2] || 'Bull'})**
 
 ---
 
@@ -793,11 +1135,11 @@ ${guideDesc}
                 let guideTrend = "多方啟動 (N字突破)";
                 let guideDesc = `依圖示結構，股價實體突破頸線，極具備第3波主升攻擊潛力，建議積極進場佈局。若遇回檔，請嚴格防守 ${fP(breakoutLow)}。`;
                 
-                v29BaseReport = `2. 【模擬突破】(起漲第一天)
+                v32BaseReport = `2. 【模擬突破】(起漲第一天)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V29 盤態解析版
+傑克.史東 N 字戰法指揮中心 V32 終極百科版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -855,7 +1197,7 @@ ${guideDesc}
 防守策略： 嚴守 ${fP(breakoutLow)} 關卡。
 停損點： 收盤跌破 ${fP(breakoutLow)} → 無條件停損出場。`;
 
-                v29AIReport = `(一) 突破結構診斷： 「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，價格實體突破提供了堅實後盾。\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
+                v32AIReport = `(一) 突破結構診斷： 「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，價格實體突破提供了堅實後盾。\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
 
              } else if (type === 'flat') {
                 rTitleText = "💤 盤整延續"; rActionText = "觀望 / 空手"; rBoxClass = "bg-slate-50 border-slate-400";
@@ -868,11 +1210,11 @@ ${guideDesc}
                 let guideTrend = "多空平衡 (第4波整理)";
                 let guideDesc = "價格受制於箱頂無法有效突破。建議持股續抱，空手者觀望，等待帶量實體突破箱頂再行動。";
 
-                v29BaseReport = `3. 【模擬盤整】(觀望等待)
+                v32BaseReport = `3. 【模擬盤整】(觀望等待)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V29 盤態解析版
+傑克.史東 N 字戰法指揮中心 V32 終極百科版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -920,24 +1262,30 @@ ${guideDesc}
 
 💡 解讀： 量縮其實是好事，代表籌碼沉澱。「極致量縮」往往是變盤的前兆。`;
 
-                v29AIReport = `(一) 結構診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
+                v32AIReport = `(一) 結構診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
 
              } else if (type === 'crash') {
+                // V32: 完美貼合圖片定義的空方邏輯 (對稱設計)
+                // 以 low3d (前三低) 作為空方頸線
                 let bearType = "📉 盤跌盤 (Slow Bear)";
-                let bearDesc = "反彈刺穿壓力，但收低緩步盤跌 (圖①)";
+                let bearDesc = "收盤突破前波低點，但受制於殺多高呈現緩跌 (圖①)";
                 
-                if (!isNaN(todayH) && !isNaN(prevClose) && !isNaN(breakoutLow)) {
-                    if (todayH < prevClose) { 
+                if (!isNaN(todayH) && !isNaN(low3d)) {
+                    if (todayH < low3d) { 
                         bearType = "💀 強殺多 (Strong Killing Bulls)";
-                        bearDesc = "多頭毫無抵抗，跳空缺口或連黑下殺 (圖③)";
-                    } else if (todayH >= prevClose && todayH <= breakoutLow) {
+                        bearDesc = "最高價未觸及前波低點，無力反彈直接下殺 (圖③)";
+                    } else if (close < low3d) { // implies todayH >= low3d
                         bearType = "🔪 殺多盤 (Killing Bulls)";
-                        bearDesc = "反彈不過壓力，多頭抵抗失敗留上影線 (圖②)";
-                    } else if (todayH > breakoutLow) {
+                        bearDesc = "盤中突破前波低點但收盤跌破，留上影線反彈失敗 (圖②)";
+                    } else { 
                          bearType = "📉 盤跌盤 (Slow Bear)";
-                         bearDesc = "反彈刺穿壓力，但收低緩步盤跌 (圖①)";
+                         bearDesc = "收盤突破前波低點，但受壓於殺多高緩步盤跌 (圖①)";
                     }
                 }
+                
+                let bearLevelText = "⚠️1. 盤跌盤";
+                if (bearType.includes("殺多盤") && !bearType.includes("強")) bearLevelText = "⚠️⚠️2. 殺多盤";
+                if (bearType.includes("強殺多")) bearLevelText = "⚠️⚠️⚠️3. 強殺多";
 
                 rTitleText = bearType; 
                 rActionText = "停損 / 反手放空"; 
@@ -950,15 +1298,15 @@ ${guideDesc}
 
                 let guideTrend = `空方趨勢 (${bearType.split(' ')[1] || bearType})`;
                 let guideDesc = "";
-                if(bearType.includes("強殺多")) guideDesc = "依圖③盤態所示，空頭完全控盤，無任何反彈直接跳空下跌，建議絕對空手或追空。";
-                else if(bearType.includes("殺多盤")) guideDesc = "依圖②盤態所示，反彈遇壓不過，留下明顯上影線，建議反彈站在賣方。";
-                else guideDesc = "依圖①盤態所示，多頭試圖抵抗並刺穿壓力，但最終收低維持空頭結構，建議反彈找空點。";
+                if(bearType.includes("強殺多")) guideDesc = "依圖③盤態所示，反彈最高點碰不到空方頸線，空頭完全控盤，建議絕對空手或追空。";
+                else if(bearType.includes("殺多盤")) guideDesc = "依圖②盤態所示，盤中試圖反彈過前低但最終失敗留下上影線，建議反彈站在賣方。";
+                else guideDesc = "依圖①盤態所示，多頭試圖抵抗並收在前低之上，但整體受制於殺多高，建議反彈找空點。";
 
-                v29BaseReport = `4. 【模擬大跌】(C波崩盤)
+                v32BaseReport = `4. 【模擬大跌】(C波崩盤)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V29 盤態解析版
+傑克.史東 N 字戰法指揮中心 V32 終極百科版
 
 「本策略僅為個人分析參考，投資有風險，操作需自負盈虧」
 
@@ -991,7 +1339,7 @@ ${volumeSummary}
 ★ 戰術指引：
 📉 趨勢：${guideTrend}。
 ${guideDesc}
-(⚡ 系統校準：符合空方盤態標準圖譜)
+(⚡ 系統校準：符合空方對稱盤態標準圖譜)
 -------------------
 防守：站不上殺多高，空方趨勢不變。
 
@@ -1032,7 +1380,7 @@ ${guideDesc}
 ❌ 迷思： 紅盤 ≠ 止跌。
 關鍵判斷： 若股價仍 < ${fP(breakoutLow)} → 只是死貓跳，空頭趨勢未改。`;
 
-                v29AIReport = `🎯 系統判定本檔個股目前屬於：**${bearType}**
+                v32AIReport = `🎯 系統判定本檔個股目前屬於：**${bearLevelText} (${bearType.split(' ')[2] || 'Bear'})**
 
 ---
 
@@ -1063,14 +1411,14 @@ ${guideDesc}
              document.getElementById('trendTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm"; 
              document.getElementById('volTag').innerText = rVolText;
              document.getElementById('volTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm";
-             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V29 戰略報告。";
+             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V32 戰略報告。";
              
              document.getElementById('aiAnalysisBox').classList.remove('hidden');
-             const htmlContent = marked.parse(v29AIReport);
+             const htmlContent = marked.parse(v32AIReport);
              document.getElementById('aiContent').innerHTML = htmlContent;
 
-             baseReportText = v29BaseReport;
-             aiReportContent = v29AIReport;
+             baseReportText = v32BaseReport;
+             aiReportContent = v32AIReport;
         }
     </script>
 </body>
