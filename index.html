@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>傑克.史東：N字戰法指揮中心 (V27 極致校準版)</title>
+    <title>傑克.史東：N字戰法指揮中心 (V29 盤態解析版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -37,7 +37,7 @@
         .ai-content p { margin-bottom: 0.5em; line-height: 1.6; }
         .ai-content strong { color: #b91c1c; }
         
-        .v27-badge {
+        .v29-badge {
             background: linear-gradient(135deg, #1e293b 0%, #000000 100%);
             color: #fbbf24; 
             text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
@@ -58,18 +58,18 @@
 
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <div class="bg-slate-900 p-5 text-white text-center relative z-20 shadow-md">
-            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v27-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V27 校準版</span></h1>
+            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v29-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V29 盤態解析版</span></h1>
             <p class="text-xs text-slate-400 mt-1">極致價格結構 × 盤態影像完美校準</p>
         </div>
 
         <div class="bg-slate-50 border-b border-slate-200">
             <div id="encyclopediaToggleBtn" class="p-3 text-center bg-blue-700 text-white font-bold text-sm cursor-pointer hover:bg-blue-800 transition-colors" onclick="toggleEncyclopedia()">
-                📖 點我打開：V27 純淨波浪 × N字 戰術百科 ▼
+                📖 點我打開：V29 純淨波浪 × N字 戰術百科 ▼
             </div>
             <div id="encyclopediaContent" class="hidden max-h-[500px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
                 
                 <div class="bg-blue-50 p-3 rounded border border-blue-200 mb-2">
-                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ V27 盤態邏輯影像校準 (圖2-17/2-22)</p>
+                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ V29 盤態邏輯影像校準 (圖2-17/2-22)</p>
                     <div class="text-xs text-slate-700 space-y-2">
                         <p><span class="font-bold text-blue-700">多方修正：</span> 依據標準圖譜，明確區分回檔深度。「盤堅盤」跌破頸線但守軋空低；「軋空盤」守穩頸線之上；「強軋空」回檔最低點完全脫離頸線(懸空)。</p>
                         <p><span class="font-bold text-red-700">空方修正：</span> 明確定義反彈力道。「強殺多」無反彈跳空；「殺多盤」反彈碰不到壓力；「盤跌盤」反彈刺穿壓力但收低。</p>
@@ -167,7 +167,7 @@
                         <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="基礎測幅起點">
                     </div>
 
-                    <!-- V27 關鍵點位卡片 -->
+                    <!-- V29 關鍵點位卡片 -->
                     <div class="col-span-2 bg-[#f8fafc] rounded-xl border-2 border-slate-200 mt-2 relative overflow-hidden shadow-sm">
                         <!-- Watermark Icon -->
                         <div class="absolute right-[5px] top-[5px] text-[70px] opacity-[0.04] pointer-events-none transform rotate-[-15deg]">🗝️</div>
@@ -412,14 +412,13 @@
             currentSimulationType = type; 
 
             if (type === 'strong') {
-                // 套用盛群 6202 實際參數 (測試 V27 圖③ 強軋空判定)
                 document.getElementById('stockName').value = "盛群 (6202) 範例";
-                document.getElementById('high3d').value = 58.20; // 之前的頸線高點
+                document.getElementById('high3d').value = 58.20; 
                 document.getElementById('low3d').value = 47.00; 
                 document.getElementById('avgVol').value = 11370;
                 setStatus('RED');
                 document.getElementById('prevClose').value = 62.70;
-                document.getElementById('todayLow').value = 60.50; // 最低點 > 前高58.20
+                document.getElementById('todayLow').value = 60.50; 
                 document.getElementById('closePrice').value = 63.20;
                 document.getElementById('todayHigh').value = 65.70; 
                 document.getElementById('breakoutLow').value = 60.50; 
@@ -573,7 +572,7 @@
                 }
             }
 
-            // V27 核心修正：完全依據圖2-17與2-22進行判定
+            // V29 核心修正：完全依據圖2-17與2-22進行判定
             let determinedType = 'flat'; 
             let isBreakdown = false;
             
@@ -599,10 +598,10 @@
             }
 
             const typeToRender = currentSimulationType ? currentSimulationType : determinedType;
-            renderV27Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
+            renderV29Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
         }
 
-        function renderV27Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
+        function renderV29Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
              const resultArea = document.getElementById('resultArea');
              resultArea.classList.remove('hidden');
              const resultBox = document.getElementById('resultBox');
@@ -617,7 +616,7 @@
              const todayLow = parseFloat(document.getElementById('todayLow').value);
              const todayVol = parseFloat(document.getElementById('todayVol').value);
 
-             const reportTime = getFormattedTime(); // 取得生成時間
+             const reportTime = getFormattedTime();
 
              let breakoutLow = parseFloat(document.getElementById('breakoutLow').value);
              let keyPointLabel = "軋空低"; 
@@ -651,8 +650,8 @@
              let volumeSummary = `本檔「${stockName}」${volStatusStr}`;
 
              let rTitleText = "", rActionText = "", rBoxClass = "", rTitleClass = "", rActionClass = "", rIconText = "", rTrendText = "", rVolText = "";
-             let v27BaseReport = "";
-             let v27AIReport = "";
+             let v29BaseReport = "";
+             let v29AIReport = "";
 
              const fP = (num) => isNaN(num) ? "---" : formatPrice(num);
              const fN = (num) => isNaN(num) ? "---" : formatNumber(num);
@@ -661,18 +660,14 @@
                 let subType = "🛡️ 盤堅盤 (Solid Bull)";
                 let subTypeDesc = "過高後拉回跌破頸線，N字測試支撐 (圖①)";
                 
-                // V27 極致校準影像邏輯 (完全符合圖2-17)
                 if (!isNaN(todayLow) && !isNaN(high3d)) {
                     if (todayLow > high3d) { 
-                        // 圖③：最低點完全碰不到前波高點/頸線，最強勢懸空
                         subType = "🔥 強軋空盤 (Super Squeeze)";
                         subTypeDesc = "回檔最低點完全未碰頸線，強勢脫離成本區 (圖③)";
                     } else if (close >= high3d) { 
-                        // 圖②：有踩到頸線，但收盤守穩在頸線之上
                         subType = "🚩 軋空盤 (Short Squeeze)";
                         subTypeDesc = "高檔強勢整理，收盤守穩頸線之上 (圖②)";
                     } else { 
-                        // 圖①：收盤跌破頸線，但沒有跌破軋空低防守線
                         subType = "🛡️ 盤堅盤 (Solid Bull)";
                         subTypeDesc = "過高後拉回跌破頸線，N字測試支撐 (圖①)";
                     }
@@ -693,11 +688,11 @@
                 const washPrice7 = (close * 0.93).toFixed(2); 
                 const manualStr = userInputLow ? "(手動輸入)" : "(系統判定)";
 
-                v27BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
+                v29BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V27 盤態校準版
+傑克.史東 N 字戰法指揮中心 V29 盤態解析版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -763,12 +758,29 @@ ${guideDesc}
 1. 高檔爆量留長黑，且未能創新高。
 2. 收盤跌破 ${fP(breakoutLow)} (結構防守點) → 必須減碼/停損。`;
 
-                v27AIReport = `(一) 波浪與價格結構診斷：\n主力資金維持推升意圖，股價軌跡已過高，確立為第3波推進浪。延伸浪的工作是「甩掉逆勢的人」，切勿輕易做空。\n(二) 教練心法：\n「波浪不是用來精準猜頂，而是用來定義結構防守。只要軋空低不破，趨勢就還在！」\n\n---
-【附錄：多頭趨勢的三大盤態診斷 (V27 影像校準)】
-本系統已根據您輸入的價格結構，判定本檔個股目前屬於：${subType}
-1. 盤堅盤 (圖①)：過高後拉回跌破前高頸線，但守穩軋空低，進行深度的N字洗盤。
-2. 軋空盤 (圖②)：過高後拉回，收盤依然強勢守穩在前高頸線之上，以盤代跌。
-3. 強軋空盤 (圖③)：跳空或強勢表態，回檔的最低點完全懸空(不碰前高頸線)，空頭抵抗完全失敗。`;
+                v29AIReport = `🎯 系統判定本檔個股目前屬於：**${subType}**
+
+---
+
+### 📈多方盤態總整理：三階段強勢解析
+
+**⭐️ 盤堅盤（穩健推升格局）**
+這是多頭市場中最常見的「步步為營」型態，走勢雖然震盪，但底部越墊越高。
+• **核心特徵**：股價行進間伴隨深度的 N 字回測洗盤，以測試下方支撐力道。
+• **技術判斷（位階）**：股價在突破前波高點後，拉回時會跌破前高頸線。雖然看似轉弱，但其關鍵在於絕對會守穩「軋空低」（發動那根Ｋ棒的低點），完成深度的 N 字洗盤。
+• **盤面心理（力道）**：意味著市場上的空頭抵抗力道尚存。主力必須透過跌破前高的假動作與反覆洗盤，來逼出浮額並消化上檔賣壓，屬於穩紮穩打的推升格局。
+
+**⭐️⭐️ 軋空盤（蓄勢待發格局）**
+此時多頭動能已經明顯增強，走勢呈現「強勢整理」，讓想撿便宜的投資人買不到低點。
+• **核心特徵**：股價於高檔進行強勢整理，以時間換取空間（以盤代跌）。
+• **技術判斷（位階）**：股價在過高之後雖然有拉回，但收盤價依然強勢守穩在「前高頸線」之上。前波高點的壓力區已經實質轉換為強大的支撐區。
+• **盤面心理（力道）**：顯示市場籌碼鎖定度非常良好，持股者惜售。空頭的抵抗力道已經轉弱，主力透過高檔橫盤震盪來取代下跌回測，隨時蓄勢待發準備發動下一波攻勢。
+
+**⭐️⭐️⭐️ 強軋空盤（極端噴出格局）**
+這是多方最強勢、最具爆發力的型態，通常伴隨強大利多或強悍的資金瘋狂湧入。
+• **核心特徵**：多頭動能極強，呈現「噴出不回頭」之勢。
+• **技術判斷（位階）**：股價通常以跳空或拉出強勢長紅來表態。最關鍵的特徵是：回檔的最低點完全懸空（連碰都不碰前高頸線），留下了強勢的價格空隙（Gap）。
+• **盤面心理（力道）**：空頭的抵抗已經完全失敗，甚至引發空單停損的「軋空」連鎖反應。主力的控盤態度極度堅決，不給市場任何上車的機會，為最強勢之多頭型態。`;
 
              } else if (type === 'break') {
                 rTitleText = "🚀 三盤突破 (翻紅)"; 
@@ -781,11 +793,11 @@ ${guideDesc}
                 let guideTrend = "多方啟動 (N字突破)";
                 let guideDesc = `依圖示結構，股價實體突破頸線，極具備第3波主升攻擊潛力，建議積極進場佈局。若遇回檔，請嚴格防守 ${fP(breakoutLow)}。`;
                 
-                v27BaseReport = `2. 【模擬突破】(起漲第一天)
+                v29BaseReport = `2. 【模擬突破】(起漲第一天)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V27 盤態校準版
+傑克.史東 N 字戰法指揮中心 V29 盤態解析版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -843,7 +855,7 @@ ${guideDesc}
 防守策略： 嚴守 ${fP(breakoutLow)} 關卡。
 停損點： 收盤跌破 ${fP(breakoutLow)} → 無條件停損出場。`;
 
-                v27AIReport = `(一) 突破結構診斷： 「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，價格實體突破提供了堅實後盾。\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
+                v29AIReport = `(一) 突破結構診斷： 「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，價格實體突破提供了堅實後盾。\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
 
              } else if (type === 'flat') {
                 rTitleText = "💤 盤整延續"; rActionText = "觀望 / 空手"; rBoxClass = "bg-slate-50 border-slate-400";
@@ -856,11 +868,11 @@ ${guideDesc}
                 let guideTrend = "多空平衡 (第4波整理)";
                 let guideDesc = "價格受制於箱頂無法有效突破。建議持股續抱，空手者觀望，等待帶量實體突破箱頂再行動。";
 
-                v27BaseReport = `3. 【模擬盤整】(觀望等待)
+                v29BaseReport = `3. 【模擬盤整】(觀望等待)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V27 盤態校準版
+傑克.史東 N 字戰法指揮中心 V29 盤態解析版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -908,15 +920,14 @@ ${guideDesc}
 
 💡 解讀： 量縮其實是好事，代表籌碼沉澱。「極致量縮」往往是變盤的前兆。`;
 
-                v27AIReport = `(一) 結構診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
+                v29AIReport = `(一) 結構診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
 
              } else if (type === 'crash') {
                 let bearType = "📉 盤跌盤 (Slow Bear)";
                 let bearDesc = "反彈刺穿壓力，但收低緩步盤跌 (圖①)";
                 
-                // V27 空方校準影像邏輯 (完全符合圖2-22)
                 if (!isNaN(todayH) && !isNaN(prevClose) && !isNaN(breakoutLow)) {
-                    if (todayH < prevClose) { // 缺口或完全不過昨收
+                    if (todayH < prevClose) { 
                         bearType = "💀 強殺多 (Strong Killing Bulls)";
                         bearDesc = "多頭毫無抵抗，跳空缺口或連黑下殺 (圖③)";
                     } else if (todayH >= prevClose && todayH <= breakoutLow) {
@@ -943,11 +954,11 @@ ${guideDesc}
                 else if(bearType.includes("殺多盤")) guideDesc = "依圖②盤態所示，反彈遇壓不過，留下明顯上影線，建議反彈站在賣方。";
                 else guideDesc = "依圖①盤態所示，多頭試圖抵抗並刺穿壓力，但最終收低維持空頭結構，建議反彈找空點。";
 
-                v27BaseReport = `4. 【模擬大跌】(C波崩盤)
+                v29BaseReport = `4. 【模擬大跌】(C波崩盤)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V27 盤態校準版
+傑克.史東 N 字戰法指揮中心 V29 盤態解析版
 
 「本策略僅為個人分析參考，投資有風險，操作需自負盈虧」
 
@@ -1021,12 +1032,24 @@ ${guideDesc}
 ❌ 迷思： 紅盤 ≠ 止跌。
 關鍵判斷： 若股價仍 < ${fP(breakoutLow)} → 只是死貓跳，空頭趨勢未改。`;
 
-                v27AIReport = `(一) 結構診斷： 情緒崩解，資金全面撤退，價格結構雙雙崩壞。\n(二) 教練心法： 「截斷虧損，讓利潤奔跑。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 空方主跌段\n🎯 核心策略： 只出不進，嚴禁抄底。\n\n---
-【附錄：空方趨勢的三大盤態診斷 (V27 影像校準)】
-本系統已根據您輸入的價格結構，判定本檔個股目前屬於：${bearType}
-1. 盤跌盤 (圖①)：反彈幅度較大，刺穿昨高或壓力，但最終收低，趨勢緩步向下。
-2. 殺多盤 (圖②)：反彈無力，最高點碰不到壓力線，留下明顯上影線後續跌。
-3. 強殺多 (圖③)：空方完全控盤，多頭毫無抵抗，連反彈都沒有，直接跳空崩跌。`;
+                v29AIReport = `🎯 系統判定本檔個股目前屬於：**${bearType}**
+
+---
+
+### 📉 空方盤態總整理：三階段跌勢解析
+在空方架構下，根據多頭抵抗的力道與價格表現，盤勢可分為三種不同層級的弱勢型態。
+
+**⚠️ 1. 盤跌盤（多方嘗試抵抗，緩步探底）**
+• **技術特徵**：盤中反彈幅度較大，甚至可能短暫刺穿昨高或壓力區，但尾盤最終仍收低，整體高點逐步降低。
+• **盤勢意義**：多頭仍未放棄，試圖抵抗並發動反彈。然而，整體趨勢仍受制於空方架構，反彈只是給空方更好的空點。盤勢呈現「退兩步、進一步」的緩步溫水煮青蛙狀態。
+
+**⚠️⚠️ 2. 殺多盤（多頭抵抗失敗，賣壓加劇）**
+• **技術特徵**：反彈極度無力，股價最高點完全碰不到上方的壓力線，K線通常留下明顯的「上影線」後便接續下跌。
+• **盤勢意義**：多頭的抵抗宣告失敗。由於反彈無力，原本抱持希望的做多籌碼開始面臨停損賣壓（多殺多），導致修正壓力顯著加劇，跌勢成形。
+
+**⚠️⚠️⚠️ 3. 強殺多（多頭完全放棄，加速崩跌）**
+• **技術特徵**：盤中連任何反彈的跡象都沒有，最常見的表現是直接出現「跳空缺口」向下殺盤。
+• **盤勢意義**：空方已經完全主導盤勢，多頭毫無招架之力並徹底放棄抵抗。市場情緒陷入恐慌，股價呈現加速趕底的崩潰跌勢。`;
              }
              
              resultBox.className = `p-6 rounded-2xl border-l-8 shadow-xl relative overflow-hidden ${rBoxClass}`;
@@ -1040,14 +1063,14 @@ ${guideDesc}
              document.getElementById('trendTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm"; 
              document.getElementById('volTag').innerText = rVolText;
              document.getElementById('volTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm";
-             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V27 戰略報告。";
+             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V29 戰略報告。";
              
              document.getElementById('aiAnalysisBox').classList.remove('hidden');
-             const htmlContent = marked.parse(v27AIReport);
+             const htmlContent = marked.parse(v29AIReport);
              document.getElementById('aiContent').innerHTML = htmlContent;
 
-             baseReportText = v27BaseReport;
-             aiReportContent = v27AIReport;
+             baseReportText = v29BaseReport;
+             aiReportContent = v29AIReport;
         }
     </script>
 </body>
