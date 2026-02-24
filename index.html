@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>傑克.史東：N字戰法指揮中心 (V24 動能校準版)</title>
+    <title>傑克.史東：N字戰法指揮中心 (V26 盤態校準版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f1f5f9; }
+        body { font-family: 'Noto Sans TC', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f8fafc; }
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -37,12 +37,12 @@
         .ai-content p { margin-bottom: 0.5em; line-height: 1.6; }
         .ai-content strong { color: #b91c1c; }
         
-        .v24-badge {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            color: #ffffff; 
+        .v26-badge {
+            background: linear-gradient(135deg, #0f172a 0%, #000000 100%);
+            color: #fbbf24; 
             text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border: 1px solid #93c5fd;
+            border: 1px solid #d97706;
         }
         
         .hidden { display: none !important; }
@@ -58,20 +58,21 @@
 
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <div class="bg-slate-900 p-5 text-white text-center relative z-20 shadow-md">
-            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v24-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V24 動能校準版</span></h1>
-            <p class="text-xs text-slate-400 mt-1">結構防守 × 斐波那契目標 × 智能動能校正</p>
+            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v26-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V26 校準版</span></h1>
+            <p class="text-xs text-slate-400 mt-1">極致價格結構 × 盤態影像完美校準</p>
         </div>
 
         <div class="bg-slate-50 border-b border-slate-200">
             <div id="encyclopediaToggleBtn" class="p-3 text-center bg-blue-700 text-white font-bold text-sm cursor-pointer hover:bg-blue-800 transition-colors" onclick="toggleEncyclopedia()">
-                📖 點我打開：V24 波浪 × N字 戰術百科 ▼
+                📖 點我打開：V26 純淨波浪 × N字 戰術百科 ▼
             </div>
             <div id="encyclopediaContent" class="hidden max-h-[500px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
                 
                 <div class="bg-blue-50 p-3 rounded border border-blue-200 mb-2">
-                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ V24 核心判斷引擎升級</p>
+                    <p class="font-bold text-blue-800 border-b border-blue-200 pb-1 mb-2">⚡ V26 盤態邏輯影像校準</p>
                     <div class="text-xs text-slate-700 space-y-2">
-                        <p><span class="font-bold text-blue-700">修正盲點：</span> 過去系統僅依賴「收盤價突破」來判定強勢。現在，即使收盤留上影線未過高，只要 <span class="font-bold text-red-600">RSI(5T)>60 且 MACD擴張</span>，系統將智能校正為「強勢整理(盤堅/軋空)」，避免高動能股被誤判為死板盤整。</p>
+                        <p><span class="font-bold text-blue-700">多方修正：</span> 依據標準圖譜，明確區分回檔深度。「盤堅盤」跌破頸線但守軋空低；「軋空盤」守穩頸線之上；「強軋空」完全脫離頸線跳空噴出。</p>
+                        <p><span class="font-bold text-red-700">空方修正：</span> 明確定義反彈力道。「強殺多」無反彈跳空；「殺多盤」反彈碰不到壓力；「盤跌盤」反彈刺穿壓力但收低。</p>
                         <p><span class="font-bold text-red-600">風險鐵律：</span> 軋空低 (第2波低點) 絕對不可跌破起漲點 (第1波起點)。</p>
                     </div>
                 </div>
@@ -85,17 +86,17 @@
                         <div class="border-l-4 border-red-500 pl-2">
                             <p class="font-bold text-red-800 mb-1">📈 多方盤態</p>
                             <ul class="space-y-1">
-                                <li><span class="font-bold">⭐️ 盤堅盤：</span> N字回測測試支撐，守軋空低。</li>
-                                <li><span class="font-bold">⭐️⭐️ 軋空盤：</span> 高檔強勢整理，以盤代跌。</li>
-                                <li><span class="font-bold text-red-600">⭐️⭐️⭐️ 強軋空：</span> 噴出不回頭，空頭抵抗失敗。</li>
+                                <li><span class="font-bold">⭐️ 盤堅盤 (圖①)：</span> 過高後拉回跌破頸線，N字測試支撐。</li>
+                                <li><span class="font-bold">⭐️⭐️ 軋空盤 (圖②)：</span> 高檔強勢整理，收盤守穩頸線之上。</li>
+                                <li><span class="font-bold text-red-600">⭐️⭐️⭐️ 強軋空 (圖③)：</span> 跳空或強勢過高，回檔不破前高頸線。</li>
                             </ul>
                         </div>
                         <div class="border-l-4 border-green-600 pl-2">
                             <p class="font-bold text-green-900 mb-1">📉 空方盤態</p>
                             <ul class="space-y-1">
-                                <li><span class="font-bold">⚠️ 盤跌盤：</span> 緩跌，多頭抵抗反彈。</li>
-                                <li><span class="font-bold">⚠️⚠️ 殺多盤：</span> 多頭抵抗失敗，反彈不過壓力。</li>
-                                <li><span class="font-bold text-green-700">⚠️⚠️⚠️ 強殺多：</span> 多頭放棄抵抗，跳空崩盤趕底。</li>
+                                <li><span class="font-bold">⚠️ 盤跌盤 (圖①)：</span> 反彈刺穿壓力，但收低緩步盤跌。</li>
+                                <li><span class="font-bold">⚠️⚠️ 殺多盤 (圖②)：</span> 反彈不過壓力，多頭抵抗失敗留上影線。</li>
+                                <li><span class="font-bold text-green-700">⚠️⚠️⚠️ 強殺多 (圖③)：</span> 多頭毫無抵抗，跳空缺口或連黑下殺。</li>
                             </ul>
                         </div>
                     </div>
@@ -107,7 +108,7 @@
             
             <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
                 <h3 class="text-xs font-black text-blue-900 mb-2 flex items-center">
-                    🎮 戰術模擬 (自動帶入完美波浪數據)
+                    🎮 戰術模擬 (自動帶入純粹波浪數據)
                 </h3>
                 <div class="grid grid-cols-2 gap-2">
                     <button onclick="simulate('strong')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded text-xs transition-colors flex items-center justify-center shadow-sm">
@@ -166,7 +167,7 @@
                         <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="基礎測幅起點">
                     </div>
 
-                    <!-- V24 關鍵點位卡片 -->
+                    <!-- V26 關鍵點位卡片 -->
                     <div class="col-span-2 bg-[#f8fafc] rounded-xl border-2 border-slate-200 mt-2 relative overflow-hidden shadow-sm">
                         <!-- Watermark Icon -->
                         <div class="absolute right-[5px] top-[5px] text-[70px] opacity-[0.04] pointer-events-none transform rotate-[-15deg]">🗝️</div>
@@ -215,30 +216,6 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            <div class="border-t border-slate-200 pt-4">
-                <h3 class="text-sm font-black text-slate-800 mb-3 border-l-4 border-orange-500 pl-2">波浪雙動能輸入 (V24 量化模組)</h3>
-                
-                <div class="bg-orange-50 p-4 rounded-xl border-2 border-orange-200 shadow-inner space-y-4">
-                    <label class="flex items-center space-x-2 cursor-pointer bg-white p-2 rounded-lg border border-orange-100 shadow-sm">
-                        <input type="checkbox" id="checkNonFinance" class="form-checkbox h-5 w-5 text-orange-600 rounded" checked>
-                        <span class="text-sm text-slate-800 font-bold">排除金融股 (確認股性具備飆漲爆發力)</span>
-                    </label>
-
-                    <div class="grid grid-cols-2 gap-4 pt-2 border-t border-orange-200/60">
-                        <div>
-                            <label class="block text-orange-900 font-black mb-1 text-xs">RSI 數值 <span class="bg-orange-200 text-orange-800 px-1 rounded text-[10px] ml-1">短天期 5T</span></label>
-                            <input type="number" step="0.01" id="rsiVal" class="w-full p-2 border-2 border-orange-300 rounded-lg focus:ring-orange-500 font-mono text-xl font-bold text-orange-900 placeholder-orange-300" placeholder="例如: 84.89">
-                            <p class="text-[10px] text-orange-600 mt-1 font-bold">>60 轉強 / >80 過熱</p>
-                        </div>
-                        <div>
-                            <label class="block text-orange-900 font-black mb-1 text-xs">MACD 柱狀體 <span class="bg-orange-200 text-orange-800 px-1 rounded text-[10px] ml-1">OSC 數值</span></label>
-                            <input type="number" step="0.01" id="macdVal" class="w-full p-2 border-2 border-orange-300 rounded-lg focus:ring-orange-500 font-mono text-xl font-bold text-orange-900 placeholder-orange-300" placeholder="例如: 1.38">
-                            <p class="text-[10px] text-orange-600 mt-1 font-bold">正值擴張 / 負值收斂</p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -299,24 +276,6 @@
                             <span id="volTag" class="text-xs font-bold px-2 py-1 rounded-md border"></span>
                         </div>
                         
-                        <!-- 動能量化結果區 -->
-                        <div id="momentumDisplay" class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs font-bold mb-3 shadow-sm text-slate-700">
-                            <div class="flex items-center gap-2 mb-1 border-b border-slate-200 pb-1">
-                                <span class="text-lg">📊</span> <span class="text-slate-900 tracking-wide uppercase">動能指標量化結果</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-2">
-                                <div id="rsiResult" class=""></div>
-                                <div id="macdResult" class=""></div>
-                            </div>
-                        </div>
-
-                        <div id="momentumWarning" class="hidden bg-orange-100 border border-orange-400 text-orange-800 px-3 py-2 rounded-lg text-xs font-bold mb-3 shadow-sm flex items-center gap-2">
-                            <span class="text-lg">⚠️</span> 警告：動能未達標，高機率為 B波假突破或量價背離！
-                        </div>
-                        <div id="momentumSuccess" class="hidden bg-blue-100 border border-blue-400 text-blue-800 px-3 py-2 rounded-lg text-xs font-bold mb-3 shadow-sm flex items-center gap-2">
-                            <span class="text-lg">✅</span> 驗證通過：雙指標轉強，具備波浪主升段爆發特徵。
-                        </div>
-                        
                         <p id="resultAction" class="text-2xl font-black mb-3 border-b pb-3"></p>
                         
                         <div id="targetBox" class="hidden bg-[#f0fdf4] p-4 rounded-xl border border-[#bbf7d0] mb-3 text-sm shadow-sm transition-all">
@@ -372,6 +331,17 @@
         let baseReportText = "";
         let aiReportContent = "";
         let currentSimulationType = null;
+
+        // 取得當下格式化時間的函數
+        function getFormattedTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            return `${year}/${month}/${day} ${hours}:${minutes}`;
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const prevCloseInput = document.getElementById('prevClose');
@@ -442,7 +412,7 @@
             currentSimulationType = type; 
 
             if (type === 'strong') {
-                // 套用偉詮電 2436 實際參數，驗證 V24 智能校正
+                // 套用偉詮電 2436 實際參數
                 document.getElementById('stockName').value = "偉詮電 (2436) 範例";
                 document.getElementById('high3d').value = 59.80; 
                 document.getElementById('low3d').value = 56.30; 
@@ -454,9 +424,6 @@
                 document.getElementById('todayHigh').value = 61.60; 
                 document.getElementById('breakoutLow').value = 56.30; 
                 document.getElementById('todayVol').value = 17887;
-                
-                document.getElementById('rsiVal').value = 84.89;
-                document.getElementById('macdVal').value = 1.38;
                 
             } else if (type === 'break') {
                 document.getElementById('stockName').value = "轉機股 (第3波初升段)";
@@ -470,9 +437,6 @@
                 document.getElementById('todayLow').value = 99;
                 document.getElementById('breakoutLow').value = 99;
                 document.getElementById('todayVol').value = 1800;
-                
-                document.getElementById('rsiVal').value = 62.0;
-                document.getElementById('macdVal').value = 0.35;
 
             } else if (type === 'crash') {
                 document.getElementById('stockName').value = "弱勢股 (C波主跌段)";
@@ -485,9 +449,6 @@
                 document.getElementById('prevClose').value = 95;
                 document.getElementById('breakoutLow').value = 95; 
                 document.getElementById('todayVol').value = 3000;
-                
-                document.getElementById('rsiVal').value = 25.5;
-                document.getElementById('macdVal').value = -1.80;
 
             } else if (type === 'flat') {
                 document.getElementById('stockName').value = "橫盤股 (第4波整理)";
@@ -499,9 +460,6 @@
                 document.getElementById('todayHigh').value = 98;
                 document.getElementById('breakoutLow').value = 90;
                 document.getElementById('todayVol').value = 600;
-                
-                document.getElementById('rsiVal').value = 50.0;
-                document.getElementById('macdVal').value = -0.15;
             }
 
             const inputs = document.querySelectorAll('input[type="number"]');
@@ -521,7 +479,6 @@
 
         function clearInputs(hideResult = true) {
             document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => input.value = '');
-            document.getElementById('checkNonFinance').checked = true;
             
             document.getElementById('aiAnalysisBox').classList.add('hidden');
             document.getElementById('aiContent').innerHTML = '';
@@ -565,10 +522,6 @@
             
             const todayVol = parseFloat(document.getElementById('todayVol').value);
             const avgVol = parseFloat(document.getElementById('avgVol').value);
-
-            // V24 動能量化參數
-            const rsiVal = parseFloat(document.getElementById('rsiVal').value);
-            const macdVal = parseFloat(document.getElementById('macdVal').value);
 
             let hasError = false;
             let errorMsg = "請檢查紅框欄位：\n";
@@ -617,20 +570,16 @@
                 }
             }
 
-            // V24 核心修正：動能凌駕價格邏輯
+            // V26 核心修正：價格軌跡判定 (完美校準影像)
             let determinedType = 'flat'; 
             let isBreakdown = false;
             
-            const isIndicatorStrong = (!isNaN(rsiVal) && rsiVal >= 60) && (!isNaN(macdVal) && macdVal > 0);
-
             if (status === 'RED') {
                 if (close < PR || close < L) { 
-                    // 跌破防守，優先判定為崩壞
                     isBreakdown = true; 
                     determinedType = 'crash'; 
                 } 
-                else if (close > high3d || isIndicatorStrong) { 
-                    // ★ V24 修正：即使收盤未過前高，只要動能極強 (RSI>60 且 MACD>0)，系統強制判定為強勢多頭整理，不准落入盤整
+                else if (close > high3d || todayHigh > high3d) { 
                     determinedType = 'strong'; 
                 } 
                 else {
@@ -647,10 +596,10 @@
             }
 
             const typeToRender = currentSimulationType ? currentSimulationType : determinedType;
-            renderV24Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow, rsiVal, macdVal);
+            renderV26Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
         }
 
-        function renderV24Simulation(type, PR, gap_A, target1, target2, target5, userInputLow, rsiVal, macdVal) {
+        function renderV26Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
              const resultArea = document.getElementById('resultArea');
              resultArea.classList.remove('hidden');
              const resultBox = document.getElementById('resultBox');
@@ -664,43 +613,8 @@
              const prevClose = parseFloat(document.getElementById('prevClose').value);
              const todayLow = parseFloat(document.getElementById('todayLow').value);
              const todayVol = parseFloat(document.getElementById('todayVol').value);
-             
-             let rsiStr = "未輸入";
-             let rsiState = "未知";
-             let rsiColor = "text-slate-500";
-             let rsiHtml = `<span class="text-slate-500">RSI(5T): 未輸入</span>`;
-             let isRsiStrong = false;
-             let isRsiOverheated = false;
 
-             if(!isNaN(rsiVal)) {
-                 if(rsiVal >= 80) { rsiState = "高檔過熱 🔥"; rsiColor = "text-red-600"; isRsiStrong = true; isRsiOverheated = true;}
-                 else if(rsiVal >= 60) { rsiState = "強勢多方 📈"; rsiColor = "text-orange-600"; isRsiStrong = true; }
-                 else if(rsiVal >= 40) { rsiState = "中性盤整 ➖"; rsiColor = "text-slate-600"; }
-                 else { rsiState = "弱勢空方 📉"; rsiColor = "text-green-600"; }
-                 rsiStr = `${rsiVal} (${rsiState})`;
-                 rsiHtml = `<span class="text-slate-600">RSI(5T):</span> <span class="${rsiColor} font-black text-sm">${rsiVal}</span> <span class="text-[10px] text-slate-500 bg-slate-200 px-1 rounded">${rsiState}</span>`;
-             }
-
-             let macdStr = "未輸入";
-             let macdState = "未知";
-             let macdColor = "text-slate-500";
-             let macdHtml = `<span class="text-slate-500">MACD: 未輸入</span>`;
-             let isMacdStrong = false;
-
-             if(!isNaN(macdVal)) {
-                 if(macdVal > 0) { macdState = "正值擴張 🔴"; macdColor = "text-red-600"; isMacdStrong = true; }
-                 else { macdState = "綠柱收斂 🟢"; macdColor = "text-green-600"; }
-                 macdStr = `${macdVal} (${macdState})`;
-                 macdHtml = `<span class="text-slate-600">MACD:</span> <span class="${macdColor} font-black text-sm">${macdVal}</span> <span class="text-[10px] text-slate-500 bg-slate-200 px-1 rounded">${macdState}</span>`;
-             }
-
-             document.getElementById('rsiResult').innerHTML = rsiHtml;
-             document.getElementById('macdResult').innerHTML = macdHtml;
-
-             const momentumPass = (isRsiStrong && isMacdStrong) && (!isNaN(rsiVal) && !isNaN(macdVal));
-             
-             document.getElementById('momentumWarning').classList.add('hidden');
-             document.getElementById('momentumSuccess').classList.add('hidden');
+             const reportTime = getFormattedTime(); // 取得生成時間
 
              let breakoutLow = parseFloat(document.getElementById('breakoutLow').value);
              let keyPointLabel = "軋空低"; 
@@ -734,64 +648,53 @@
              let volumeSummary = `本檔「${stockName}」${volStatusStr}`;
 
              let rTitleText = "", rActionText = "", rBoxClass = "", rTitleClass = "", rActionClass = "", rIconText = "", rTrendText = "", rVolText = "";
-             let v24BaseReport = "";
-             let v24AIReport = "";
+             let v26BaseReport = "";
+             let v26AIReport = "";
 
              const fP = (num) => isNaN(num) ? "---" : formatPrice(num);
              const fN = (num) => isNaN(num) ? "---" : formatNumber(num);
 
              if (type === 'strong') {
-                if(!momentumPass && !isNaN(rsiVal) && !isNaN(macdVal)) document.getElementById('momentumWarning').classList.remove('hidden');
-                else if(momentumPass) document.getElementById('momentumSuccess').classList.remove('hidden');
-
                 let subType = "🛡️ 盤堅盤 (Solid Bull)";
-                let subTypeDesc = "N字回測有守 (測試支撐)";
+                let subTypeDesc = "過高拉回，N字測試支撐 (圖①)";
                 
-                // 動態判定盤堅/軋空/強軋空
+                // V26 校準影像邏輯 (完全符合圖2-17)
                 if (!isNaN(todayLow) && !isNaN(breakoutLow) && !isNaN(prevClose)) {
-                    const buffer = breakoutLow * 1.015;
-                    if (todayLow <= buffer) {
-                        subType = "🛡️ 盤堅盤 (Solid Bull)";
-                        subTypeDesc = "N字回測有守 (測試支撐)";
-                    } else if (todayLow > prevClose || close > prevClose * 1.04) {
+                    if (todayLow > high3d && close > prevClose) { // 缺口或極強過高不碰頸線
                         subType = "🔥 強軋空盤 (Super Squeeze)";
-                        subTypeDesc = "強勢噴出 (最強勢)";
-                    } else {
+                        subTypeDesc = "跳空或強勢過高，回檔不破前高頸線 (圖③最強勢)";
+                    } else if (close >= high3d) { // 收盤價還在頸線之上
                         subType = "🚩 軋空盤 (Short Squeeze)";
-                        subTypeDesc = "高檔強勢整理 (以盤代跌)";
+                        subTypeDesc = "高檔強勢整理，收盤守穩頸線之上 (圖②)";
+                    } else { // 跌破頸線但沒破軋空低
+                        subType = "🛡️ 盤堅盤 (Solid Bull)";
+                        subTypeDesc = "過高後拉回跌破頸線，N字測試支撐 (圖①)";
                     }
                 }
 
                 let guideTrend = `多方攻擊 (${subType.split(' ')[1]})`;
-                let guideDesc = "";
-
-                if(isRsiOverheated && isMacdStrong) {
-                    guideDesc = `依圖一所示，趨勢維持強勢。唯 RSI 顯示高檔過熱 (${rsiVal})，需提防急殺回馬槍洗盤。守住軋空低可續抱，隨時準備停利。`;
-                } else if(momentumPass) {
-                    guideDesc = `依圖一所示，動能量化雙指標強勢，高機率為第3波主升段。守住軋空低可續抱，上看1.618延伸目標。`;
-                } else {
-                    guideDesc = `⚠️ 雖然價格仍在強勢區間，但動能指標(RSI/MACD)未獲全面確認。防範B波假突破或量價背離，跌破${fP(breakoutLow)}必須停損。`;
-                }
+                let guideDesc = `依盤態圖譜所示，價格結構維持強勢。只要收盤不跌破軋空低防守線 ${fP(breakoutLow)}，空頭抵抗將被化解。建議持股續抱，上看 1.618 倍延伸波段目標。`;
 
                 rTitleText = subType; 
-                rActionText = momentumPass ? "死抱不放 (讓利潤奔跑)" : (isRsiOverheated ? "高檔過熱 (隨時停利)" : "風險偏高 (嚴防回檔)"); 
+                rActionText = "死抱不放 (讓利潤奔跑)"; 
                 rBoxClass = "bg-red-50 border-red-600";
                 rTitleClass = "text-2xl font-black text-red-700"; 
                 rActionClass = "text-2xl font-black text-red-800 border-b border-red-300 pb-2 mb-2";
                 rIconText = "🚀"; 
                 rTrendText = subType; 
-                rVolText = todayVol >= v_break ? "攻擊量達標" : "量縮整理";
+                rVolText = todayVol >= v_break ? "攻擊量達標" : "高檔換手量";
 
                 const washPrice7 = (close * 0.93).toFixed(2); 
                 const manualStr = userInputLow ? "(手動輸入)" : "(系統判定)";
 
-                v24BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
+                v26BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V24 動能校準版
+傑克.史東 N 字戰法指揮中心 V26 盤態校準版
 
 股名：${stockName}
+報告日期：${reportTime}
 
 【一、個股現況分析】
 
@@ -799,7 +702,6 @@
 
 (請確認模組狀態符合條件再操作)
 
-⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
 ⚡ 量能狀態： ${todayVol >= v_break ? "攻擊量達標 (1.3倍↑)" : "高檔換手量"}
 
 💰 當前現價： ${fP(close)}
@@ -826,7 +728,7 @@ ${volumeSummary}
 ★ 戰術指引：
 📈 趨勢：${guideTrend}。
 ${guideDesc}
-(⚡ 系統校準：動能凌駕價格，拒絕誤判為盤整)
+(⚡ 系統校準：價格軌跡已過高，符合多方盤態標準)
 -------------------
 防守：不破軋空低，目標才有效。
 
@@ -843,7 +745,7 @@ ${guideDesc}
 ❓ Q1：漲這麼多了，我很怕，能不能先賣一趟？
 
 邏輯說明： 在軋空主升段中，最容易犯的錯誤是「因為怕高而賣在主升段中途」。
-操作建議： 價格未跌破 ${fP(breakoutLow)} 且 MACD 未明顯收斂 → 堅持抱（Hold）。
+操作建議： 價格未實體跌破 ${fP(breakoutLow)} → 堅持抱（Hold）。
 
 ❓ Q2：盤中如果急殺跳水，要不要跑？
 
@@ -852,47 +754,40 @@ ${guideDesc}
 ❓ Q3：什麼情況下，死抱會失效？
 
 否決條款：
-1. 量價背離 (創高但 RSI 未創高，或脫離過熱區)。
+1. 高檔爆量留長黑，且未能創新高。
 2. 收盤跌破 ${fP(breakoutLow)} (結構防守點) → 必須減碼/停損。`;
 
-                v24AIReport = `(一) 波浪與動能診斷：\n${isRsiOverheated ? '短線動能 RSI(5T) 進入 >80 的極度過熱區，這是第3波延伸或第5波末端的強烈特徵，主力極易在此發動劇烈洗盤。請嚴控停損！' : (momentumPass ? '主力資金持續挹注，價格與動能指標雙倍共振，確立為第3波推進浪。延伸浪的工作是「甩掉逆勢的人」，切勿輕易做空。' : '價格創高但指標不配合，留意第5波末端或B波反彈陷阱。')}\n(二) 教練心法：\n「波浪不是用來精準猜頂，而是用來定義結構防守。只要軋空低不破，趨勢就還在！」\n\n---
-【附錄：多頭趨勢的三大盤態診斷 (V24校準)】
+                v26AIReport = `(一) 波浪與價格結構診斷：\n主力資金維持推升意圖，股價軌跡已過高，確立為第3波推進浪。延伸浪的工作是「甩掉逆勢的人」，切勿輕易做空。\n(二) 教練心法：\n「波浪不是用來精準猜頂，而是用來定義結構防守。只要軋空低不破，趨勢就還在！」\n\n---
+【附錄：多頭趨勢的三大盤態診斷 (V26 影像校準)】
 本系統已根據您輸入的價格結構，判定本檔個股目前屬於：${subType}
-1. 盤堅盤 (Solid Bull)：N字上漲、回檔深。空頭抵抗強，需透過回測洗盤，只要守住「軋空低」，緩步趨堅。
-2. 軋空盤 (Short Squeeze)：高檔旗型/楔型整理。空頭抵抗弱，「以盤代跌」，修正時間但不修正價格，隨後再往上攻。
-3. 強軋空盤 (Super Squeeze)：噴出不回頭，K線連紅。空頭抵抗完全失敗，主力不給上車機會，為最強勢盤態。`;
+1. 盤堅盤 (圖①)：過高後拉回跌破前高頸線，但守穩軋空低，進行深度的N字洗盤。
+2. 軋空盤 (圖②)：過高後拉回，收盤依然強勢守穩在前高頸線之上，以盤代跌。
+3. 強軋空盤 (圖③)：跳空或長紅噴出，最低點完全脫離前高頸線，空頭抵抗完全失敗。`;
 
              } else if (type === 'break') {
-                if(!momentumPass && !isNaN(rsiVal) && !isNaN(macdVal)) document.getElementById('momentumWarning').classList.remove('hidden');
-                else if(momentumPass) document.getElementById('momentumSuccess').classList.remove('hidden');
-
                 rTitleText = "🚀 三盤突破 (翻紅)"; 
-                rActionText = momentumPass ? "積極進場試單" : "保守觀望 (防假突破)"; 
+                rActionText = "積極進場試單"; 
                 rBoxClass = "bg-orange-50 border-orange-500";
                 rTitleClass = "text-2xl font-black text-orange-600"; 
                 rActionClass = "text-2xl font-black text-orange-700 border-b border-orange-200 pb-2 mb-2";
                 rIconText = "🚀"; rTrendText = "🔥 突破頸線 (N字起點)"; rVolText = "帶量突破 (Day 1)";
                 
                 let guideTrend = "多方啟動 (N字突破)";
-                let guideDesc = momentumPass 
-                    ? `依圖一所示，股價帶量突破頸線，量化動能雙指標(RSI/MACD)轉強確認，極具備第3波攻擊潛力，建議積極進場佈局。`
-                    : `⚠️ 突破雖發生，但動能量化指標(RSI/MACD)並未同步轉強，無法確認為主升段起點。可能是量價背離或B波假突破，以極小資金試單或觀望。`;
+                let guideDesc = `依圖示結構，股價實體突破頸線，極具備第3波主升攻擊潛力，建議積極進場佈局。若遇回檔，請嚴格防守 ${fP(breakoutLow)}。`;
                 
-                const passStr = momentumPass ? "積極進場試單" : "保守觀望";
-
-                v24BaseReport = `2. 【模擬突破】(起漲第一天)
+                v26BaseReport = `2. 【模擬突破】(起漲第一天)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V24 動能校準版
+傑克.史東 N 字戰法指揮中心 V26 盤態校準版
 
 股名：${stockName}
+報告日期：${reportTime}
 
 【一、個股現況分析】
 
-📌 操作指令：【 ${passStr} 】
+📌 操作指令：【 積極進場試單 】
 
-⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
 ⚡ 量能狀態： 帶量突破 (Day 1)
 
 💰 當前現價： ${fP(close)}
@@ -935,14 +830,14 @@ ${guideDesc}
 
 ❓ Q2：怎麼判斷突破是真的還是假？
 
-判斷標準： 量化雙動能(RSI>60/MACD>0) + 三天原則 + 軋空低防守 (防守價位：${fP(breakoutLow)})
+判斷標準： 帶量 + 三天原則 + 軋空低防守 (防守價位：${fP(breakoutLow)})
 
 ❓ Q3：買進後開始盤跌怎麼辦？
 
 防守策略： 嚴守 ${fP(breakoutLow)} 關卡。
 停損點： 收盤跌破 ${fP(breakoutLow)} → 無條件停損出場。`;
 
-                v24AIReport = `(一) 突破與量化診斷： ${momentumPass ? '「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，短天期(5T)雙動能指標提供了堅實後盾。' : '動能不足的價格突破，常常是主力藉此誘多拉高出貨的手段，不宜重壓。'}\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
+                v26AIReport = `(一) 突破結構診斷： 「懷疑消失，確認出現」。第3波初期是獲利風險比最佳的切入點，價格實體突破提供了堅實後盾。\n(二) 教練心法： 「進場前先想好退路，你的退路就是 ${fP(breakoutLow)}。破了就認錯，這才是成熟的交易者。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 趨勢反轉 (由盤轉多)\n🎯 核心策略： 建立部位，嚴守軋空低停損。`;
 
              } else if (type === 'flat') {
                 rTitleText = "💤 盤整延續"; rActionText = "觀望 / 空手"; rBoxClass = "bg-slate-50 border-slate-400";
@@ -953,28 +848,21 @@ ${guideDesc}
                 const boxBottom = isNaN(breakoutLow) ? close * 0.95 : breakoutLow;
 
                 let guideTrend = "多空平衡 (第4波整理)";
-                let guideDesc = "";
-                
-                // V24 修正矛盾文案
-                if (momentumPass) {
-                    guideDesc = "指標(RSI/MACD)雖有轉強跡象，但價格受制於箱頂無法有效突破。建議持股續抱，空手者等待實體突破再加碼。";
-                } else {
-                    guideDesc = "量縮整理階段，方向未明。短線 RSI(5T) 與 MACD 皆無攻擊表態，建議觀望，等待帶量且帶動能突破箱頂再行動。";
-                }
+                let guideDesc = "價格受制於箱頂無法有效突破。建議持股續抱，空手者觀望，等待帶量實體突破箱頂再行動。";
 
-                v24BaseReport = `3. 【模擬盤整】(觀望等待)
+                v26BaseReport = `3. 【模擬盤整】(觀望等待)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V24 動能校準版
+傑克.史東 N 字戰法指揮中心 V26 盤態校準版
 
 股名：${stockName}
+報告日期：${reportTime}
 
 【一、個股現況分析】
 
 📌 操作指令：【 觀望 / 空手 】
 
-⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
 ⚡ 量能狀態： 量縮整理 (人氣退潮)
 
 💰 當前現價： ${fP(close)}
@@ -1007,26 +895,30 @@ ${guideDesc}
 
 ❓ Q2：要看到什麼訊號，才代表盤整結束？
 
-🔥 點火訊號： 第一根帶量且短線量化指標轉強 (RSI(5T)>60/MACD>0) 的紅 K 棒。
+🔥 點火訊號： 第一根帶量突破的紅 K 棒。
 判斷條件： 成交量 ≥ ${fN(Math.round(avgVol * 1.5))} 且 收盤價強勢站上箱頂 ${fP(boxTop)} 元。
 
 ❓ Q3：成交量越來越少，是不是沒人玩了？
 
 💡 解讀： 量縮其實是好事，代表籌碼沉澱。「極致量縮」往往是變盤的前兆。`;
 
-                v24AIReport = `(一) 結構與量化診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
+                v26AIReport = `(一) 結構診斷： 市場處於多空平衡期，缺乏明顯突破方向。可能是第4波平台整理或收斂。\n(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。」`;
 
              } else if (type === 'crash') {
                 let bearType = "📉 盤跌盤 (Slow Bear)";
-                let bearDesc = "多頭抵抗，緩步盤跌";
+                let bearDesc = "反彈刺穿壓力，但收低緩步盤跌 (圖①)";
                 
+                // V26 空方校準影像邏輯 (完全符合圖2-22)
                 if (!isNaN(todayH) && !isNaN(prevClose) && !isNaN(breakoutLow)) {
                     if (todayH < prevClose) {
                         bearType = "💀 強殺多 (Strong Killing Bulls)";
-                        bearDesc = "多頭不抵抗，無反彈 (跳空缺口)";
-                    } else if (todayH >= prevClose && close < prevClose) {
+                        bearDesc = "多頭毫無抵抗，跳空缺口或連黑下殺 (圖③)";
+                    } else if (todayH >= prevClose && todayH <= breakoutLow) {
                         bearType = "🔪 殺多盤 (Killing Bulls)";
-                        bearDesc = "多頭抵抗失敗，反彈無力 (上影線)";
+                        bearDesc = "反彈不過壓力，多頭抵抗失敗留上影線 (圖②)";
+                    } else if (todayH > breakoutLow) {
+                         bearType = "📉 盤跌盤 (Slow Bear)";
+                         bearDesc = "反彈刺穿壓力，但收低緩步盤跌 (圖①)";
                     }
                 }
 
@@ -1041,19 +933,20 @@ ${guideDesc}
 
                 let guideTrend = `空方趨勢 (${bearType.split(' ')[1] || bearType})`;
                 let guideDesc = "";
-                if(bearType.includes("強殺多")) guideDesc = "依圖二所示，空頭完全控盤，動能指標崩壞，跳空下跌，建議絕對空手或追空。";
-                else if(bearType.includes("殺多盤")) guideDesc = "依圖二所示，反彈遇壓不過，留上影線且指標轉弱，建議反彈站在賣方。";
-                else guideDesc = "依圖二所示，多頭試圖抵抗但趨勢向下，短線指標無力，建議反彈找空點。";
+                if(bearType.includes("強殺多")) guideDesc = "依圖③盤態所示，空頭完全控盤，無任何反彈直接跳空下跌，建議絕對空手或追空。";
+                else if(bearType.includes("殺多盤")) guideDesc = "依圖②盤態所示，反彈遇壓不過，留下明顯上影線，建議反彈站在賣方。";
+                else guideDesc = "依圖①盤態所示，多頭試圖抵抗並刺穿壓力，但最終收低維持空頭結構，建議反彈找空點。";
 
-                v24BaseReport = `4. 【模擬大跌】(C波崩盤)
+                v26BaseReport = `4. 【模擬大跌】(C波崩盤)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V24 動能校準版
+傑克.史東 N 字戰法指揮中心 V26 盤態校準版
 
 「本策略僅為個人分析參考，投資有風險，操作需自負盈虧」
 
 股名：${stockName}
+報告日期：${reportTime}
 
 【一、個股現況分析】
 
@@ -1061,7 +954,6 @@ ${guideDesc}
 
 (請確認模組狀態符合條件再操作)
 
-⚡ 動能狀態： RSI(5T) ${rsiStr} / MACD ${macdStr}
 ⚡ 量能狀態： 帶量下殺 (主力出貨)
 
 💰 當前現價： ${fP(close)}
@@ -1082,7 +974,7 @@ ${volumeSummary}
 ★ 戰術指引：
 📉 趨勢：${guideTrend}。
 ${guideDesc}
-(⚡ 長紅力道：無 (長黑))
+(⚡ 系統校準：符合空方盤態標準圖譜)
 -------------------
 防守：站不上殺多高，空方趨勢不變。
 
@@ -1107,7 +999,7 @@ ${guideDesc}
 
 ⚫ 劇本 D (V型反轉)
 🔹 防守壓力：${fP(breakoutLow)}
-🔹 條件： 收盤站回 ${fP(breakoutLow)}、量能達 ${fN(v_break)} 且 指標轉強
+🔹 條件： 收盤站回 ${fP(breakoutLow)} 且量能達 ${fN(v_break)}
 👉 指令： 回補空單 (Cover)，可能為假跌破，先退場觀望。
 
 【三、📌 大跌盤操作策略專屬・關鍵三問】
@@ -1121,14 +1013,14 @@ ${guideDesc}
 
 ❓ Q3：如果明天開紅盤，是不是代表止跌了？
 ❌ 迷思： 紅盤 ≠ 止跌。
-關鍵判斷： 若股價仍 < ${fP(breakoutLow)} 或短線指標無起色 → 只是死貓跳，空頭趨勢未改。`;
+關鍵判斷： 若股價仍 < ${fP(breakoutLow)} → 只是死貓跳，空頭趨勢未改。`;
 
-                v24AIReport = `(一) 結構診斷： 情緒崩解，資金全面撤退，量化動能雙雙崩壞。\n(二) 教練心法： 「截斷虧損，讓利潤奔跑。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 空方主跌段\n🎯 核心策略： 只出不進，嚴禁抄底。\n\n---
-【附錄：空方趨勢的三大盤態診斷 (V24校準)】
+                v26AIReport = `(一) 結構診斷： 情緒崩解，資金全面撤退，價格結構雙雙崩壞。\n(二) 教練心法： 「截斷虧損，讓利潤奔跑。」\n(三) 傑克.史東戰略結論：\n● 盤勢定調： 空方主跌段\n🎯 核心策略： 只出不進，嚴禁抄底。\n\n---
+【附錄：空方趨勢的三大盤態診斷 (V26 影像校準)】
 本系統已根據您輸入的價格結構，判定本檔個股目前屬於：${bearType}
-1. 盤跌盤 (Slow Bear)：多頭仍有抵抗，反彈幅度較大(可能過昨高)，但趨勢緩步向下。
-2. 殺多盤 (Killing Bulls)：多頭抵抗失敗，反彈無力(僅留上影線)，弱勢整理後續跌。
-3. 強殺多 (Strong Killing Bulls)：空方完全控盤，多頭放棄抵抗，常伴隨跳空缺口，崩跌速度最快。`;
+1. 盤跌盤 (圖①)：反彈幅度較大，刺穿昨高或壓力，但最終收低，趨勢緩步向下。
+2. 殺多盤 (圖②)：反彈無力，最高點碰不到壓力線，留下明顯上影線後續跌。
+3. 強殺多 (圖③)：空方完全控盤，多頭毫無抵抗，連反彈都沒有，直接跳空崩跌。`;
              }
              
              resultBox.className = `p-6 rounded-2xl border-l-8 shadow-xl relative overflow-hidden ${rBoxClass}`;
@@ -1142,14 +1034,14 @@ ${guideDesc}
              document.getElementById('trendTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm"; 
              document.getElementById('volTag').innerText = rVolText;
              document.getElementById('volTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm";
-             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V24 戰略報告。";
+             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V26 戰略報告。";
              
              document.getElementById('aiAnalysisBox').classList.remove('hidden');
-             const htmlContent = marked.parse(v24AIReport);
+             const htmlContent = marked.parse(v26AIReport);
              document.getElementById('aiContent').innerHTML = htmlContent;
 
-             baseReportText = v24BaseReport;
-             aiReportContent = v24AIReport;
+             baseReportText = v26BaseReport;
+             aiReportContent = v26AIReport;
         }
     </script>
 </body>
