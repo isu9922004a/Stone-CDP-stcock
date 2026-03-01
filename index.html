@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>傑克.史東：N字戰法指揮中心 (V37 動態量價升級版)</title>
+    <title>傑克.史東：N字戰法指揮中心 (V39 動態量價升級版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -37,7 +37,7 @@
         .ai-content p { margin-bottom: 0.5em; line-height: 1.6; }
         .ai-content strong { color: #b91c1c; }
         
-        .v37-badge {
+        .v39-badge {
             background: linear-gradient(135deg, #1e293b 0%, #000000 100%);
             color: #10b981; 
             text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
@@ -58,7 +58,7 @@
 
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <div class="bg-slate-900 p-5 text-white text-center relative z-20 shadow-md">
-            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v37-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V37 量價版</span></h1>
+            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v39-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V39 量價版</span></h1>
             <p class="text-xs text-slate-400 mt-1">導入動態結構升級 × 百科心法完整還原</p>
         </div>
 
@@ -68,7 +68,7 @@
             </div>
             <div id="encyclopediaContent" class="hidden max-h-[500px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
                 
-                <!-- V37 核心更新說明 -->
+                <!-- V39 核心更新說明 -->
                 <div class="bg-emerald-50 p-3 rounded border border-emerald-200 mb-2">
                     <p class="font-bold text-emerald-800 border-b border-emerald-200 pb-1 mb-2">⚡ 動態量價結構升級 (核心修訂)</p>
                     <div class="text-xs text-slate-700 space-y-2">
@@ -355,7 +355,7 @@
                         <span class="text-red-500 transition-transform group-open:rotate-180">▼</span>
                     </summary>
                     <div class="p-3 text-xs text-slate-700 space-y-3">
-                        <p><strong>如何快速判斷軋空低：</strong><br>「首先找到寶塔線最近一次 (綠翻紅) 的那根紅色寶塔線，對應 K 棒的最低點價位。」</p>
+                        <p><strong>如何找軋空低：</strong><br>「先找出近三日『最高的那根收盤價』，隔天起算只要有收盤超過它(綠翻紅)，那根K棒的最低點就是軋空低。」</p>
                         
                         <div class="bg-white p-2 rounded border border-red-200">
                             <p class="font-bold text-red-900 mb-1">★ 關鍵點位 (軋空低 / 殺多高) 填寫邏輯</p>
@@ -482,7 +482,7 @@
                         <input type="number" step="0.01" id="low3d" class="w-full p-2 border border-slate-300 rounded font-mono text-sm" placeholder="空方頸線/起漲點（昨天/前天/大前天）">
                     </div>
 
-                    <!-- V37 關鍵點位卡片 -->
+                    <!-- V39 關鍵點位卡片 -->
                     <div class="col-span-2 bg-[#f8fafc] rounded-xl border-2 border-slate-200 mt-2 relative overflow-hidden shadow-sm">
                         <!-- Watermark Icon -->
                         <div class="absolute right-[5px] top-[5px] text-[70px] opacity-[0.04] pointer-events-none transform rotate-[-15deg]">🗝️</div>
@@ -495,15 +495,15 @@
                             </div>
                             <p class="text-[13px] font-medium text-[#64748b] mb-4 flex items-start leading-relaxed">
                                 <span class="text-yellow-400 text-base mr-1 drop-shadow-sm">💡</span>
-                                <span>如何判斷軋空低：找到寶塔線最近一次 (綠翻紅)對應 K棒的最低點價位</span>
+                                <span>如何找軋空低：先找出近三日「最高的那根收盤價」，隔天起算只要有收盤超過它(綠翻紅)，那根K棒的最低點就是軋空低。</span>
                             </p>
-                            <input type="number" step="0.01" id="breakoutLow" class="w-full p-3 border-2 border-slate-300 rounded-lg font-mono text-3xl text-slate-900 font-black bg-white focus:border-slate-500 focus:ring-0 shadow-inner transition-colors" placeholder="輸入點位">
+                            <input type="number" step="0.01" id="breakoutLow" class="w-full p-3 border-2 border-slate-300 rounded-lg font-mono text-3xl text-slate-900 font-black bg-white focus:border-slate-500 focus:ring-0 shadow-inner transition-colors" placeholder="輸入軋空低點位...">
                         </div>
                 
                         <!-- Instruction Area -->
                         <div class="p-4 space-y-4 text-[13px] text-slate-700 bg-[#f8fafc]">
                             <div class="leading-relaxed">
-                                <span class="bg-[#fef08a] text-[#713f12] px-1.5 py-0.5 rounded text-xs font-bold mr-1">智能判斷</span>
+                                <span class="bg-[#fef08a] text-[#713f12] px-1.5 py-0.5 rounded text-xs font-bold mr-1">⚡ 智能判斷</span>
                                 <span class="font-bold text-[#475569]">若不填，系統自動抓取對應支撐/壓力。</span>
                             </div>
                         </div>
@@ -818,7 +818,6 @@
             const todayH = parseFloat(document.getElementById('todayHigh').value);
             const high3d = parseFloat(document.getElementById('high3d').value);
             
-            // V37 修復：底層變數宣告為 L
             const L = parseFloat(document.getElementById('low3d').value); 
             
             let breakoutLow = parseFloat(document.getElementById('breakoutLow').value);
@@ -882,7 +881,7 @@
             const v_break = Math.round(avgVol * 1.3);
             const isVolumeBreakout = todayVol >= v_break;
 
-            if (close < L) { // V37 修復：判斷大跌的基準為 L
+            if (close < L) { 
                 determinedType = 'crash'; 
             } else if (todayHigh > high3d || close > high3d) {
                 if (status === 'RED' && close >= high3d) {
@@ -896,10 +895,10 @@
             }
 
             const typeToRender = currentSimulationType ? currentSimulationType : determinedType;
-            renderV37Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
+            renderV39Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
         }
 
-        function renderV37Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
+        function renderV39Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
              const resultArea = document.getElementById('resultArea');
              resultArea.classList.remove('hidden');
              const resultBox = document.getElementById('resultBox');
@@ -908,7 +907,6 @@
              const close = parseFloat(document.getElementById('closePrice').value);
              const todayH = parseFloat(document.getElementById('todayHigh').value);
              const high3d = parseFloat(document.getElementById('high3d').value);
-             // V37 修復：底層變數宣告為 L
              const L = parseFloat(document.getElementById('low3d').value);
              
              const avgVol = parseFloat(document.getElementById('avgVol').value);
@@ -930,12 +928,12 @@
                      else breakoutLow = isNaN(todayH) ? high3d : todayH;
                      keyPointLabel = "殺多高 (壓力)";
                  } else if (type === 'flat') {
-                     breakoutLow = L; // V37 修復：盤整預設防守點為 L
+                     breakoutLow = L; 
                      keyPointLabel = "箱體底";
                  }
              } else {
                   if (type === 'crash') keyPointLabel = "殺多高 (壓力)";
-                  else if (type === 'flat') keyPointLabel = "箱體底";
+                  else if (type === 'flat') keyPointLabel = "關鍵點"; 
              }
              
              const v_break = Math.round(avgVol * 1.3);
@@ -950,8 +948,8 @@
              let volumeSummary = `本檔「${stockName}」${volStatusStr}`;
 
              let rTitleText = "", rActionText = "", rBoxClass = "", rTitleClass = "", rActionClass = "", rIconText = "", rTrendText = "", rVolText = "";
-             let v37BaseReport = "";
-             let v37AIReport = "";
+             let v39BaseReport = "";
+             let v39AIReport = "";
 
              const fP = (num) => isNaN(num) ? "---" : formatPrice(num);
              const fN = (num) => isNaN(num) ? "---" : formatNumber(num);
@@ -987,11 +985,11 @@
 
                 const washPrice7 = (close * 0.93).toFixed(2); 
 
-                v37BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
+                v39BaseReport = `1. 【強勢多方】(多頭主升段 / 獲利極大化)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V37 動態量價版
+傑克.史東 N 字戰法指揮中心 V39 動態量價版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -1049,7 +1047,7 @@ ${guideDesc}
 1. 高檔爆量留長黑，且未能創新高。
 2. 收盤實體跌破 ${fP(breakoutLow)} (結構防守點) → 必須減碼或停損出場。`;
 
-                v37AIReport = `🎯 系統判定本檔個股目前屬於：**${levelText} (${subType.split(' ')[2] || 'Bull'})**
+                v39AIReport = `🎯 系統判定本檔個股目前屬於：**${levelText} (${subType.split(' ')[2] || 'Bull'})**
 ---
 ### 📈多方盤態總整理：三階段強勢解析
 **⭐️ 盤堅盤（穩健推升格局）**
@@ -1075,11 +1073,11 @@ ${guideDesc}
                 let guideTrend = "轉強初動 (脫離盤整)";
                 let guideDesc = `盤面已出現放量突破K線，技術結構由原先整理型態強制升級為「轉強初動」。原區間壓力 ${fP(high3d)} 已轉換為短線支撐。`;
                 
-                v37BaseReport = `2. 【轉強盤】(初動段 / 脫離整理)
+                v39BaseReport = `2. 【轉強盤】(初動段 / 脫離整理)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V37 動態量價版
+傑克.史東 N 字戰法指揮中心 V39 動態量價版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -1136,7 +1134,7 @@ ${guideDesc}
 ❓ Q3：買進後如果沒有馬上噴出，要等多久？
 操作建議： 突破後的「前三天」是關鍵期。只要這三天內低點不破軋空低 ${fP(breakoutLow)}，且量能不異常失控，請給主力一點時間洗盤，耐心持股。`;
 
-                v37AIReport = `【${stockName} 技術面學習筆記 – 結構升級版】
+                v39AIReport = `【${stockName} 技術面學習筆記 – 結構升級版】
 目前股價 ${fP(close)}，盤中最高已觸及 ${fP(todayH)}。
 盤面已出現帶量突破，技術結構由原先整理型態轉為**「轉強初動」**。
 
@@ -1163,12 +1161,23 @@ ${guideDesc}
                 let guideTrend = "多空平衡 (第4波整理)";
                 let guideDesc = "價格未破新低也未過新高，且量能萎縮。此為標準的『真正箱型』。建議持股續抱，空手者觀望，等待帶量實體突破箱頂再行動。";
 
-                // V37 修復：盤整區間底的變數修正為 L，防守點修正為 breakoutLow (預設也是 L)
-                v37BaseReport = `3. 【真正盤整盤】(觀望等待)
+                // V38 終極修復：盤整區間防守點的智慧雙層顯示邏輯，完美區分短線與結構
+                let flatDefenseStr = "";
+                let flatBottomLineStr = "";
+                
+                if (!isNaN(breakoutLow) && breakoutLow !== L) {
+                    flatDefenseStr = `⚠️ 防守要點：\n• 短線轉弱點： ${fP(breakoutLow)}\n• 結構破壞點 (箱底)： ${fP(L)}`;
+                    flatBottomLineStr = `防守：跌破 ${fP(breakoutLow)} 轉為偏弱，跌破 ${fP(L)} 才是結構破壞。`;
+                } else {
+                    flatDefenseStr = `⚠️ 防守要點： 結構箱底 ${fP(L)} 不可破`;
+                    flatBottomLineStr = `防守：箱底不破，保留反攻機會。`;
+                }
+
+                v39BaseReport = `3. 【真正盤整盤】(觀望等待)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V37 動態量價版
+傑克.史東 N 字戰法指揮中心 V39 動態量價版
 
 股名：${stockName}
 報告日期：${reportTime}
@@ -1183,7 +1192,7 @@ ${guideDesc}
 
 📦 箱體區間： ${fP(L)} (底) ~ ${fP(high3d)} (頂)
 
-⚠️ 防守要點： 箱底支撐 (${keyPointLabel}) ${fP(breakoutLow)} 不可破
+${flatDefenseStr}
 
 ★ 量價推演：
 • 攻擊門檻(1.3x)：${fN(v_break)} ${todayVol >= v_break ? "(✅達標)" : ""}
@@ -1194,7 +1203,7 @@ ${volumeSummary}
 📈 趨勢：${guideTrend}。
 ${guideDesc}
 -------------------
-防守：箱底不破，保留反攻機會。
+${flatBottomLineStr}
 
 【二、明日開盤・量能作戰劇本】
 
@@ -1213,16 +1222,19 @@ ${guideDesc}
 ❓ Q3：什麼叫「真正」的盤整？
 必須同時滿足：
 1. 高低點沒有創新高 / 創新低
-2. 成交量逐步萎縮`;
+2. 成交量逐步萎縮
 
-                v37AIReport = `(一) 結構診斷： 市場處於多空平衡期。高低點無創新高低，且成交量未見放大。
+【四、🧠 傑克.史東戰略分析報告】
+(一) 結構診斷： 市場處於多空平衡期。高低點無創新高低，且成交量未見放大。
+(二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。只要放量突破，盤態即刻升級！」`;
+
+                v39AIReport = `(一) 結構診斷： 市場處於多空平衡期。高低點無創新高低，且成交量未見放大。
 (二) 教練心法： 「看不懂就休息，現金為王。不要在沒有趨勢的市場裡消耗資金。只要放量突破，盤態即刻升級！」`;
 
              } else if (type === 'crash') {
                 let bearType = "📉 盤跌盤 (Slow Bear)";
                 let bearDesc = "收盤突破前波低點，但受制於殺多高呈現緩跌 (圖①)";
                 
-                // V37 修復：大跌盤的內部判斷基準必須是 L
                 if (!isNaN(todayH) && !isNaN(L)) {
                     if (todayH < L) { 
                         bearType = "💀 強殺多 (Strong Killing Bulls)";
@@ -1255,11 +1267,11 @@ ${guideDesc}
                 else if(bearType.includes("殺多盤")) guideDesc = "依圖②盤態所示，盤中試圖反彈過前低但最終失敗留下上影線，建議反彈站在賣方。";
                 else guideDesc = "依圖①盤態所示，多頭試圖抵抗並收在前低之上，但整體受制於殺多高，建議反彈找空點。";
 
-                v37BaseReport = `4. 【弱勢大跌】(C波崩盤)
+                v39BaseReport = `4. 【弱勢大跌】(C波崩盤)
 
 嗨，我是傑克.史東，希望我的 N 字戰法分析系統能讓你大幅提升勝率📈💯
 
-傑克.史東 N 字戰法指揮中心 V37 動態量價版
+傑克.史東 N 字戰法指揮中心 V39 動態量價版
 
 「本策略僅為個人分析參考，投資有風險，操作需自負盈虧」
 
@@ -1319,7 +1331,7 @@ ${guideDesc}
 ❌ 迷思： 紅盤 ≠ 止跌。
 關鍵判斷： 若股價反彈仍小於 ${fP(breakoutLow)} (壓力區) → 只是死貓跳，空頭趨勢未改。`;
 
-                v37AIReport = `🎯 系統判定本檔個股目前屬於：**${bearLevelText} (${bearType.split(' ')[2] || 'Bear'})**
+                v39AIReport = `🎯 系統判定本檔個股目前屬於：**${bearLevelText} (${bearType.split(' ')[2] || 'Bear'})**
 ---
 ### 📉 空方盤態總整理：三階段跌勢解析
 **⚠️ 1. 盤跌盤（多方嘗試抵抗，緩步探底）**
@@ -1343,14 +1355,14 @@ ${guideDesc}
              document.getElementById('trendTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm"; 
              document.getElementById('volTag').innerText = rVolText;
              document.getElementById('volTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm";
-             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V37 戰略報告。";
+             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V39 戰略報告。";
              
              document.getElementById('aiAnalysisBox').classList.remove('hidden');
-             const htmlContent = marked.parse(v37AIReport);
+             const htmlContent = marked.parse(v39AIReport);
              document.getElementById('aiContent').innerHTML = htmlContent;
 
-             baseReportText = v37BaseReport;
-             aiReportContent = v37AIReport;
+             baseReportText = v39BaseReport;
+             aiReportContent = v39AIReport;
         }
     </script>
 </body>
