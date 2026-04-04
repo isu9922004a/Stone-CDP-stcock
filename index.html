@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>傑克.史東：N字戰法指揮中心 (V40 動態量價升級版)</title>
+    <title>傑克.史東：N字戰法指揮中心 (V43 雙網終極版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -37,12 +37,12 @@
         .ai-content p { margin-bottom: 0.5em; line-height: 1.6; }
         .ai-content strong { color: #b91c1c; }
         
-        .v40-badge {
-            background: linear-gradient(135deg, #1e293b 0%, #000000 100%);
-            color: #10b981; 
+        .v43-badge {
+            background: linear-gradient(135deg, #312e81 0%, #1e1b4b 100%);
+            color: #fbbf24; 
             text-shadow: 0px 1px 0px rgba(0,0,0,0.5);
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border: 1px solid #059669;
+            border: 1px solid #4f46e5;
         }
         
         .hidden { display: none !important; }
@@ -58,8 +58,8 @@
 
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-300 relative">
         <div class="bg-slate-900 p-5 text-white text-center relative z-20 shadow-md">
-            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v40-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V40 量價版</span></h1>
-            <p class="text-xs text-slate-400 mt-1">導入動態結構升級 × 百科心法完整還原</p>
+            <h1 class="text-2xl font-black tracking-wider">史東 N字戰法指揮中心 <span class="v43-badge px-2 py-0.5 rounded text-sm align-top ml-1 font-bold tracking-normal">V43 雙網版</span></h1>
+            <p class="text-xs text-slate-400 mt-1">導入動態結構升級 × 雙網過濾 (三盤/凹洞量)</p>
         </div>
 
         <div class="bg-slate-50 border-b border-slate-200">
@@ -68,8 +68,17 @@
             </div>
             <div id="encyclopediaContent" class="hidden max-h-[500px] overflow-y-auto p-4 space-y-3 shadow-inner bg-white">
                 
+                <!-- 新增 V43 雙網核心修訂 -->
+                <div class="bg-purple-50 p-3 rounded border border-purple-200 mb-2">
+                    <p class="font-bold text-purple-800 border-b border-purple-200 pb-1 mb-2">⚡ V43 雙網過濾系統 (核心升級)</p>
+                    <div class="text-xs text-slate-700 space-y-2">
+                        <p><span class="font-bold text-purple-700">1. 三盤轉折 (極短線動能)：</span> 最新K收盤突破前兩K高為「轉強」；跌破前兩K低為「轉弱」。用來精準抓出N字整理結束的第一根起漲訊號。</p>
+                        <p><span class="font-bold text-indigo-700">2. 凹洞量 (洗盤籌碼)：</span> 回檔過程中的極致量縮 (低於均量 0.8 倍)，代表浮額清洗乾淨。配合三盤突破即為「回後起漲」最佳買點。</p>
+                    </div>
+                </div>
+
                 <div class="bg-emerald-50 p-3 rounded border border-emerald-200 mb-2">
-                    <p class="font-bold text-emerald-800 border-b border-emerald-200 pb-1 mb-2">⚡ 動態量價結構升級 (核心修訂)</p>
+                    <p class="font-bold text-emerald-800 border-b border-emerald-200 pb-1 mb-2">⚡ 動態量價結構升級 (V40 修訂)</p>
                     <div class="text-xs text-slate-700 space-y-2">
                         <p><span class="font-bold text-emerald-700">突破盲點：</span> 過去單純用「區間價格(收盤價)」定義盤態，容易誤判。市場只要出現：<strong class="text-red-600">放量 + 均線發散 + 高點突破</strong>，盤態就必須即時升級！</p>
                         <p><span class="font-bold text-blue-700">🟢 轉強盤 (初動段)：</span> 出現帶量長紅，最高價突破箱頂/頸線。此時結構已脫離整理，原壓力轉為支撐，進入轉強初動。</p>
@@ -515,6 +524,36 @@
                 </div>
             </div>
 
+            <!-- 新增 V43 雙網過濾選單 -->
+            <div class="border-t border-slate-200 pt-4 mt-2">
+                <h3 class="text-sm font-black text-slate-800 mb-3 border-l-4 border-amber-500 pl-2">✨ V43 雙網過濾 (進階選填)</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-amber-900 font-bold mb-1 text-xs">K線轉折 (三盤狀態)</label>
+                        <select id="threeBarStatus" class="w-full p-2 border-2 border-amber-200 rounded-lg text-sm font-bold text-slate-700 bg-amber-50">
+                            <option value="none">➖ 觀察中</option>
+                            <option value="breakout">📈 三盤突破 (強) (收盤價過前二高)</option>
+                            <option value="breakdown">📉 三盤跌破 (弱) (收盤價破前二低)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-amber-900 font-bold mb-1 text-xs">量能特徵</label>
+                        <select id="volumeFeature" class="w-full p-2 border-2 border-amber-200 rounded-lg text-sm font-bold text-slate-700 bg-amber-50">
+                            <option value="none">➖ 無特徵 (一般正常量能)</option>
+                            <option value="cave">🕳️ 凹洞量 (量 < 均量0.8倍)</option>
+                            <option value="surge">🔥 單兵量起 (量 > 均量1.3倍)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- V43 新增：量能特徵參數判斷提示卡 -->
+                    <div class="col-span-2 mt-1.5 p-2 bg-amber-100/50 rounded-lg border border-amber-200/80 text-[11px] text-amber-800 leading-relaxed font-medium shadow-inner">
+                        <span class="text-amber-600 text-sm drop-shadow-sm">💡</span> <b>量能特徵判斷標準：</b><br>
+                        • <b class="text-amber-900">凹洞量：</b>回檔時量能極度萎縮 (今日量低於過去均量的 <span class="text-red-600 font-bold">0.8 倍</span>)，代表浮額洗淨、無人倒貨。<br>
+                        • <b class="text-amber-900">單兵量起：</b>在量縮整理後，突然爆出單根突兀的攻擊量 (今日量大於過去均量的 <span class="text-red-600 font-bold">1.3 倍</span>)，代表主力點火。
+                    </div>
+                </div>
+            </div>
+
             <div id="advancedInputs" class="hidden bg-indigo-50 p-3 rounded-lg mt-4 border border-indigo-100">
                 <h3 class="text-sm font-black text-indigo-900 mb-2">★ 盤態強弱判定參數 (自動比對用)</h3>
                 <div class="grid grid-cols-3 gap-3">
@@ -645,7 +684,7 @@
             prevCloseInput.addEventListener('input', autoCalcShortSqueezeLow);
             todayLowInput.addEventListener('input', autoCalcShortSqueezeLow);
             
-            document.querySelectorAll('input').forEach(input => {
+            document.querySelectorAll('input, select').forEach(input => {
                 input.addEventListener('input', () => {
                     if (currentSimulationType) currentSimulationType = null;
                 });
@@ -758,6 +797,8 @@
 
         function clearInputs(hideResult = true) {
             document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => input.value = '');
+            document.getElementById('threeBarStatus').value = 'none';
+            document.getElementById('volumeFeature').value = 'none';
             
             document.getElementById('aiAnalysisBox').classList.add('hidden');
             document.getElementById('aiContent').innerText = '';
@@ -805,6 +846,9 @@
             
             const todayLow = parseFloat(document.getElementById('todayLow').value);
             const prevClose = parseFloat(document.getElementById('prevClose').value);
+
+            const threeBar = document.getElementById('threeBarStatus').value;
+            const volFeat = document.getElementById('volumeFeature').value;
 
             let hasError = false;
             let errorMsg = "請檢查紅框欄位：\n";
@@ -856,9 +900,18 @@
             let determinedType = 'flat'; 
             
             const v_break = Math.round(avgVol * 1.3);
-            const isVolumeBreakout = todayVol >= v_break;
+            const v_wash = Math.round(avgVol * 0.8);
 
-            if (close < L) { 
+            // V43 新增邏輯：優先判斷雙網訊號
+            if (status === 'RED' && threeBar === 'breakout' && (volFeat === 'cave' || volFeat === 'surge' || todayVol >= v_break)) {
+                determinedType = 'v43_pullback_buy';
+            } else if (status === 'RED' && threeBar === 'breakdown' && close >= PR && (volFeat === 'cave' || todayVol <= v_wash)) {
+                determinedType = 'v43_fake_breakdown';
+            } else if (threeBar === 'breakdown' && close < L) {
+                determinedType = 'v43_true_breakdown';
+            }
+            // 退回 V40 邏輯
+            else if (close < L) { 
                 determinedType = 'crash'; 
             } else if (todayHigh > high3d || close > high3d) {
                 if (status === 'RED' && close >= high3d) {
@@ -872,10 +925,10 @@
             }
 
             const typeToRender = currentSimulationType ? currentSimulationType : determinedType;
-            renderV40Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow);
+            renderV40Simulation(typeToRender, PR, gap_A, target1, target2, target5, userInputLow, threeBar, volFeat);
         }
 
-        function renderV40Simulation(type, PR, gap_A, target1, target2, target5, userInputLow) {
+        function renderV40Simulation(type, PR, gap_A, target1, target2, target5, userInputLow, threeBar, volFeat) {
              const resultArea = document.getElementById('resultArea');
              resultArea.classList.remove('hidden');
              const resultBox = document.getElementById('resultBox');
@@ -897,10 +950,10 @@
              let keyPointLabel = "軋空低"; 
 
              if (isNaN(breakoutLow)) {
-                 if (type === 'strong' || type === 'turning_strong') {
+                 if (type === 'strong' || type === 'turning_strong' || type === 'v43_pullback_buy' || type === 'v43_fake_breakdown') {
                      if (!isNaN(prevClose) && !isNaN(todayLow)) breakoutLow = Math.min(prevClose, todayLow);
                      else breakoutLow = L; 
-                 } else if (type === 'crash') {
+                 } else if (type === 'crash' || type === 'v43_true_breakdown') {
                      if (!isNaN(prevClose) && !isNaN(todayH)) breakoutLow = Math.max(prevClose, todayH);
                      else breakoutLow = isNaN(todayH) ? high3d : todayH;
                      keyPointLabel = "殺多高 (壓力)";
@@ -909,7 +962,7 @@
                      keyPointLabel = "箱體底";
                  }
              } else {
-                  if (type === 'crash') keyPointLabel = "殺多高 (壓力)";
+                  if (type === 'crash' || type === 'v43_true_breakdown') keyPointLabel = "殺多高 (壓力)";
                   else if (type === 'flat') keyPointLabel = "短線轉弱點"; 
              }
              
@@ -918,7 +971,9 @@
              const v_wash = Math.round(avgVol * 0.8);
              
              let volStatusStr = "量能溫和 (觀望)";
-             if (todayVol >= v_break) volStatusStr = `攻擊量達標 (符合 1.3 倍) ✅`;
+             if (volFeat === 'cave') volStatusStr = `V43 雙網：極致洗盤凹洞量 🕳️`;
+             else if (volFeat === 'surge') volStatusStr = `V43 雙網：單兵攻擊點火 🔥`;
+             else if (todayVol >= v_break) volStatusStr = `攻擊量達標 (符合 1.3 倍) ✅`;
              else if (todayVol <= v_wash) volStatusStr = `量縮洗盤達標 (符合 0.8 倍) ✅`;
              else volStatusStr = "量能介於攻擊與洗盤之間";
 
@@ -927,8 +982,156 @@
 
              const fP = (num) => isNaN(num) ? "---" : formatPrice(num);
              const fN = (num) => isNaN(num) ? "---" : formatNumber(num);
+             const washPrice7 = (close * 0.93).toFixed(2); 
 
-             if (type === 'strong') {
+             // V43 雙網新增的三種劇本：
+             if (type === 'v43_pullback_buy') {
+                let subType = "🔥 V43 雙網：回後起漲 (Pullback Buy)";
+                let subTypeDesc = "收盤站上前二高發動三盤轉折，配合凹洞量/單兵量確認整理結束，主力重新點火。";
+                let headerType = "【最佳狙擊點】(三盤突破 × 回後起漲)";
+                
+                let guideTrend = `多方重啟攻擊`;
+                let guideDesc = `V43雙網過濾確認：出現三盤突破，配合量能表態，此為標準「回後起漲」狙擊點。只要收盤不破防守點 ${fP(breakoutLow)}，波段目標直指2N以上。建議積極進場或持股死抱。`;
+
+                rTitleText = subType; 
+                rActionText = "積極試單 / 抱緊處理"; 
+                rBoxClass = "bg-red-50 border-red-600";
+                rTitleClass = "text-2xl font-black text-red-700"; 
+                rActionClass = "text-2xl font-black text-red-800 border-b border-red-300 pb-2 mb-2";
+                rIconText = "🎯"; rTrendText = "🎯 N字右側起漲"; 
+                rVolText = volFeat === 'cave' ? "凹洞量發動" : "單兵攻擊量";
+
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
+標的： ${stockName}
+時間： ${reportTime}
+當前盤態： ${headerType}
+
+【一、個股現況分析】
+• 📌 操作指令： 【 ${rActionText} 】
+• ⚡ 雙網特徵： 三盤突破 + ${volFeat === 'cave' ? '凹洞量洗盤完畢' : '攻擊量點火'}
+• 💰 價格與型態：
+  • 當前現價： ${fP(close)}
+  • 盤勢型態： N字右側起漲
+  • 特徵診斷： ${subTypeDesc}
+  • 波段目標： 5N (${fP(target5)})
+• ⚠️ 防守與容忍值：
+  • 結構防守 (${keyPointLabel})： ${fP(breakoutLow)}
+  • 7% 洗盤容忍： 跌到 ${washPrice7}
+• 🎯 斐波那契測幅： (基準參數：h2=${fP(todayH)}, PR=${fP(PR)}, A=${fP(gap_A)})
+  • 一飽 (1N)： ${fP(target1)} (基礎對稱)
+  • 二吐 (2N)： ${fP(target2)} (1.618 波浪延伸)
+  • 五倍 (5N)： ${fP(target5)} (2.618 波浪極限)
+💡 戰術小卡：預估量 = 09:15 成交量 × 8
+• 📊 量能推演指標：
+  • 現況備註：${volStatusStr}
+• 🎯 戰術指引：
+  • 趨勢目前為${guideTrend}。
+  • 動作建議： ${guideDesc}
+
+【二、明日開盤作戰劇本】
+• 🔴 劇本 A (放量續攻) - 抱緊：
+  若明日續帶量攻擊，代表主力強攻，抱緊不放。
+• 🟢 劇本 B (量縮整理) - 續抱防守：
+  若量縮休息，只要不跌破 ${fP(breakoutLow)}，皆視為多方良性換手。
+
+【三、雙網作戰心法】
+• ❓ Q1：三盤突破代表什麼？
+  • 邏輯說明： 短線下跌或整理的慣性被打破，多方正式奪回控盤權。
+• ❓ Q2：為什麼要看凹洞量？
+  • 邏輯說明： 量縮代表沒有人要賣了，籌碼乾淨。凹洞量後的三盤突破，是最安全的起漲點。
+
+【四、大腦決策區：戰略分析報告】
+🎯 系統判定： V43 雙網過濾 - 回後起漲最佳狙擊點
+📈 V43 雙網特徵總結：
+• 多方發動三盤轉折，價格突破。
+• 伴隨特定量能特徵，確認籌碼安定。
+• 此為 N 字戰法中最具威力的「右側發動點」，獲利期望值極高。`;
+
+             } else if (type === 'v43_fake_breakdown') {
+                let subType = "🛡️ V43 雙網：強勢洗盤 (假跌破)";
+                let subTypeDesc = "三盤雖跌破，但量能出現極致凹洞量，且力守關鍵防線，主力甩轎意圖明顯。";
+                let headerType = "【強勢洗盤】(假跌破 / 誘空)";
+                
+                let guideTrend = `量縮誘空 (測試防線)`;
+                let guideDesc = `V43雙網過濾確認：出現三盤跌破但伴隨極致量縮(凹洞量)，且收盤仍守穩 ${fP(PR)}。此為主力發動前最後的「甩轎誘空」。建議持股續抱，防範被洗出場。`;
+
+                rTitleText = subType; 
+                rActionText = "持股續抱 (防範甩轎)"; 
+                rBoxClass = "bg-blue-50 border-blue-600";
+                rTitleClass = "text-2xl font-black text-blue-700"; 
+                rActionClass = "text-2xl font-black text-blue-800 border-b border-blue-300 pb-2 mb-2";
+                rIconText = "🎭"; rTrendText = "🎭 誘空甩轎"; 
+                rVolText = "量縮凹洞";
+
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
+標的： ${stockName}
+時間： ${reportTime}
+當前盤態： ${headerType}
+
+【一、個股現況分析】
+• 📌 操作指令： 【 ${rActionText} 】
+• ⚡ 雙網特徵： 三盤跌破 + 凹洞量洗盤
+• 💰 價格與型態：
+  • 當前現價： ${fP(close)}
+  • 盤勢型態： V43 假跌破 / 誘空
+  • 特徵診斷： ${subTypeDesc}
+• ⚠️ 防守與容忍值：
+  • 結構防守 (${keyPointLabel})： ${fP(breakoutLow)}
+• 🎯 戰術指引：
+  • 趨勢目前為${guideTrend}。
+  • 動作建議： ${guideDesc}
+
+【二、大腦決策區：戰略分析報告】
+🎯 系統判定： V43 雙網過濾 - 強勢洗盤誘空
+📈 V43 雙網特徵總結：
+• 表面上三盤轉弱，容易引發散戶恐慌停損。
+• 實際上量能極致萎縮，代表主力並未出貨，且力守關鍵防線。
+• 教練心法：「量縮不跌破，就是洗盤。抱緊你的籌碼，不要被甩下車！」`;
+
+             } else if (type === 'v43_true_breakdown') {
+                let subType = "💀 V43 雙網：三盤真跌破";
+                let subTypeDesc = "三盤跌破且同步貫破底線支撐，結構完全敗壞，空軍全面接管。";
+                let headerType = "【結構破壞】(真跌破 / 趨勢轉空)";
+                
+                let guideTrend = `空方發動 (真跌破)`;
+                let guideDesc = `V43雙網過濾確認：三盤跌破且貫破底線 ${fP(L)}，多方結構已遭破壞。建議立即執行停損/減碼，絕不可留戀。`;
+
+                rTitleText = subType; 
+                rActionText = "全數撤退 / 停損"; 
+                rBoxClass = "bg-gray-100 border-gray-800";
+                rTitleClass = "text-2xl font-black text-gray-700"; 
+                rActionClass = "text-2xl font-black text-red-600 underline border-b border-gray-300 pb-2 mb-2";
+                rIconText = "💀"; rTrendText = "💀 結構敗壞"; 
+                rVolText = "空方攻擊";
+
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
+標的： ${stockName}
+時間： ${reportTime}
+當前盤態： ${headerType}
+
+【一、個股現況分析】
+• 📌 操作指令： 【 ${rActionText} 】
+• ⚡ 雙網特徵： 三盤跌破 + 跌破箱底
+• 💰 價格與型態：
+  • 當前現價： ${fP(close)}
+  • 盤勢型態： V43 結構破壞
+  • 特徵診斷： ${subTypeDesc}
+• ⚠️ 防守與容忍值：
+  • 壓力關卡 (${keyPointLabel})： ${fP(breakoutLow)}
+• 🎯 戰術指引：
+  • 趨勢目前為${guideTrend}。
+  • 動作建議： ${guideDesc}
+
+【二、大腦決策區：戰略分析報告】
+🎯 系統判定： V43 雙網過濾 - 結構全面敗壞
+📈 V43 雙網特徵總結：
+• 三盤跌破確認極短線動能轉空。
+• 關鍵支撐失守，引發多殺多停損賣壓。
+• 教練心法：「留得青山在，不怕沒柴燒。趨勢轉空的第一時間撤退，是保命的唯一法則。」`;
+
+             }
+             // 回歸 V40 的四大經典劇本
+             else if (type === 'strong') {
                 let subType = "🔥 強軋空盤 (Super Squeeze)";
                 let subTypeDesc = "最低價未跌破頸線，完全懸空強勢脫離 (圖③)。";
                 let headerType = "【強勢多方】(多頭主升段 / 獲利極大化)";
@@ -961,9 +1164,7 @@
                 rIconText = "🚀"; rTrendText = subType; 
                 rVolText = todayVol >= v_break ? "攻擊量達標" : "高檔換手量";
 
-                const washPrice7 = (close * 0.93).toFixed(2); 
-
-                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V40 動態量價版)
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
 標的： ${stockName}
 時間： ${reportTime}
 當前盤態： ${headerType}
@@ -1036,7 +1237,7 @@
                 let guideTrend = "轉強初動 (脫離盤整)";
                 let guideDesc = `盤面已出現放量突破K線，技術結構由原先整理型態強制升級為「轉強初動」。原區間壓力 ${fP(high3d)} 已轉換為短線支撐。防守：不破軋空低 ${fP(breakoutLow)}，多方初動架構不變。`;
                 
-                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V40 動態量價版)
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
 標的： ${stockName}
 時間： ${reportTime}
 當前盤態： ${headerType}
@@ -1108,7 +1309,7 @@
                 
                 let guideDesc = `建議持股續抱，空手者觀望，等待帶量實體突破箱頂再行動。\n  • ${flatBottomLineStr}`;
 
-                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V40 動態量價版)
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
 標的： ${stockName}
 時間： ${reportTime}
 當前盤態： ${headerType}
@@ -1191,7 +1392,7 @@ ${flatDefenseStr}
                 
                 guideDesc += " 防守：站不上殺多高，空方趨勢不變。";
 
-                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V40 動態量價版)
+                fullReport = `📈 傑克．史東 N 字戰法指揮中心 (V43 雙網過濾終極版)
 標的： ${stockName}
 時間： ${reportTime}
 當前盤態： ${headerType}
@@ -1251,11 +1452,10 @@ ${flatDefenseStr}
              document.getElementById('trendTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm"; 
              document.getElementById('volTag').innerText = rVolText;
              document.getElementById('volTag').className = "text-xs font-bold px-3 py-1 rounded-md bg-white/60 text-slate-800 border border-slate-300 shadow-sm";
-             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V40 戰略報告。";
+             document.getElementById('resultAdvice').innerText = "請參閱下方完整 V43 戰略報告。";
              
              document.getElementById('aiAnalysisBox').classList.remove('hidden');
              
-             // 提取 AI 報告區塊用於畫面上顯示
              const aiReportStartIndex = fullReport.indexOf("【四、大腦決策區：戰略分析報告】");
              const aiReportOnly = fullReport.substring(aiReportStartIndex);
              document.getElementById('aiContent').innerText = aiReportOnly;
